@@ -97,6 +97,7 @@
         };
     };
 
+    // TODO: docs: https://github.com/phaserjs/examples/blob/master/public/src/depth%20sorting/isometric%20map.js
     // const spawnTiles = (scene: Phaser.Scene) => {
     //     let tile: Phaser.GameObjects.Sprite;
     //     let i = 0;
