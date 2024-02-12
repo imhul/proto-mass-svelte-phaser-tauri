@@ -1,13 +1,13 @@
-// import object_2 from '$assets/sprites/objects/object_2.png';
-// import object_3 from '$assets/sprites/objects/object_3.png';
-// import object_4 from '$assets/sprites/objects/object_4.png';
-// import object_5 from '$assets/sprites/objects/object_5.png';
-// import object_6 from '$assets/sprites/objects/object_6.png';
-// import object_7 from '$assets/sprites/objects/object_7.png';
-// import object_8 from '$assets/sprites/objects/object_8.png';
-// import object_9 from '$assets/sprites/objects/object_9.png';
-// import object_10 from '$assets/sprites/objects/object_10.png';
-// import object_11 from '$assets/sprites/objects/object_11.png';
+// import object_2 from '$lib/assets/sprites/objects/object_2.png';
+// import object_3 from '$lib/assets/sprites/objects/object_3.png';
+// import object_4 from '$lib/assets/sprites/objects/object_4.png';
+// import object_5 from '$lib/assets/sprites/objects/object_5.png';
+// import object_6 from '$lib/assets/sprites/objects/object_6.png';
+// import object_7 from '$lib/assets/sprites/objects/object_7.png';
+// import object_8 from '$lib/assets/sprites/objects/object_8.png';
+// import object_9 from '$lib/assets/sprites/objects/object_9.png';
+// import object_10 from '$lib/assets/sprites/objects/object_10.png';
+// import object_11 from '$lib/assets/sprites/objects/object_11.png';
 
 export const getObjectByType = (typeId: number) => {
     switch (typeId) {

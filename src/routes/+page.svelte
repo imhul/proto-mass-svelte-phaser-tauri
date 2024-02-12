@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Home from '$ui/home.svelte';
+    import Home from '$lib/ui/home.svelte';
 </script>
 
 <Home />

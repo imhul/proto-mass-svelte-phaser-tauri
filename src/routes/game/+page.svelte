@@ -1,3 +1,3 @@
-{#await import('$game/loader.svelte') then app}
+{#await import('$lib/game/loader.svelte') then app}
     <svelte:component this={app.default} />
 {/await}

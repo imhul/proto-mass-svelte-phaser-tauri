@@ -2,11 +2,11 @@
     import { getContext } from 'svelte';
     import { goto } from '$app/navigation';
     // store
-    import user from '$store/user/auth';
+    import user from '$lib/store/user/auth';
     // components
-    import AuthModal from '$ui/auth.svelte';
+    import AuthModal from '$lib/ui/auth.svelte';
 
-    const { open } = getContext('simple-modal');
+    const { open } = getContext('simple-modal') as { open: Function };
     $: isLoggedIn = $user.isLoggedIn;
 
     const goGame = () => {
@@ -56,8 +56,11 @@
             <!-- <i class="icon-dollar3"></i> -->
             <span>Donate</span>
         </a>
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
         <span
             class="menu-link"
+            tabindex="0"
+            role="button"
             on:click={isLoggedIn ? logout : login}
         >
             <!-- <i class="icon-Y15"></i> -->

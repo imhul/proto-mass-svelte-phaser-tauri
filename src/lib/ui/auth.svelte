@@ -1,9 +1,11 @@
 <script lang="ts">
     import { getContext } from 'svelte';
-    import user from '$store/user/auth';
+    import user from '$lib/store/user/auth';
 
     export let message = '';
-    const { close } = getContext('simple-modal');
+    const { close } = getContext('simple-modal') as {
+        close: Function;
+    };
 
     let isRegistration = false;
 

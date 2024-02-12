@@ -1,6 +1,6 @@
 <script lang="ts">
-    import svelteLogo from '$assets/logo/svelte.svg';
-    import phaserLogo from '$assets/logo/phaser.png';
+    import svelteLogo from '$lib/assets/logo/svelte.svg';
+    import phaserLogo from '$lib/assets/logo/phaser.png';
 </script>
 
 <footer>

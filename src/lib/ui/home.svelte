@@ -1,8 +1,8 @@
 <script lang="ts">
     // components
-    import Hero from '$ui/hero.svelte';
-    import Header from '$ui/header.svelte';
-    import Footer from '$ui/footer.svelte';
+    import Hero from '$lib/ui/hero.svelte';
+    import Header from '$lib/ui/header.svelte';
+    import Footer from '$lib/ui/footer.svelte';
 </script>
 
 <div class="container">

@@ -1,12 +1,12 @@
-// import isometric_pixel_0 from '$assets/sprites/cube/isometric_pixel_0054.png';
-// import isometric_pixel_1 from '$assets/sprites/cube/isometric_pixel_0207.png';
-// import isometric_pixel_2 from '$assets/sprites/cube/isometric_pixel_0208.png';
-// import isometric_pixel_3 from '$assets/sprites/cube/isometric_pixel_0209.png';
-// import isometric_pixel_4 from '$assets/sprites/cube/isometric_pixel_0210.png';
-// import isometric_pixel_5 from '$assets/sprites/cube/isometric_pixel_0211.png';
-// import isometric_pixel_6 from '$assets/sprites/cube/isometric_pixel_0212.png';
-// import isometric_pixel_7 from '$assets/sprites/cube/isometric_pixel_0063.png';
-// import isometric_pixel_8 from '$assets/sprites/cube/isometric_pixel_0063.png';
+// import isometric_pixel_0 from '$lib/assets/sprites/cube/isometric_pixel_0054.png';
+// import isometric_pixel_1 from '$lib/assets/sprites/cube/isometric_pixel_0207.png';
+// import isometric_pixel_2 from '$lib/assets/sprites/cube/isometric_pixel_0208.png';
+// import isometric_pixel_3 from '$lib/assets/sprites/cube/isometric_pixel_0209.png';
+// import isometric_pixel_4 from '$lib/assets/sprites/cube/isometric_pixel_0210.png';
+// import isometric_pixel_5 from '$lib/assets/sprites/cube/isometric_pixel_0211.png';
+// import isometric_pixel_6 from '$lib/assets/sprites/cube/isometric_pixel_0212.png';
+// import isometric_pixel_7 from '$lib/assets/sprites/cube/isometric_pixel_0063.png';
+// import isometric_pixel_8 from '$lib/assets/sprites/cube/isometric_pixel_0063.png';
 
 export const getTileByType = (type: number) => {
     switch (type) {

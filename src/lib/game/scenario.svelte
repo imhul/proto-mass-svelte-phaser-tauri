@@ -2,32 +2,32 @@
     import Phaser from 'phaser';
     import { goto } from '$app/navigation';
     // types
-    import type { Message } from '$types/ui';
-    import type { ICube } from '$types/objects';
+    import type { Message } from '$lib/types/ui';
+    import type { ICube } from '$lib/types/objects';
     // store
-    import user from '$store/user/auth';
-    import { unit, units } from '$store/game/unit';
-    import { gameUI } from '$store/game/ui';
-    import { messages } from '$store/game/notify';
+    import user from '$lib/store/user/auth';
+    import { unit, units } from '$lib/store/game/unit';
+    import { gameUI } from '$lib/store/game/ui';
+    import { messages } from '$lib/store/game/notify';
     // components
     import { Scene, getScene } from 'svelte-phaser';
     import { IsoPlugin, IsoPhysics, IsoSprite } from '$lib/iso';
-    import Background from '$game/background.svelte';
+    import Background from '$lib/game/background.svelte';
     // utils
-    import { getTileByType } from '$utils/getTileByType';
-    import { getMap } from '$utils/getMap';
+    import { getTileByType } from '$lib/utils/getTileByType';
+    import { getMap } from '$lib/utils/getMap';
     import { v5 as uuidv5 } from 'uuid';
     // assets
-    import CubeSprite from '$assets/sprites/cube/isometric_pixel_0123.png';
-    import Tile0 from '$assets/sprites/cube/isometric_pixel_0054.png';
-    import Tile1 from '$assets/sprites/cube/isometric_pixel_0207.png';
-    import Tile2 from '$assets/sprites/cube/isometric_pixel_0208.png';
-    import Tile3 from '$assets/sprites/cube/isometric_pixel_0209.png';
-    import Tile4 from '$assets/sprites/cube/isometric_pixel_0210.png';
-    import Tile5 from '$assets/sprites/cube/isometric_pixel_0211.png';
-    import Tile6 from '$assets/sprites/cube/isometric_pixel_0212.png';
-    import Tile7 from '$assets/sprites/cube/isometric_pixel_0063.png';
-    import Tile8 from '$assets/sprites/cube/isometric_pixel_0063.png';
+    import CubeSprite from '$lib/assets/sprites/cube/isometric_pixel_0123.png';
+    import Tile0 from '$lib/assets/sprites/cube/isometric_pixel_0054.png';
+    import Tile1 from '$lib/assets/sprites/cube/isometric_pixel_0207.png';
+    import Tile2 from '$lib/assets/sprites/cube/isometric_pixel_0208.png';
+    import Tile3 from '$lib/assets/sprites/cube/isometric_pixel_0209.png';
+    import Tile4 from '$lib/assets/sprites/cube/isometric_pixel_0210.png';
+    import Tile5 from '$lib/assets/sprites/cube/isometric_pixel_0211.png';
+    import Tile6 from '$lib/assets/sprites/cube/isometric_pixel_0212.png';
+    import Tile7 from '$lib/assets/sprites/cube/isometric_pixel_0063.png';
+    import Tile8 from '$lib/assets/sprites/cube/isometric_pixel_0063.png';
 
     export let h = 0;
     export let w = 0;
@@ -57,6 +57,7 @@
         GROWTH_COOF * 1000 * (totalCubes <= 1 ? 1 : totalCubes);
 
     const cameraControls = (scene: Phaser.Scene) => {
+        if (!scene.input.keyboard) return;
         const camera = scene.cameras.main;
         // const cursors = scene.input.keyboard.createCursorKeys(); // for ←↑→↓ keys only
         const controls =
@@ -152,8 +153,8 @@
                         id: isDuplicate ? suffix : id,
                         title: 'Name: ' + tile.name,
                         aside: 'right',
-                        img: tilesArray[tileId],
-                        message: `x: ${tile._isoPosition.x}, y: ${tile._isoPosition.y}`
+                        img: tilesArray[tileId as number],
+                        message: `x: ${tile.x}, y: ${tile.y}`
                     });
                 });
             }
@@ -184,11 +185,12 @@
         }, 1000 + timeoutDir);
     };
 
-    const collide: ArcadePhysicsCallback = () => {
-        // TODO: game objects collide event handler
-        // https://github.com/mattjennings/svelte-phaser/blob/master/examples/invaders/src/App.svelte
-        console.info('collide');
-    };
+    const collide: Phaser.Types.Physics.Arcade.ArcadePhysicsCallback =
+        () => {
+            // TODO: game objects collide event handler
+            // https://github.com/mattjennings/svelte-phaser/blob/master/examples/invaders/src/App.svelte
+            console.info('collide');
+        };
 
     const createCube = (scene: Phaser.Scene) => {
         if ($gameUI.isGamePaused) return;
@@ -334,11 +336,12 @@
         scene.isoPhysics.world.gravity.setTo(0, 0, -500);
         scene.isoPhysics.projector.origin.setTo(0.5, 0);
 
-        scene.input.keyboard.on(
-            'keyup',
-            (event: KeyboardEvent) => onKeyup(event, scene),
-            scene
-        );
+        if (scene.input.keyboard)
+            scene.input.keyboard.on(
+                'keyup',
+                (event: KeyboardEvent) => onKeyup(event, scene),
+                scene
+            );
 
         scene.events.on('pause', function () {
             console.info('paused');

@@ -4,13 +4,13 @@
     // types
     import type Phaser from 'phaser';
     // store
-    import user from '$store/user/auth';
+    import user from '$lib/store/user/auth';
     // components
     import { Game } from 'svelte-phaser';
-    import Header from '$game/ui/header.svelte';
-    import AsideL from '$game/ui/aside-left.svelte';
-    import AsideR from '$game/ui/aside-right.svelte';
-    import Scenario from '$game/game.svelte';
+    import Header from '$lib/game/ui/header.svelte';
+    import AsideL from '$lib/game/ui/aside-left.svelte';
+    import AsideR from '$lib/game/ui/aside-right.svelte';
+    import Scenario from '$lib/game/scenario.svelte';
 
     $: !$user.isLoggedIn && goto('/');
     $: h = 0;

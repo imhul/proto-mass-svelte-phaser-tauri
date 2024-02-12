@@ -1,5 +1,7 @@
 import type { Body } from '$lib/iso';
 
-export interface ICube extends Body {
+type IBody = typeof Body;
+
+export interface ICube extends IBody {
     id: string;
 }

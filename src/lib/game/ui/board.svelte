@@ -1,10 +1,10 @@
 <script lang="ts">
     import { fly, fade } from 'svelte/transition';
     // store
-    import { messages } from '$store/game/notify';
-    import user from '$store/user/auth';
+    import { messages } from '$lib/store/game/notify';
+    import user from '$lib/store/user/auth';
     // types
-    import type { Message } from '$types/ui';
+    import type { Message } from '$lib/types/ui';
 
     export let board: Message;
 
@@ -29,16 +29,19 @@
     $: if (filtered?.length > 1 && !board.fixed) expiring();
 </script>
 
-<!-- svelte-ignore a11y-mouse-events-have-key-events -->
 {#if !board.archived}
+    <!-- svelte-ignore a11y-click-events-have-key-events -->
     <div
         class="board {board.type ?? 'default'}"
         class:fixed={board.fixed}
+        tabindex="0"
+        role="button"
         in:fly={flyOptions}
         out:fade
         on:click|stopPropagation={() => (overBoard = true)}
         on:mouseenter|stopPropagation={() => (overBoard = true)}
         on:mouseover|stopPropagation={() => (overBoard = true)}
+        on:focus|stopPropagation={() => (overBoard = true)}
         on:mouseleave|stopPropagation={() => (overBoard = false)}
     >
         <div class="head">
@@ -46,10 +49,14 @@
             <div class="controls">
                 <i
                     class="icon-{board.fixed ? 'bar' : 'numbersign'}"
-                    on:click={messages.fixation(board.id)}
+                    on:click={() => messages.fixation(board.id)}
+                    tabindex="0"
+                    role="button"
                 />
                 <i
                     class="icon-forbid"
+                    tabindex="0"
+                    role="button"
                     on:click|stopPropagation={() =>
                         messages.delete(board.id, 'archive')}
                 />
@@ -69,7 +76,7 @@
         {#if board.actions?.length}
             <div class="actions">
                 {#each board.actions as action (action.id)}
-                    {#if action.url.length}
+                    {#if action.url?.length}
                         <a href={action.url} class="link btn">
                             {action.title}
                         </a>

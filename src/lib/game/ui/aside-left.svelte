@@ -1,10 +1,10 @@
 <script lang="ts">
     // components
-    import Board from '$game/ui/board.svelte';
+    import Board from '$lib/game/ui/board.svelte';
     // store
-    import { messages } from '$store/game/notify';
+    import { messages } from '$lib/store/game/notify';
     // types
-    import type { Message } from '$types/ui';
+    import type { Message } from '$lib/types/ui';
 
     $: boards = $messages
         ? $messages.filter((board: Message) => board.aside === 'left')

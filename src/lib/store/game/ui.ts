@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
-import type { InitialGameState } from '$types/ui';
+import type { InitialGameState } from '$lib/types/ui';
 
 const initState: InitialGameState = {
     loadingPercent: 0,

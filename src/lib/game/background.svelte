@@ -1,6 +1,6 @@
 <script lang="ts">
     // store
-    import { gameUI } from '$store/game/ui';
+    import { gameUI } from '$lib/store/game/ui';
     // components
     import { TileSprite, onGameEvent } from 'svelte-phaser';
 

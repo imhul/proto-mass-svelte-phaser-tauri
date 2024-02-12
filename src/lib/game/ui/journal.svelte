@@ -1,17 +1,26 @@
 <script lang="ts">
     import { getContext } from 'svelte';
     // types
-    import type { Message } from '$types/ui';
+    import type { Message } from '$lib/types/ui';
+    import type { MouseEventHandler } from 'svelte/elements';
     // store
-    import { messages } from '$store/game/notify';
+    import { messages } from '$lib/store/game/notify';
 
-    const { close } = getContext('simple-modal');
+    const { close } = getContext('simple-modal') as {
+        close: MouseEventHandler<HTMLElement>;
+    };
     const archive = $messages.filter(
         (message: Message) => message.archived
     );
 </script>
 
-<i class="icon-forbid close" on:click|stopPropagation={close} />
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<i
+    class="icon-forbid close"
+    role="button"
+    tabindex="0"
+    on:click|stopPropagation={close}
+/>
 <div class="list">
     {#each archive as message (message.id)}
         <div class="list-item">

@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
-import type { Message } from '$types/ui';
+import type { Message } from '$lib/types/ui';
 
 const initState: Message[] = [];
 
@@ -33,6 +33,7 @@ function createMessages() {
                     const current = boards.find(
                         board => board.id === id
                     );
+                    if (!current) return boards;
                     const filtered = boards.filter(
                         board => board.parent !== current.parent
                     );

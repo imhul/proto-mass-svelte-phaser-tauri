@@ -1,5 +1,6 @@
 {
     "$schema": "https://json.schemastore.org/tsconfig",
+    "extends": "./.svelte-kit/tsconfig.json",
     "display": "Svelte",
     "_version": "5.0.0",
     "typeRoots": ["./node_modules/phaser/types"],
@@ -15,17 +16,7 @@
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
         "importHelpers": true,
-        "types": ["node"],
-        "baseUrl": ".",
-        "paths": {
-            "$lib": ["src/lib/*"],
-            "$store": ["src/lib/store/*"],
-            "$utils": ["src/lib/utils/*"],
-            "$ui": ["src/lib/ui/*"],
-            "$game": ["src/lib/game/*"],
-            "$assets": ["src/lib/assets/*"],
-            "$types": ["src/lib/types/*"]
-        }
+        "types": ["node"]
     },
     "exclude": [
         "node_modules/*",

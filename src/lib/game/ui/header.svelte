@@ -1,14 +1,17 @@
 <script lang="ts">
     import { getContext } from 'svelte';
     // components
-    import Journal from '$game/ui/journal.svelte';
+    import Journal from '$lib/game/ui/journal.svelte';
 
-    const { open } = getContext('simple-modal');
+    const { open } = getContext('simple-modal') as { open: Function };
 </script>
 
 <header>
     <nav>
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
         <span
+            role="button"
+            tabindex="0"
             class="menu-link"
             on:click|stopPropagation={() =>
                 open(Journal, { message: 'Journal' })}
