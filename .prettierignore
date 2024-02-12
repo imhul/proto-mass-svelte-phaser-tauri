@@ -1,0 +1,14 @@
+# Ignore files for PNPM, NPM and YARN
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+.cache/**
+.vscode/**
+static/**
+dist/**
+Lab/**
+development
+coverage
+node_modules/**
+src/fonts/iconfont.js
+src-tauri/target/

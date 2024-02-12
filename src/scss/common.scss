@@ -1,0 +1,129 @@
+* {
+    box-sizing: border-box;
+    outline: none;
+
+    &::before,
+    &::after {
+        box-sizing: inherit;
+        outline: none;
+    }
+
+    &::selection {
+        color: var(--transparent);
+        background: var(--transparent);
+    }
+}
+
+html {
+    overflow: hidden;
+    --scroll-bar: 0;
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: var(--transparent);
+    font-feature-settings: 'tnum', 'tnum';
+}
+
+body {
+    min-height: 100vh;
+    max-height: 100vh;
+    margin: 0;
+    padding: 0;
+    background: radial-gradient(circle, #000 70%, #111719 100%);
+    overflow: hidden;
+    font-family: var(--mono);
+
+    &.game {
+        // background: radial-gradient(circle, #000 70%, #111719 100%);
+        .react-transform-component {
+            z-index: 5;
+            overflow: visible;
+            width: 100%;
+        }
+    }
+}
+
+a {
+    text-decoration: none;
+}
+
+button {
+    border-radius: 0;
+}
+
+a,
+i,
+button,
+svg,
+.btn,
+.link {
+    transition:
+        color 0.3s,
+        background-color 0.3s,
+        border-color 0.3s,
+        fill 0.3s;
+}
+
+input {
+    border-radius: 0;
+    &:-internal-autofill-selected {
+        background-color: var(--game-color-dark) !important;
+    }
+}
+
+div {
+    border-radius: 0;
+}
+
+.space-between {
+    justify-content: space-between;
+}
+
+.flex {
+    display: flex;
+}
+
+.touchable {
+    cursor: pointer;
+}
+
+.btn {
+    color: var(--game-color-darkest);
+    border: var(--size-2) solid var(--game-color);
+    background-color: var(--game-color-dark);
+    border-radius: 0;
+    box-shadow: var(--size-2) var(--size-2) 0
+        var(--game-color-darkest);
+    margin: var(--size-20) auto;
+    font-size: var(--size-16);
+    padding: 0 var(--size-16);
+    line-height: var(--size-32);
+    &:hover {
+        background-color: var(--game-color-darkest);
+        color: var(--game-color);
+        border-color: var(--game-color);
+    }
+    &:focus {
+        background-color: var(--game-color);
+        color: var(--game-color-darkest);
+        border-color: var(--game-color)-darker;
+        box-shadow: var(--size-2) var(--size-2) 0
+            var(--game-color-darkest);
+    }
+}
+
+.game-menu-icon {
+    font-family: 'PixelIconsCompilation';
+    vertical-align: middle;
+    font-size: var(--size-30);
+    line-height: var(--size-30);
+    z-index: 999;
+    color: var(--game-color-dark);
+    margin-right: var(--size-16);
+}
+
+.game-menu-text-icon {
+    font-size: var(--size-30);
+    font-family: 'PressStart2P-Regular';
+    vertical-align: middle;
+    z-index: 999;
+    color: var(--game-color);
+}

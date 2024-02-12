@@ -1,0 +1,43 @@
+{
+    "$schema": "https://json.schemastore.org/tsconfig",
+    "display": "Svelte",
+    "_version": "5.0.0",
+    "typeRoots": ["./node_modules/phaser/types"],
+    "types": ["Phaser"],
+    "compilerOptions": {
+        "module": "esnext",
+        "moduleResolution": "bundler",
+        "target": "es2020",
+        "verbatimModuleSyntax": true,
+        "sourceMap": true,
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "importHelpers": true,
+        "types": ["node"],
+        "baseUrl": ".",
+        "paths": {
+            "$lib": ["src/lib/*"],
+            "$store": ["src/lib/store/*"],
+            "$utils": ["src/lib/utils/*"],
+            "$ui": ["src/lib/ui/*"],
+            "$game": ["src/lib/game/*"],
+            "$assets": ["src/lib/assets/*"],
+            "$types": ["src/lib/types/*"]
+        }
+    },
+    "exclude": [
+        "node_modules/*",
+        "dist/*",
+        ".svelte/*",
+        ".svelte-kit/*",
+        "build/*",
+        "coverage/*",
+        ".vercel_build_output/*",
+        "functions/*",
+        "static/*",
+        "public/*",
+        "scripts/*"
+    ]
+}
