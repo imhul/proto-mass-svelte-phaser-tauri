@@ -3,7 +3,6 @@
     import { goto } from '$app/navigation';
     // types
     import type { Message } from '$lib/types/ui';
-    import type { ICube } from '$lib/types/objects';
     // store
     import user from '$lib/store/user/auth';
     import { unit, units } from '$lib/store/game/unit';
@@ -11,7 +10,7 @@
     import { messages } from '$lib/store/game/notify';
     // components
     import { Scene, getScene } from 'svelte-phaser';
-    import { IsoPlugin, IsoPhysics, IsoSprite } from '$lib/iso';
+    // import { IsoPlugin, IsoPhysics, IsoSprite } from '$lib/iso';
     import Background from '$lib/game/background.svelte';
     // utils
     import { getTileByType } from '$lib/utils/getTileByType';
@@ -98,186 +97,184 @@
         };
     };
 
-    const spawnTiles = (scene: Phaser.Scene) => {
-        let tile: IsoSprite;
-        let i = 0;
-        const offsetX = 150;
-        const offsetY = 150;
-        const mapCells = 30;
-        const mapStep = 27;
-        const mapSizeX = mapStep * mapCells + offsetX;
-        const mapSizeY = mapStep * mapCells + offsetY;
+    // const spawnTiles = (scene: Phaser.Scene) => {
+    //     let tile: Phaser.GameObjects.Sprite;
+    //     let i = 0;
+    //     const offsetX = 150;
+    //     const offsetY = 150;
+    //     const mapCells = 30;
+    //     const mapStep = 27;
+    //     const mapSizeX = mapStep * mapCells + offsetX;
+    //     const mapSizeY = mapStep * mapCells + offsetY;
 
-        for (var xx = offsetX; xx < mapSizeX; xx += mapStep) {
-            for (var yy = offsetY; yy < mapSizeY; yy += mapStep) {
-                i++;
-                const tileId = getMap.flat(Infinity)[i - 1];
-                tile = scene.add.isoSprite(
-                    xx,
-                    yy,
-                    0,
-                    'tile-' + tileId,
-                    scene.isoGroup
-                );
-                tile.name = 'ground-' + tileId;
-                tile.gameData = getTileByType(tileId);
-                tile.isoZ -= 30;
-                tile.setInteractive();
+    //     for (var xx = offsetX; xx < mapSizeX; xx += mapStep) {
+    //         for (var yy = offsetY; yy < mapSizeY; yy += mapStep) {
+    //             i++;
+    //             const tileId = getMap.flat(Infinity)[i - 1];
+    //             tile = scene.add.sprite(
+    //                 xx,
+    //                 yy,
+    //                 0,
+    //                 'tile-' + tileId
+    //             );
+    //             tile.name = 'ground-' + tileId;
+    //             tile.gameData = getTileByType(tileId);
+    //             tile.isoZ -= 30;
+    //             tile.setInteractive();
 
-                tile.on('pointerover', function () {
-                    this.setTint(0x86bfda);
-                    this.isoZ += 5;
-                });
+    //             tile.on('pointerover', function () {
+    //                 this.setTint(0x86bfda);
 
-                tile.on('pointerout', function () {
-                    this.clearTint();
-                    this.isoZ -= 5;
-                });
+    //             });
 
-                tile.on('pointerdown', function () {
-                    let id = tile.name + '-' + (i += 1);
-                    let isDuplicate = $messages
-                        .map((message: Message) => {
-                            message.id;
-                        })
-                        .includes(id);
-                    let suffix =
-                        id +
-                        '-' +
-                        uuidv5(
-                            'message-' + $messages?.length,
-                            idLength
-                        );
+    //             tile.on('pointerout', function () {
+    //                 this.clearTint();
+    //                 this.isoZ -= 5;
+    //             });
 
-                    messages.add({
-                        id: isDuplicate ? suffix : id,
-                        title: 'Name: ' + tile.name,
-                        aside: 'right',
-                        img: tilesArray[tileId as number],
-                        message: `x: ${tile.x}, y: ${tile.y}`
-                    });
-                });
-            }
-        }
-    };
+    //             tile.on('pointerdown', function () {
+    //                 let id = tile.name + '-' + (i += 1);
+    //                 let isDuplicate = $messages
+    //                     .map((message: Message) => {
+    //                         message.id;
+    //                     })
+    //                     .includes(id);
+    //                 let suffix =
+    //                     id +
+    //                     '-' +
+    //                     uuidv5(
+    //                         'message-' + $messages?.length,
+    //                         idLength
+    //                     );
 
-    const roam = (cube: ICube) => {
-        let timer;
-        if ($gameUI.isGamePaused) {
-            clearTimeout(timer);
-            cube.body.velocity.setTo(0, 0, 0);
-            return;
-        }
+    //                 messages.add({
+    //                     id: isDuplicate ? suffix : id,
+    //                     title: 'Name: ' + tile.name,
+    //                     aside: 'right',
+    //                     img: tilesArray[tileId as number],
+    //                     message: `x: ${tile.x}, y: ${tile.y}`
+    //                 });
+    //             });
+    //         }
+    //     }
+    // };
 
-        const timeoutDir = Math.abs(
-            Math.trunc(Math.random() * 2000 - 50)
-        );
-        const isPause = Math.random() > 0.5;
-        timer = setTimeout(() => {
-            const randomX = Math.trunc(Math.random() * 100 - 50);
-            const randomY = Math.trunc(Math.random() * 100 - 50);
-            cube.body.velocity.setTo(
-                isPause ? 0 : randomX,
-                isPause ? 0 : randomY,
-                0
-            );
-            roam(cube);
-        }, 1000 + timeoutDir);
-    };
+    // const roam = (cube: any) => {
+    //     let timer;
+    //     if ($gameUI.isGamePaused) {
+    //         clearTimeout(timer);
+    //         cube.body.velocity.setTo(0, 0, 0);
+    //         return;
+    //     }
 
-    const collide: Phaser.Types.Physics.Arcade.ArcadePhysicsCallback =
-        () => {
-            // TODO: game objects collide event handler
-            // https://github.com/mattjennings/svelte-phaser/blob/master/examples/invaders/src/App.svelte
-            console.info('collide');
-        };
+    //     const timeoutDir = Math.abs(
+    //         Math.trunc(Math.random() * 2000 - 50)
+    //     );
+    //     const isPause = Math.random() > 0.5;
+    //     timer = setTimeout(() => {
+    //         const randomX = Math.trunc(Math.random() * 100 - 50);
+    //         const randomY = Math.trunc(Math.random() * 100 - 50);
+    //         cube.body.velocity.setTo(
+    //             isPause ? 0 : randomX,
+    //             isPause ? 0 : randomY,
+    //             0
+    //         );
+    //         roam(cube);
+    //     }, 1000 + timeoutDir);
+    // };
 
-    const createCube = (scene: Phaser.Scene) => {
-        if ($gameUI.isGamePaused) return;
-        totalCubes += 1;
-        if ($units.length) {
-            $units.forEach((unit: ICube) => roam(unit));
-        }
-        let cube: ICube;
+    // const collide: Phaser.Types.Physics.Arcade.ArcadePhysicsCallback =
+    //     () => {
+    //         // TODO: game objects collide event handler
+    //         // https://github.com/mattjennings/svelte-phaser/blob/master/examples/invaders/src/App.svelte
+    //         console.info('collide');
+    //     };
 
-        // Add a cube which is way above the ground
-        cube = scene.add.isoSprite(
-            810,
-            810,
-            600,
-            'cube',
-            scene.isoGroup
-        );
-        // Enable the physics body on this cube
-        scene.isoPhysics.world.enable(cube);
+    // const createCube = (scene: Phaser.Scene) => {
+    //     if ($gameUI.isGamePaused) return;
+    //     totalCubes += 1;
+    //     if ($units.length) {
+    //         $units.forEach((unit: any) => roam(unit));
+    //     }
+    //     let cube: any;
 
-        // Collide with the world bounds so it doesn't go falling forever or fly off the screen!
-        cube.body.collideWorldBounds = true;
-        cube.id = uuidv5(
-            'cube-' + ($units?.length + totalCubes + 1),
-            idLength
-        );
+    //     // Add a cube which is way above the ground
+    //     cube = scene.add.sprite(
+    //         810,
+    //         810,
+    //         600,
+    //         'cube',
+    //     );
+    //     // Enable the physics body on this cube
+    //     scene.physics.world.enable(cube);
 
-        // Add a full bounce on the x and y axes, and a bit on the z axis.
-        cube.body.bounce.set(1, 1, 0.2);
-        // scene.physics.add.collider($units, $units, collide);
-        scene.physics.add.collider($units, $units, collide);
-        // scene.physics.collide($units, $units, collide);
-        cube.setInteractive();
+    //     // Collide with the world bounds so it doesn't go falling forever or fly off the screen!
+    //     cube.body.collideWorldBounds = true;
+    //     cube.id = uuidv5(
+    //         'cube-' + ($units?.length + totalCubes + 1),
+    //         idLength
+    //     );
 
-        const camera = scene.cameras.main;
+    //     // Add a full bounce on the x and y axes, and a bit on the z axis.
+    //     cube.body.bounce.set(1, 1, 0.2);
+    //     // scene.physics.add.collider($units, $units, collide);
+    //     scene.physics.add.collider($units, $units, collide);
+    //     // scene.physics.collide($units, $units, collide);
+    //     cube.setInteractive();
 
-        cube.on('pointerdown', function () {
-            const unitFocus = () => {
-                unit.set(cube);
-                $unit.setTint(hover);
-                camera.startFollow($unit);
-                $messages.forEach((board: Message) => {
-                    if (board.parent === 'unit')
-                        messages.delete(board.id, 'delete');
-                });
-                messages.add({
-                    id: 'click-unit-' + cube.id + '-' + totalCubes,
-                    type: 'info',
-                    title: 'Name: ' + 'The Cube',
-                    aside: 'right',
-                    icon: 'a10',
-                    fixed: true,
-                    parent: 'unit',
-                    message: `x: ${$unit._isoPosition.x} and y: ${$unit._isoPosition.y}`
-                });
-            };
+    //     const camera = scene.cameras.main;
 
-            const unitBlur = () => {
-                $unit.clearTint();
-                camera.stopFollow();
-                unit.set(null);
-            };
+    //     cube.on('pointerdown', function () {
+    //         const unitFocus = () => {
+    //             unit.set(cube);
+    //             $unit.setTint(hover);
+    //             camera.startFollow($unit);
+    //             $messages.forEach((board: Message) => {
+    //                 if (board.parent === 'unit')
+    //                     messages.delete(board.id, 'delete');
+    //             });
+    //             messages.add({
+    //                 id: 'click-unit-' + cube.id + '-' + totalCubes,
+    //                 type: 'info',
+    //                 title: 'Name: ' + 'The Cube',
+    //                 aside: 'right',
+    //                 icon: 'a10',
+    //                 fixed: true,
+    //                 parent: 'unit',
+    //                 message: `x: ${$unit._isoPosition.x} and y: ${$unit._isoPosition.y}`
+    //             });
+    //         };
 
-            if ($unit?.id) {
-                if (cube.id !== $unit.id) {
-                    unitBlur();
-                    unitFocus();
-                } else {
-                    unitBlur();
-                }
-            } else {
-                unitFocus();
-            }
-        });
+    //         const unitBlur = () => {
+    //             $unit.clearTint();
+    //             camera.stopFollow();
+    //             unit.set(null);
+    //         };
 
-        roam(cube);
-        units.set([...$units, cube]);
-        spawnCubes(scene);
-    };
+    //         if ($unit?.id) {
+    //             if (cube.id !== $unit.id) {
+    //                 unitBlur();
+    //                 unitFocus();
+    //             } else {
+    //                 unitBlur();
+    //             }
+    //         } else {
+    //             unitFocus();
+    //         }
+    //     });
 
-    const spawnCubes = (scene: Phaser.Scene) => {
-        if ($gameUI.isGamePaused) return;
-        const timer = setTimeout(() => {
-            createCube(scene);
-            totalCubes === GROWTH_MAX && clearTimeout(timer);
-        }, timeout);
-    };
+    //     roam(cube);
+    //     units.set([...$units, cube]);
+    //     spawnCubes(scene);
+    // };
+
+    // const spawnCubes = (scene: Phaser.Scene) => {
+    //     if ($gameUI.isGamePaused) return;
+    //     const timer = setTimeout(() => {
+    //         createCube(scene);
+    //         totalCubes === GROWTH_MAX && clearTimeout(timer);
+    //     }, timeout);
+    // };
 
     const pause = (scene: Phaser.Scene) => {
         gameUI.set({
@@ -318,23 +315,23 @@
             'starship',
             '/images/parallax_starship_1.png'
         );
-        scene.load.scenePlugin({
-            key: 'IsoPlugin',
-            url: IsoPlugin,
-            sceneKey: 'iso'
-        });
-        scene.load.scenePlugin({
-            key: 'IsoPhysics',
-            url: IsoPhysics,
-            sceneKey: 'isoPhysics'
-        });
+        // scene.load.scenePlugin({
+        //     key: 'IsoPlugin',
+        //     url: IsoPlugin,
+        //     sceneKey: 'iso'
+        // });
+        // scene.load.scenePlugin({
+        //     key: 'IsoPhysics',
+        //     url: IsoPhysics,
+        //     sceneKey: 'isoPhysics'
+        // });
     };
 
     const create = (scene: Phaser.Scene) => {
-        scene.isoGroup = scene.add.group();
+        // scene.group = scene.add.group();
 
-        scene.isoPhysics.world.gravity.setTo(0, 0, -500);
-        scene.isoPhysics.projector.origin.setTo(0.5, 0);
+        scene.physics.world.gravity.setTo(0, 0);
+        // scene.physics.projector.origin.setTo(0.5, 0);
 
         if (scene.input.keyboard)
             scene.input.keyboard.on(
@@ -353,8 +350,8 @@
 
         cameraControls(scene);
         // TODO: replace spawn functions to JSX
-        spawnTiles(scene);
-        spawnCubes(scene);
+        // spawnTiles(scene);
+        // spawnCubes(scene);
     };
 </script>
 
