@@ -1,6 +1,8 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+// TODO: use tao instead winit + winit_fullscreen
+// https://github.com/tauri-apps/tao/blob/dev/examples/fullscreen.rs
 use winit::{
     event_loop::EventLoop,
     window::WindowBuilder,
