@@ -60,7 +60,7 @@ yarn tauri dev
 To create a production version of your app:
 
 ```bash
-yarn build
+yarn tauri build
 ```
 
 You can preview the production build with `yarn preview`.
