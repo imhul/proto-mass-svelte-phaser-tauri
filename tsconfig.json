@@ -3,6 +3,7 @@
     "extends": "./.svelte-kit/tsconfig.json",
     "display": "Svelte",
     "_version": "5.0.0",
+    "lib": ["es6", "dom", "dom.iterable", "scripthost"],
     "typeRoots": ["./node_modules/phaser/types"],
     "types": ["Phaser"],
     "compilerOptions": {

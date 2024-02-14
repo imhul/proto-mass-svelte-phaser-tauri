@@ -1,59 +1,42 @@
 <script lang="ts">
+    // TODO: docs: https://github.com/phaserjs/examples/blob/master/public/src/depth%20sorting/isometric%20map.js
     import Phaser from 'phaser';
+    import { afterUpdate, onDestroy, onMount } from 'svelte';
     import { goto } from '$app/navigation';
     // types
     import type { Message } from '$lib/types/ui';
+    import type { SkeletonType } from './stats';
     // store
     import user from '$lib/store/user/auth';
     import { unit, units } from '$lib/store/game/unit';
     import { gameUI } from '$lib/store/game/ui';
     import { messages } from '$lib/store/game/notify';
     // components
-    import { Scene, getScene } from 'svelte-phaser';
-    // import { IsoPlugin, IsoPhysics, IsoSprite } from '$lib/iso';
+    import { Scene } from 'svelte-phaser';
     import Background from '$lib/game/background.svelte';
     // utils
-    import { getTileByType } from '$lib/utils/getTileByType';
-    import { getMap } from '$lib/utils/getMap';
-    import { v5 as uuidv5 } from 'uuid';
+    import { start, stop } from '$lib/utils/interval';
+    // import { getTileByType } from '$lib/utils/getTileByType';
+    // import { getMap } from '$lib/utils/getMap';
+    // import { v5 as uuidv5 } from 'uuid';
     // assets
-    import CubeSprite from '$lib/assets/sprites/cube/isometric_pixel_0123.png';
-    import Tile0 from '$lib/assets/sprites/cube/isometric_pixel_0054.png';
-    import Tile1 from '$lib/assets/sprites/cube/isometric_pixel_0207.png';
-    import Tile2 from '$lib/assets/sprites/cube/isometric_pixel_0208.png';
-    import Tile3 from '$lib/assets/sprites/cube/isometric_pixel_0209.png';
-    import Tile4 from '$lib/assets/sprites/cube/isometric_pixel_0210.png';
-    import Tile5 from '$lib/assets/sprites/cube/isometric_pixel_0211.png';
-    import Tile6 from '$lib/assets/sprites/cube/isometric_pixel_0212.png';
-    import Tile7 from '$lib/assets/sprites/cube/isometric_pixel_0063.png';
-    import Tile8 from '$lib/assets/sprites/cube/isometric_pixel_0063.png';
+    import mapJson from '$lib/assets/sprites/isometric-grass-and-water.json';
+    import tilesPng from '$lib/assets/sprites/isometric-grass-and-water.png';
+    import skeletonPng from '$lib/assets/sprites/skeleton8.png';
+    import housePng from '$lib/assets/sprites/rem_0002.png';
+    import Skeleton from './skeleton';
 
     export let h = 0;
     export let w = 0;
 
     $: !$user.isLoggedIn && goto('/');
-
-    // const scene = getScene();
+    let sceneInstance: Phaser.Scene;
     const sceneID = 'main_scene';
     const MIN_WIDTH_FOR_ZOOM = 1500;
-    const GROWTH_MAX = 5;
-    const GROWTH_COOF = 2;
-    const idLength = new Array(16);
-    const hover = 0x86bfda;
-    const tilesArray = [
-        Tile0,
-        Tile1,
-        Tile2,
-        Tile3,
-        Tile4,
-        Tile5,
-        Tile6,
-        Tile7,
-        Tile8
-    ];
-    $: totalCubes = 0;
-    $: timeout =
-        GROWTH_COOF * 1000 * (totalCubes <= 1 ? 1 : totalCubes);
+    let tileWidthHalf: number;
+    let tileHeightHalf: number;
+    let skeletons: SkeletonType[] = [];
+    let d = 0;
 
     const cameraControls = (scene: Phaser.Scene) => {
         if (!scene.input.keyboard) return;
@@ -97,186 +80,6 @@
         };
     };
 
-    // TODO: docs: https://github.com/phaserjs/examples/blob/master/public/src/depth%20sorting/isometric%20map.js
-    // const spawnTiles = (scene: Phaser.Scene) => {
-    //     let tile: Phaser.GameObjects.Sprite;
-    //     let i = 0;
-    //     const offsetX = 150;
-    //     const offsetY = 150;
-    //     const mapCells = 30;
-    //     const mapStep = 27;
-    //     const mapSizeX = mapStep * mapCells + offsetX;
-    //     const mapSizeY = mapStep * mapCells + offsetY;
-
-    //     for (var xx = offsetX; xx < mapSizeX; xx += mapStep) {
-    //         for (var yy = offsetY; yy < mapSizeY; yy += mapStep) {
-    //             i++;
-    //             const tileId = getMap.flat(Infinity)[i - 1];
-    //             tile = scene.add.sprite(
-    //                 xx,
-    //                 yy,
-    //                 0,
-    //                 'tile-' + tileId
-    //             );
-    //             tile.name = 'ground-' + tileId;
-    //             tile.gameData = getTileByType(tileId);
-    //             tile.isoZ -= 30;
-    //             tile.setInteractive();
-
-    //             tile.on('pointerover', function () {
-    //                 this.setTint(0x86bfda);
-
-    //             });
-
-    //             tile.on('pointerout', function () {
-    //                 this.clearTint();
-    //                 this.isoZ -= 5;
-    //             });
-
-    //             tile.on('pointerdown', function () {
-    //                 let id = tile.name + '-' + (i += 1);
-    //                 let isDuplicate = $messages
-    //                     .map((message: Message) => {
-    //                         message.id;
-    //                     })
-    //                     .includes(id);
-    //                 let suffix =
-    //                     id +
-    //                     '-' +
-    //                     uuidv5(
-    //                         'message-' + $messages?.length,
-    //                         idLength
-    //                     );
-
-    //                 messages.add({
-    //                     id: isDuplicate ? suffix : id,
-    //                     title: 'Name: ' + tile.name,
-    //                     aside: 'right',
-    //                     img: tilesArray[tileId as number],
-    //                     message: `x: ${tile.x}, y: ${tile.y}`
-    //                 });
-    //             });
-    //         }
-    //     }
-    // };
-
-    // const roam = (cube: any) => {
-    //     let timer;
-    //     if ($gameUI.isGamePaused) {
-    //         clearTimeout(timer);
-    //         cube.body.velocity.setTo(0, 0, 0);
-    //         return;
-    //     }
-
-    //     const timeoutDir = Math.abs(
-    //         Math.trunc(Math.random() * 2000 - 50)
-    //     );
-    //     const isPause = Math.random() > 0.5;
-    //     timer = setTimeout(() => {
-    //         const randomX = Math.trunc(Math.random() * 100 - 50);
-    //         const randomY = Math.trunc(Math.random() * 100 - 50);
-    //         cube.body.velocity.setTo(
-    //             isPause ? 0 : randomX,
-    //             isPause ? 0 : randomY,
-    //             0
-    //         );
-    //         roam(cube);
-    //     }, 1000 + timeoutDir);
-    // };
-
-    // const collide: Phaser.Types.Physics.Arcade.ArcadePhysicsCallback =
-    //     () => {
-    //         // TODO: game objects collide event handler
-    //         // https://github.com/mattjennings/svelte-phaser/blob/master/examples/invaders/src/App.svelte
-    //         console.info('collide');
-    //     };
-
-    // const createCube = (scene: Phaser.Scene) => {
-    //     if ($gameUI.isGamePaused) return;
-    //     totalCubes += 1;
-    //     if ($units.length) {
-    //         $units.forEach((unit: any) => roam(unit));
-    //     }
-    //     let cube: any;
-
-    //     // Add a cube which is way above the ground
-    //     cube = scene.add.sprite(
-    //         810,
-    //         810,
-    //         600,
-    //         'cube',
-    //     );
-    //     // Enable the physics body on this cube
-    //     scene.physics.world.enable(cube);
-
-    //     // Collide with the world bounds so it doesn't go falling forever or fly off the screen!
-    //     cube.body.collideWorldBounds = true;
-    //     cube.id = uuidv5(
-    //         'cube-' + ($units?.length + totalCubes + 1),
-    //         idLength
-    //     );
-
-    //     // Add a full bounce on the x and y axes, and a bit on the z axis.
-    //     cube.body.bounce.set(1, 1, 0.2);
-    //     // scene.physics.add.collider($units, $units, collide);
-    //     scene.physics.add.collider($units, $units, collide);
-    //     // scene.physics.collide($units, $units, collide);
-    //     cube.setInteractive();
-
-    //     const camera = scene.cameras.main;
-
-    //     cube.on('pointerdown', function () {
-    //         const unitFocus = () => {
-    //             unit.set(cube);
-    //             $unit.setTint(hover);
-    //             camera.startFollow($unit);
-    //             $messages.forEach((board: Message) => {
-    //                 if (board.parent === 'unit')
-    //                     messages.delete(board.id, 'delete');
-    //             });
-    //             messages.add({
-    //                 id: 'click-unit-' + cube.id + '-' + totalCubes,
-    //                 type: 'info',
-    //                 title: 'Name: ' + 'The Cube',
-    //                 aside: 'right',
-    //                 icon: 'a10',
-    //                 fixed: true,
-    //                 parent: 'unit',
-    //                 message: `x: ${$unit._isoPosition.x} and y: ${$unit._isoPosition.y}`
-    //             });
-    //         };
-
-    //         const unitBlur = () => {
-    //             $unit.clearTint();
-    //             camera.stopFollow();
-    //             unit.set(null);
-    //         };
-
-    //         if ($unit?.id) {
-    //             if (cube.id !== $unit.id) {
-    //                 unitBlur();
-    //                 unitFocus();
-    //             } else {
-    //                 unitBlur();
-    //             }
-    //         } else {
-    //             unitFocus();
-    //         }
-    //     });
-
-    //     roam(cube);
-    //     units.set([...$units, cube]);
-    //     spawnCubes(scene);
-    // };
-
-    // const spawnCubes = (scene: Phaser.Scene) => {
-    //     if ($gameUI.isGamePaused) return;
-    //     const timer = setTimeout(() => {
-    //         createCube(scene);
-    //         totalCubes === GROWTH_MAX && clearTimeout(timer);
-    //     }, timeout);
-    // };
-
     const pause = (scene: Phaser.Scene) => {
         gameUI.set({
             ...$gameUI,
@@ -299,16 +102,16 @@
     };
 
     const preload = (scene: Phaser.Scene) => {
-        scene.load.image('tile-0', Tile0);
-        scene.load.image('tile-1', Tile1);
-        scene.load.image('tile-2', Tile2);
-        scene.load.image('tile-3', Tile3);
-        scene.load.image('tile-4', Tile4);
-        scene.load.image('tile-5', Tile5);
-        scene.load.image('tile-6', Tile6);
-        scene.load.image('tile-7', Tile7);
-        scene.load.image('tile-8', Tile8);
-        scene.load.image('cube', CubeSprite);
+        scene.load.json('map', mapJson);
+        scene.load.spritesheet('tiles', tilesPng, {
+            frameWidth: 64,
+            frameHeight: 64
+        });
+        scene.load.spritesheet('skeleton', skeletonPng, {
+            frameWidth: 128,
+            frameHeight: 128
+        });
+        scene.load.image('house', housePng);
         scene.load.image('stars-1', '/images/parallax_1.png');
         scene.load.image('stars-2', '/images/parallax_2.png');
         scene.load.image('stars-3', '/images/parallax_3.png');
@@ -316,24 +119,58 @@
             'starship',
             '/images/parallax_starship_1.png'
         );
-        // scene.load.scenePlugin({
-        //     key: 'IsoPlugin',
-        //     url: IsoPlugin,
-        //     sceneKey: 'iso'
-        // });
-        // scene.load.scenePlugin({
-        //     key: 'IsoPhysics',
-        //     url: IsoPhysics,
-        //     sceneKey: 'isoPhysics'
-        // });
+    };
+
+    const buildMap = (scene: Phaser.Scene) => {
+        //  Parse the data out of the map
+        const data = scene.cache.json.get('map');
+
+        const tilewidth = data.tilewidth;
+        const tileheight = data.tileheight;
+
+        tileWidthHalf = tilewidth / 2;
+        tileHeightHalf = tileheight / 2;
+
+        const layer = data.layers[0].data;
+
+        const mapwidth = data.layers[0].width;
+        const mapheight = data.layers[0].height;
+
+        const centerX = mapwidth * tileWidthHalf;
+        const centerY = 16;
+
+        let i = 0;
+
+        for (let y = 0; y < mapheight; y++) {
+            for (let x = 0; x < mapwidth; x++) {
+                const id = layer[i] - 1;
+
+                const tx = (x - y) * tileWidthHalf;
+                const ty = (x + y) * tileHeightHalf;
+
+                const tile = scene.add.image(
+                    centerX + tx,
+                    centerY + ty,
+                    'tiles',
+                    id
+                );
+
+                tile.depth = centerY + ty;
+
+                i++;
+            }
+        }
+    };
+
+    const placeHouses = (scene: Phaser.Scene) => {
+        const house_1 = scene.add.image(240, 370, 'house');
+        house_1.depth = house_1.y + 86;
+
+        const house_2 = scene.add.image(1300, 290, 'house');
+        house_2.depth = house_2.y + 86;
     };
 
     const create = (scene: Phaser.Scene) => {
-        // scene.group = scene.add.group();
-
-        scene.physics.world.gravity.setTo(0, 0);
-        // scene.physics.projector.origin.setTo(0.5, 0);
-
         if (scene.input.keyboard)
             scene.input.keyboard.on(
                 'keyup',
@@ -350,18 +187,198 @@
         });
 
         cameraControls(scene);
-        // TODO: replace spawn functions to JSX
-        // spawnTiles(scene);
-        // spawnCubes(scene);
+        buildMap(scene);
+        placeHouses(scene);
+
+        skeletons.push(
+            scene.add.existing(
+                new Skeleton(
+                    scene,
+                    240,
+                    290,
+                    'walk',
+                    'southEast',
+                    100
+                )
+            )
+        );
+        skeletons.push(
+            scene.add.existing(
+                new Skeleton(
+                    scene,
+                    100,
+                    380,
+                    'walk',
+                    'southEast',
+                    230
+                )
+            )
+        );
+        skeletons.push(
+            scene.add.existing(
+                new Skeleton(scene, 620, 140, 'walk', 'south', 380)
+            )
+        );
+        skeletons.push(
+            scene.add.existing(
+                new Skeleton(scene, 460, 180, 'idle', 'south', 0)
+            )
+        );
+
+        skeletons.push(
+            scene.add.existing(
+                new Skeleton(
+                    scene,
+                    760,
+                    100,
+                    'attack',
+                    'southEast',
+                    0
+                )
+            )
+        );
+        skeletons.push(
+            scene.add.existing(
+                new Skeleton(
+                    scene,
+                    800,
+                    140,
+                    'attack',
+                    'northWest',
+                    0
+                )
+            )
+        );
+
+        skeletons.push(
+            scene.add.existing(
+                new Skeleton(scene, 750, 480, 'walk', 'east', 200)
+            )
+        );
+
+        skeletons.push(
+            scene.add.existing(
+                new Skeleton(scene, 1030, 300, 'die', 'west', 0)
+            )
+        );
+
+        skeletons.push(
+            scene.add.existing(
+                new Skeleton(
+                    scene,
+                    1180,
+                    340,
+                    'attack',
+                    'northEast',
+                    0
+                )
+            )
+        );
+
+        skeletons.push(
+            scene.add.existing(
+                new Skeleton(
+                    scene,
+                    1180,
+                    180,
+                    'walk',
+                    'southEast',
+                    160
+                )
+            )
+        );
+
+        skeletons.push(
+            scene.add.existing(
+                new Skeleton(
+                    scene,
+                    1450,
+                    320,
+                    'walk',
+                    'southWest',
+                    320
+                )
+            )
+        );
+        skeletons.push(
+            scene.add.existing(
+                new Skeleton(
+                    scene,
+                    1500,
+                    340,
+                    'walk',
+                    'southWest',
+                    340
+                )
+            )
+        );
+        skeletons.push(
+            scene.add.existing(
+                new Skeleton(
+                    scene,
+                    1550,
+                    360,
+                    'walk',
+                    'southWest',
+                    330
+                )
+            )
+        );
+
+        scene.cameras.main.setSize(w, h);
+        scene.cameras.main.postFX.addTiltShift(
+            0.2,
+            0.1,
+            1,
+            0.5,
+            1,
+            1
+        );
     };
+
+    const update = () => {
+        skeletons.forEach(function (skeleton) {
+            skeleton.update();
+        });
+
+        // return;
+
+        if (d) {
+            sceneInstance.cameras.main.scrollX -= 0.5;
+            if (sceneInstance.cameras.main.scrollX <= 0) d = 0;
+        } else {
+            sceneInstance.cameras.main.scrollX += 0.5;
+            if (sceneInstance.cameras.main.scrollX >= 800) d = 1;
+        }
+    };
+
+    onMount(() => start(update));
+    onDestroy(() => stop());
+
+    afterUpdate(() => {
+        if (sceneInstance) {
+            // TODO: responsive scene
+            // sceneInstance.physics.world.setBounds(w/2, h/2, w, h, true, true, true, true);
+            // const x = sceneInstance.cameras.main.centerX;
+            // const y = sceneInstance.cameras.main.centerY;
+            // sceneInstance.cameras.main.setBounds(0, 0, w, h);
+            // sceneInstance.cameras.main.setZoom(w > MIN_WIDTH_FOR_ZOOM ? 1.5 : 1);
+            sceneInstance.scale.scaleMode =
+                Phaser.Scale.ScaleModes.FIT;
+            sceneInstance.game.scale.autoCenter =
+                Phaser.Scale.Center.CENTER_BOTH;
+            sceneInstance.scale.resize(w, h);
+            sceneInstance.game.scale.resize(w, h);
+        }
+    });
 </script>
 
 <Scene
+    bind:instance={sceneInstance}
     key={sceneID}
-    mapAdd={{ isoPlugin: 'iso', isoPhysics: 'isoPhysics' }}
     {preload}
     {create}
-    active={$user.isLoggedIn}
+    active
 >
     <Background {w} {h} />
 </Scene>

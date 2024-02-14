@@ -39,7 +39,7 @@
             <span>game</span>
         </a>
         <a
-            href="https://github.com/imhul/proto-mass-svelte/blob/master/README.mdx"
+            href="https://github.com/imhul/proto-mass-svelte-phaser-tauri/blob/master/README.md"
             rel="noopener noreferrer"
             target="_blank"
             class="menu-link"
@@ -71,6 +71,8 @@
 
 <style lang="scss">
     header {
+        z-index: 1;
+        position: relative;
         display: flex;
         justify-content: space-between;
         align-items: center;
