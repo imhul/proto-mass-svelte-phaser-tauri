@@ -5,9 +5,8 @@
 
 .modal-window-wrap {
     background-color: var(--game-color-dark);
-    border: var(--size-6) solid var(--game-color);
-    box-shadow: var(--size-2) var(--size-2) 0
-        var(--game-color-darkest);
+    border: rem(6) solid var(--game-color);
+    box-shadow: rem(2) rem(2) 0 var(--game-color-darkest);
     border-radius: 0;
     max-width: 50%;
 }
@@ -20,7 +19,7 @@
 
 .modal-content {
     overflow: hidden !important;
-    border: var(--size-6) solid var(--game-color-dark);
+    border: rem(6) solid var(--game-color-dark);
     background-color: var(--game-color);
     color: var(--game-color-darkest);
 }

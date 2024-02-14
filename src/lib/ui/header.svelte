@@ -76,21 +76,19 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        height: var(--size-80);
+        height: rem(80);
         width: 100%;
-        padding: 0 var(--size-30);
+        padding: 0 rem(30);
         background-color: var(--game-color-dark);
 
         .logo {
-            font-size: var(--size-32);
+            font-size: rem(32);
             color: var(--game-color);
-            text-shadow: var(--size-2) var(--size-2) 0
-                var(--game-color-darkest);
+            text-shadow: rem(2) rem(2) 0 var(--game-color-darkest);
 
             &:hover {
                 color: var(--game-color-darkest);
-                text-shadow: var(--size-2) var(--size-2) 0
-                    var(--game-color-warn);
+                text-shadow: rem(2) rem(2) 0 var(--game-color-warn);
             }
         }
 

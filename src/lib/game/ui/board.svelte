@@ -64,11 +64,11 @@
         </div>
         <div class="content">
             <slot />
-            {#if board.img?.length}
+            <!-- {#if board.img?.length}
                 <div class="img-wrapper">
                     <img src={board.img} alt={board.title} />
                 </div>
-            {/if}
+            {/if} -->
             {#if board.message?.length}
                 <div class="message">{board.message}</div>
             {/if}
@@ -98,15 +98,14 @@
         display: flex;
         flex-direction: column;
         width: 100%;
-        padding: var(--size-24);
-        margin-bottom: var(--size-16);
-        text-shadow: var(--size-2) var(--size-2) 0
-            var(--game-color-darkest);
+        padding: rem(24);
+        margin-bottom: rem(16);
+        text-shadow: rem(2) rem(2) 0 var(--game-color-darkest);
         font-family: var(--8-bit);
         background-color: var(--game-color-dark);
-        border: var(--size-3) solid var(--game-color);
+        border: rem(3) solid var(--game-color);
         color: var(--game-color);
-        font-size: var(--size-20);
+        font-size: rem(20);
         opacity: 0.5;
         transition: opacity 0.3s;
 
@@ -116,7 +115,7 @@
         }
 
         .head {
-            min-height: var(--size-50);
+            min-height: rem(50);
 
             .controls {
                 position: absolute;
@@ -135,7 +134,7 @@
             .img-wrapper {
                 img {
                     display: block;
-                    margin: var(--size-10) auto;
+                    margin: rem(10) auto;
                 }
             }
         }

@@ -22,7 +22,7 @@
         position: absolute;
         width: 13rem;
         z-index: 999;
-        left: var(--size-16);
-        top: var(--size-80);
+        left: rem(16);
+        top: rem(80);
     }
 </style>

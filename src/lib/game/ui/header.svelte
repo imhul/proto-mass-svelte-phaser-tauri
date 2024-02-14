@@ -30,14 +30,14 @@
         top: 0;
         left: 0;
         right: 0;
-        height: var(--size-80);
+        height: rem(80);
 
         nav {
             @extend %nav;
 
             .menu-link {
                 background: var(--transparent);
-                font-size: var(--size-40);
+                font-size: rem(40);
 
                 span,
                 i {

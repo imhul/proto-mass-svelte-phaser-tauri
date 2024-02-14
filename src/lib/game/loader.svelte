@@ -17,8 +17,11 @@
     $: w = 0;
 </script>
 
-<svelte:window bind:innerHeight={h} bind:innerWidth={w} />
-
+<svelte:window
+    bind:innerHeight={h}
+    bind:innerWidth={w}
+    on:contextmenu|preventDefault={() => false}
+/>
 <svelte:document on:keydown={e => onKeydown(e)} />
 
 <Header />

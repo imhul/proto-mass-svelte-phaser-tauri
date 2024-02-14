@@ -4,7 +4,7 @@
     import { afterUpdate, onDestroy, onMount } from 'svelte';
     import { goto } from '$app/navigation';
     // types
-    import type { Message } from '$lib/types/ui';
+    import type { Aside } from '$lib/types/ui';
     import type { SkeletonType } from './stats';
     // store
     import user from '$lib/store/user/auth';
@@ -16,9 +16,7 @@
     import Background from '$lib/game/background.svelte';
     // utils
     import { start, stop } from '$lib/utils/interval';
-    // import { getTileByType } from '$lib/utils/getTileByType';
-    // import { getMap } from '$lib/utils/getMap';
-    // import { v5 as uuidv5 } from 'uuid';
+    import { v5 as uuidv5 } from 'uuid';
     // assets
     import mapJson from '$lib/assets/sprites/isometric-grass-and-water.json';
     import tilesPng from '$lib/assets/sprites/isometric-grass-and-water.png';
@@ -30,7 +28,13 @@
     export let w = 0;
 
     $: !$user.isLoggedIn && goto('/');
+    $: mapwidth = 0;
+    $: mapheight = 0;
+    $: pointerX = 0;
+    $: pointerY = 0;
+    $: mouseButton = '';
     let sceneInstance: Phaser.Scene;
+    const idLength = new Array(16);
     const sceneID = 'main_scene';
     const MIN_WIDTH_FOR_ZOOM = 1500;
     let tileWidthHalf: number;
@@ -73,7 +77,7 @@
 
         controls.start();
         camera.setBounds(0, 0, w, h);
-        camera.setZoom(w > MIN_WIDTH_FOR_ZOOM ? 1.5 : 1);
+        // camera.setZoom(w > MIN_WIDTH_FOR_ZOOM ? 1.5 : 1);
 
         scene.update = function (_, delta) {
             controls.update(delta);
@@ -133,8 +137,8 @@
 
         const layer = data.layers[0].data;
 
-        const mapwidth = data.layers[0].width;
-        const mapheight = data.layers[0].height;
+        mapwidth = data.layers[0].width;
+        mapheight = data.layers[0].height;
 
         const centerX = mapwidth * tileWidthHalf;
         const centerY = 16;
@@ -185,6 +189,34 @@
         scene.events.on('resume', function () {
             console.info('resumed');
         });
+
+        scene.input.on(
+            'pointerdown',
+            (pointer: Phaser.Input.Pointer) => {
+                if (pointer.leftButtonDown()) {
+                    mouseButton = 'left';
+                } else if (pointer.rightButtonDown()) {
+                    mouseButton = 'right';
+                }
+
+                pointerX = pointer.x;
+                pointerY = pointer.y;
+                const id =
+                    'id-' +
+                    mouseButton +
+                    '-' +
+                    uuidv5('message-' + $messages?.length, idLength);
+                console.log(id);
+
+                messages.add({
+                    id,
+                    title: `Name: ${mouseButton}`,
+                    aside: (mouseButton as Aside) ?? 'right',
+                    img: '0',
+                    message: `x: ${pointerX}, y: ${pointerY}`
+                });
+            }
+        );
 
         cameraControls(scene);
         buildMap(scene);
@@ -369,6 +401,10 @@
                 Phaser.Scale.Center.CENTER_BOTH;
             sceneInstance.scale.resize(w, h);
             sceneInstance.game.scale.resize(w, h);
+            sceneInstance.cameras.main.centerOn(
+                mapwidth / 2,
+                mapheight / 2
+            );
         }
     });
 </script>

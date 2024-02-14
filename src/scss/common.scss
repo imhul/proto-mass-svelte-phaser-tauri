@@ -87,15 +87,14 @@ div {
 
 .btn {
     color: var(--game-color-darkest);
-    border: var(--size-2) solid var(--game-color);
+    border: rem(2) solid var(--game-color);
     background-color: var(--game-color-dark);
     border-radius: 0;
-    box-shadow: var(--size-2) var(--size-2) 0
-        var(--game-color-darkest);
-    margin: var(--size-20) auto;
-    font-size: var(--size-16);
-    padding: 0 var(--size-16);
-    line-height: var(--size-32);
+    box-shadow: rem(2) rem(2) 0 var(--game-color-darkest);
+    margin: rem(20) auto;
+    font-size: rem(16);
+    padding: 0 rem(16);
+    line-height: rem(32);
     &:hover {
         background-color: var(--game-color-darkest);
         color: var(--game-color);
@@ -105,23 +104,22 @@ div {
         background-color: var(--game-color);
         color: var(--game-color-darkest);
         border-color: var(--game-color)-darker;
-        box-shadow: var(--size-2) var(--size-2) 0
-            var(--game-color-darkest);
+        box-shadow: rem(2) rem(2) 0 var(--game-color-darkest);
     }
 }
 
 .game-menu-icon {
     font-family: 'PixelIconsCompilation';
     vertical-align: middle;
-    font-size: var(--size-30);
-    line-height: var(--size-30);
+    font-size: rem(30);
+    line-height: rem(30);
     z-index: 999;
     color: var(--game-color-dark);
-    margin-right: var(--size-16);
+    margin-right: rem(16);
 }
 
 .game-menu-text-icon {
-    font-size: var(--size-30);
+    font-size: rem(30);
     font-family: 'PressStart2P-Regular';
     vertical-align: middle;
     z-index: 999;

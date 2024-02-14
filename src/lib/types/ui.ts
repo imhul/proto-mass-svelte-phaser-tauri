@@ -5,6 +5,8 @@ export interface ButtonUIAction {
     callback?: () => void;
 }
 
+export type Aside = 'left' | 'right';
+
 export interface Message {
     id: string;
     type?: 'default' | 'danger' | 'success' | 'warn' | 'info';
@@ -12,7 +14,7 @@ export interface Message {
     message?: string;
     actions?: ButtonUIAction[];
     expiring?: boolean;
-    aside: 'left' | 'right';
+    aside: Aside;
     archived?: boolean;
     fixed?: boolean;
     img?: string;

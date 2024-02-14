@@ -42,9 +42,9 @@
 <style lang="scss">
     .close {
         position: absolute;
-        right: var(--size-6);
-        top: var(--size-6);
-        font-size: var(--size-32);
+        right: rem(6);
+        top: rem(6);
+        font-size: rem(32);
         cursor: pointer;
 
         &:hover {
@@ -54,7 +54,7 @@
 
     .list {
         @include scrollbar(
-            var(--size-24),
+            rem(24),
             var(--game-color-dark),
             var(--game-color-light)
         );
@@ -62,7 +62,7 @@
         flex-direction: column;
         align-items: flex-start;
         height: 90vh;
-        margin-top: var(--size-26);
+        margin-top: rem(26);
         overflow-y: auto;
         overflow-x: hidden;
 
@@ -83,26 +83,26 @@
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                flex: 0 0 var(--size-60);
-                width: var(--size-60);
-                height: var(--size-60);
-                margin: var(--size-10);
+                flex: 0 0 rem(60);
+                width: rem(60);
+                height: rem(60);
+                margin: rem(10);
                 background-color: var(--game-color-warn);
 
                 i {
-                    font-size: var(--size-50);
+                    font-size: rem(50);
                     margin-top: 10px;
                 }
             }
 
             &-text {
                 flex: 1 0 calc(100% - 4.375rem);
-                padding-right: var(--size-20);
+                padding-right: rem(20);
 
                 h3 {
-                    font-size: var(--size-14);
+                    font-size: rem(14);
                     font-family: var(--8-bit);
-                    text-shadow: var(--size-2) var(--size-2) 0
+                    text-shadow: rem(2) rem(2) 0
                         var(--game-color-light);
                 }
             }

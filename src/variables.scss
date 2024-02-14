@@ -15,7 +15,7 @@
 }
 
 @mixin scrollbar(
-    $size: var(--size-14),
+    $size: rem(14),
     $foreground-color: #999,
     $background-color: #333
 ) {
@@ -42,17 +42,16 @@
 
     .menu-link {
         display: block;
-        height: var(--size-80);
-        padding: 0 var(--size-20);
-        line-height: var(--size-80);
+        height: rem(80);
+        padding: 0 rem(20);
+        line-height: rem(80);
         text-transform: uppercase;
         background: var(--game-color-dark);
-        text-shadow: var(--size-2) var(--size-2) 0
-            var(--game-color-darkest);
+        text-shadow: rem(2) rem(2) 0 var(--game-color-darkest);
         cursor: pointer;
 
         span {
-            font-size: var(--size-22);
+            font-size: rem(22);
             font-family: var(--8-bit);
             color: var(--game-color);
         }
@@ -63,8 +62,7 @@
             i,
             a {
                 color: var(--game-color-darkest);
-                text-shadow: var(--size-2) var(--size-2) 0
-                    var(--game-color-warn);
+                text-shadow: rem(2) rem(2) 0 var(--game-color-warn);
             }
         }
     }

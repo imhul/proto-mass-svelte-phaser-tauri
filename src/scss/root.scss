@@ -1,0 +1,99 @@
+:root {
+    // fonts
+    --mono: 'CourierPrime-Regular';
+    --hero: 'NK221';
+    --8-bit: 'PressStart2P-Regular';
+
+    // colors
+    --transparent: rgba(0, 0, 0, 0);
+    --game-color-darkest: #0f2a3f;
+    --game-color-darker: #20394f;
+    --game-color-dark: #4e495f;
+    --game-color-warn: #816271;
+    --game-color-light: #997577;
+    --game-color: #c3a38a;
+    --game-color-lightest: #f6d6bd;
+    --game-color-danger: #811350;
+    --game-color-success: #46a41b;
+    --color-primary: #ff0045;
+    --color-secondary: #5500ff;
+
+    // font-weight
+    --weight-100: 100;
+    --weight-200: 200;
+    --weight-300: 300;
+    --weight-400: 400;
+    --weight-500: 500;
+    --weight-600: 600;
+    --weight-700: 700;
+    --weight-800: 800;
+    --weight-900: 900;
+
+    // border-radius
+    --br-rounded: 50%;
+
+    // miscellaneous
+    --inherit: inherit;
+}
+
+@keyframes playHero {
+    from {
+        text-shadow:
+            rem(4) rem(-4) 0 var(--color-primary),
+            rem(8) rem(-8) 0 var(--color-secondary);
+        transform: translate(-50%, -50%) scale(0.4);
+        top: -20%;
+    }
+    10% {
+        text-shadow:
+            rem(4) rem(-4) 0 var(--color-primary),
+            rem(8) rem(-6) 0 var(--color-secondary);
+    }
+    20% {
+        text-shadow:
+            rem(4) rem(-3) 0 var(--color-primary),
+            rem(8) rem(-4) 0 var(--color-secondary);
+    }
+    30% {
+        text-shadow:
+            rem(4) rem(-2) 0 var(--color-primary),
+            rem(8) rem(-2) 0 var(--color-secondary);
+    }
+    40% {
+        text-shadow:
+            rem(4) rem(-1) 0 var(--color-primary),
+            rem(8) rem(-1) 0 var(--color-secondary);
+    }
+    50% {
+        text-shadow:
+            rem(4) 0 0 var(--color-primary),
+            rem(8) 0 0 var(--color-secondary);
+    }
+    60% {
+        text-shadow:
+            rem(4) 0 0 var(--color-primary),
+            rem(8) rem(1) 0 var(--color-secondary);
+    }
+    70% {
+        text-shadow:
+            rem(4) rem(1) 0 var(--color-primary),
+            rem(8) rem(2) 0 var(--color-secondary);
+    }
+    80% {
+        text-shadow:
+            rem(4) rem(2) 0 var(--color-primary),
+            rem(8) rem(4) 0 var(--color-secondary);
+    }
+    90% {
+        text-shadow:
+            rem(4) rem(3) 0 var(--color-primary),
+            rem(8) rem(6) 0 var(--color-secondary);
+    }
+    to {
+        text-shadow:
+            rem(4) rem(4) 0 var(--color-primary),
+            rem(8) rem(8) 0 var(--color-secondary);
+        transform: translate(-50%, -50%) scale(1);
+        top: 50%;
+    }
+}

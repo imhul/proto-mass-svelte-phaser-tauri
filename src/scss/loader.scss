@@ -5,12 +5,12 @@
         width: 100%;
         position: relative;
         .ant-progress-text {
-            top: var(--size-30);
+            top: rem(30);
             width: 5.3125rem;
         }
         .ant-progress-outer {
             .ant-progress-inner {
-                border: var(--size-1) solid var(--game-color);
+                border: rem(1) solid var(--game-color);
             }
         }
     }
@@ -19,7 +19,7 @@
         position: relative;
         .ant-progress-outer {
             .ant-progress-inner {
-                border: var(--size-2) solid var(--game-color);
+                border: rem(2) solid var(--game-color);
             }
         }
     }
@@ -29,7 +29,7 @@
         .ant-progress-inner {
             background-color: var(--game-color-dark);
             border-radius: 0;
-            border: var(--size-3) solid var(--game-color);
+            border: rem(3) solid var(--game-color);
             .ant-progress-bg {
                 &:before {
                     border-radius: 0;
@@ -48,6 +48,6 @@
         margin: 0 auto;
         position: relative;
         line-height: 0;
-        top: var(--size-16n);
+        top: rem(-16);
     }
 }

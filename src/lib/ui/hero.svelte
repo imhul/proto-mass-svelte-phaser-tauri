@@ -13,9 +13,9 @@
         text-align: center;
         color: #ff85e5;
         text-shadow:
-            var(--size-4) var(--size-4) 0 #ff0045,
-            var(--size-8) var(--size-8) 0 #5500ff;
-        margin: 0 0 var(--size-10);
+            rem(4) rem(4) 0 #ff0045,
+            rem(8) rem(8) 0 #5500ff;
+        margin: 0 0 rem(10);
         animation: playHero 20s ease-in-out;
         user-select: none;
         touch-action: none;

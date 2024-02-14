@@ -18,9 +18,9 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        height: var(--size-80);
+        height: rem(80);
         width: 100%;
-        padding: 0 var(--size-30);
+        padding: 0 rem(30);
         background-color: var(--transparent);
 
         .col {
@@ -29,14 +29,13 @@
             align-items: center;
 
             & > * {
-                margin-left: var(--size-10);
+                margin-left: rem(10);
             }
 
             span {
                 font-family: var(--8-bit);
                 color: var(--game-color);
-                text-shadow: var(--size-2) var(--size-2) 0
-                    var(--game-color-darkest);
+                text-shadow: rem(2) rem(2) 0 var(--game-color-darkest);
             }
         }
     }
