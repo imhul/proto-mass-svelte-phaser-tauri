@@ -2,16 +2,12 @@
 
 ## Indirect Control Pixel-Art Svelte-based Sandbox Browser Game
 
-### Author
-
-Tkachuk Zakhar - frontend developer
-
-### Genre
+## Genre
 
 > [`#sandbox`](https://en.wikipedia.org/wiki/Sandbox_game) [`#colony-construction`](https://en.wikipedia.org/wiki/City-building_game)
 > [`#indirect-control`](https://game-studies.fandom.com/wiki/Indirect_Control) [`#pixel-art`](https://en.wikipedia.org/wiki/Pixel_art) [`#browser-game`](https://en.wikipedia.org/wiki/Browser_game)
 
-### Tech
+## Tech
 
 -   [`Svelte`](https://svelte.dev/) - CYBERNETICALLY ENHANCED WEB APPS
 -   [`Phaser 3`](https://phaser.io/phaser3) - Phaser 3 is the next generation of the Phaser Game Framework. Every last element has been rebuilt from scratch using a fully modular structure, combined with a data-orientated approach. It includes a brand-new custom WebGL renderer designed specifically for the needs of modern 2D games.
@@ -22,12 +18,12 @@ You can also see [`React version`](https://github.com/imhul/proto-mass.git)
 
 [`Demo (React version)`](https://github.com/imhul/proto-mass.git)
 
-### Story
+## Story
 
 Far away on a distant planet inhabited by primitive life forms a small colony of robots accidentally trapped must build, develop and fight only to exist...
 How far can they go? 🕹 🎲 🌌 🎰 ⭐ ⭐ ⭐
 
-### Install
+## Create
 
 If you're seeing this, you've probably already done this step. Congrats!
 
@@ -65,7 +61,7 @@ yarn tauri build
 
 You can preview the production build with `yarn preview`.
 
-### Roadmap
+## Roadmap
 
 -   Task Performance & go to the next task or search for a new
 -   Rest & "walking around" algorithm
@@ -76,15 +72,16 @@ You can preview the production build with `yarn preview`.
 -   Enemies synthesizing & interactions
 -   Objects (minerals & trees) growth
 
-### Donate
+## Donate
 
 -   ❤️[Patreon](https://www.patreon.com/protomass?fan_landing=true)
 -   ☕[buymeacoffee](https://www.buymeacoffee.com/blashirkz)
 
-### Credits
+## Credits
 
+-   Tkachuk Zakhar - author & frontend developer
 -   Alex Gudz - math calculations & promotion
 
-### License
+## License
 
 MIT
