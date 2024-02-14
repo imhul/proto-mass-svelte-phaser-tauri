@@ -76,9 +76,10 @@ You can preview the production build with `yarn preview`.
 -   Enemies synthesizing & interactions
 -   Objects (minerals & trees) growth
 
-### Social
+### Donate
 
--   [Patreon](https://www.patreon.com/protomass?fan_landing=true)
+-   ❤️[Patreon](https://www.patreon.com/protomass?fan_landing=true)
+-   ☕[buymeacoffee](https://www.buymeacoffee.com/blashirkz)
 
 ### Credits
 
