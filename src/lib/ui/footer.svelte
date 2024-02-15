@@ -1,12 +1,15 @@
 <script lang="ts">
     import svelteLogo from '$lib/assets/logo/svelte.svg';
-    import phaserLogo from '$lib/assets/logo/phaser.png';
+    import phaserLogo from '$lib/assets/logo/phaser.svg';
+    import tauriLogo from '$lib/assets/logo/tauri.svg';
 </script>
 
 <footer>
     <div class="col" />
     <div class="col">
         <span>Powered by</span>
+        <img src={tauriLogo} height="30" alt="tauri logo" />
+        <span>+</span>
         <img src={phaserLogo} height="30" alt="phaser logo" />
         <span>+</span>
         <img src={svelteLogo} height="30" alt="svelte logo" />

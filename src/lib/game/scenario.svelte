@@ -10,12 +10,14 @@
     import { unit, units } from '$lib/store/game/unit';
     import { gameUI } from '$lib/store/game/ui';
     import { messages } from '$lib/store/game/notify';
+    import { isDev } from '$lib/store';
     // components
     import { Scene } from 'svelte-phaser';
     import Background from '$lib/game/background.svelte';
     // utils
     import { start, stop } from '$lib/utils/interval';
     import { v5 as uuidv5 } from 'uuid';
+    import { assets } from '$lib/utils/config';
     // assets
     import mapJson from '$lib/assets/sprites/isometric-grass-and-water.json';
     import tilesPng from '$lib/assets/sprites/isometric-grass-and-water.png';
@@ -117,12 +119,23 @@
             frameHeight: 128
         });
         scene.load.image('house', housePng);
-        scene.load.image('stars-1', '/images/parallax_1.png');
-        scene.load.image('stars-2', '/images/parallax_2.png');
-        scene.load.image('stars-3', '/images/parallax_3.png');
+        scene.load.image(
+            'stars-1',
+            $isDev ? '/images/parallax_1.png' : assets.stars1
+        );
+        scene.load.image(
+            'stars-2',
+            $isDev ? '/images/parallax_2.png' : assets.stars2
+        );
+        scene.load.image(
+            'stars-3',
+            $isDev ? '/images/parallax_3.png' : assets.stars3
+        );
         scene.load.image(
             'starship',
-            '/images/parallax_starship_1.png'
+            $isDev
+                ? '/images/parallax_starship_1.png'
+                : assets.starship
         );
     };
 

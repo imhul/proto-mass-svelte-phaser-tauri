@@ -36,7 +36,10 @@
 
     <nav>
         {#if $user.isLoggedIn}
-            <a href="{!$isDev ? config.appURL + '/game' : '/game'}" class="menu-link">
+            <a
+                href={!$isDev ? config.appURL + '/game' : '/game'}
+                class="menu-link"
+            >
                 <!-- <i class="icon-Y15"></i> -->
                 <span>game</span>
             </a>
