@@ -2,18 +2,21 @@
     import { getContext } from 'svelte';
     import { goto } from '$app/navigation';
     // store
+    import { isDev } from '$lib/store';
     import user from '$lib/store/user/auth';
     // components
     import AuthModal from '$lib/ui/auth.svelte';
+    // utils
+    import config from '$lib//utils/config';
 
     const { open } = getContext('simple-modal') as { open: Function };
     $: isLoggedIn = $user.isLoggedIn;
 
-    const goGame = () => {
-        isLoggedIn
-            ? goto('/game')
-            : open(AuthModal, { message: 'Log in first!' });
-    };
+    // const goGame = () => {
+    //     isLoggedIn
+    //         ? goto('/game')
+    //         : open(AuthModal, { message: 'Log in first!' });
+    // };
 
     const login = () => {
         open(AuthModal);
@@ -22,6 +25,8 @@
     const logout = () => {
         $user.isLoggedIn = false;
     };
+
+    $: console.log('$isDev', $isDev);
 </script>
 
 <header>
@@ -30,14 +35,15 @@
     </a>
 
     <nav>
-        <a
-            href="/game"
-            class="menu-link"
-            on:click|preventDefault={goGame}
-        >
-            <!-- <i class="icon-Y15"></i> -->
-            <span>game</span>
-        </a>
+        {#if $user.isLoggedIn}
+            <a href="{!$isDev ? config.appURL + '/game' : '/game'}" class="menu-link">
+                <!-- <i class="icon-Y15"></i> -->
+                <span>game</span>
+            </a>
+        {:else}
+            {open(AuthModal, { message: 'Log in first!' })}
+        {/if}
+
         <a
             href="https://github.com/imhul/proto-mass-svelte-phaser-tauri/blob/master/README.md"
             rel="noopener noreferrer"

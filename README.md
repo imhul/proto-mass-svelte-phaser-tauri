@@ -1,6 +1,6 @@
 # Proto-Mass v0.0.1
 
-## Indirect Control Pixel-Art Svelte-based Sandbox Browser Game
+## Indirect Control Pixel-Art Svelte-based Sandbox Game
 
 ## Genre
 
