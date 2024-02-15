@@ -4,7 +4,8 @@
     import { afterUpdate, onDestroy, onMount } from 'svelte';
     import { goto } from '$app/navigation';
     // types
-    import type { Aside } from '$lib/types/ui';
+    import type { IUnit } from '$lib/types/objects';
+    import type { Aside, Message } from '$lib/types/ui';
     import type { SkeletonType } from './stats';
     // store
     import user from '$lib/store/user/auth';
@@ -39,8 +40,9 @@
     const MIN_WIDTH_FOR_ZOOM = 1500;
     let tileWidthHalf: number;
     let tileHeightHalf: number;
-    let skeletons: SkeletonType[] = [];
-    let d = 0;
+    const newH = h;
+    const newW = w;
+    const hover = 0x86bfda;
 
     const cameraControls = (scene: Phaser.Scene) => {
         if (!scene.input.keyboard) return;
@@ -100,7 +102,7 @@
         scene.events.emit('resume');
     };
 
-    const onKeyup = (e: KeyboardEvent, scene: Phaser.Scene) => {
+    const onSceneKeyup = (e: KeyboardEvent, scene: Phaser.Scene) => {
         if (e.key === 'Escape') pause(scene);
         if (e.key === 'r') resume(scene);
     };
@@ -128,30 +130,22 @@
     const buildMap = (scene: Phaser.Scene) => {
         //  Parse the data out of the map
         const data = scene.cache.json.get('map');
-
         const tilewidth = data.tilewidth;
         const tileheight = data.tileheight;
-
-        tileWidthHalf = tilewidth / 2;
-        tileHeightHalf = tileheight / 2;
-
         const layer = data.layers[0].data;
-
         mapwidth = data.layers[0].width;
         mapheight = data.layers[0].height;
-
+        tileWidthHalf = tilewidth / 2;
+        tileHeightHalf = tileheight / 2;
         const centerX = mapwidth * tileWidthHalf;
         const centerY = 16;
-
         let i = 0;
 
         for (let y = 0; y < mapheight; y++) {
             for (let x = 0; x < mapwidth; x++) {
                 const id = layer[i] - 1;
-
                 const tx = (x - y) * tileWidthHalf;
                 const ty = (x + y) * tileHeightHalf;
-
                 const tile = scene.add.image(
                     centerX + tx,
                     centerY + ty,
@@ -174,21 +168,64 @@
         house_2.depth = house_2.y + 86;
     };
 
+    const unitFocus = (scene: Phaser.Scene) => {
+        console.log('unitFocus');
+        if (!$unit) return;
+        $unit.setTint(hover);
+        scene.cameras.main.startFollow($unit);
+        $messages.forEach((board: Message) => {
+            if (board.parent === 'unit')
+                messages.delete(board.id, 'delete');
+        });
+        messages.add({
+            id: 'click-unit-' + $unit.name,
+            type: 'info',
+            title: 'Name: Skeleton',
+            aside: 'right',
+            icon: 'a10',
+            fixed: true,
+            parent: 'unit',
+            message: ''
+        });
+    };
+
+    const unitBlur = (scene: Phaser.Scene) => {
+        if (!$unit) return;
+        $unit.clearTint();
+        scene.cameras.main.stopFollow();
+    };
+
+    const crteateSceleton = (scene: Phaser.Scene) => {
+        const skeletonId = 'skeleton-' + uuidv5('skeleton', idLength);
+
+        unit.set(
+            new Skeleton(
+                skeletonId,
+                scene,
+                620,
+                140,
+                'walk',
+                'south',
+                380
+            )
+        );
+
+        if (!$unit) return;
+        $unit.setInteractive();
+        scene.add.existing($unit);
+        $unit.on('pointerdown', () => unitFocus(scene));
+    };
+
     const create = (scene: Phaser.Scene) => {
         if (scene.input.keyboard)
             scene.input.keyboard.on(
                 'keyup',
-                (event: KeyboardEvent) => onKeyup(event, scene),
+                (event: KeyboardEvent) => onSceneKeyup(event, scene),
                 scene
             );
 
-        scene.events.on('pause', function () {
-            console.info('paused');
-        });
-
-        scene.events.on('resume', function () {
-            console.info('resumed');
-        });
+        scene.events.on('pause', pause);
+        scene.events.on('resume', resume);
 
         scene.input.on(
             'pointerdown',
@@ -197,6 +234,11 @@
                     mouseButton = 'left';
                 } else if (pointer.rightButtonDown()) {
                     mouseButton = 'right';
+                    unitBlur(scene);
+                    $messages.forEach((board: Message) => {
+                        if (board.parent === 'unit')
+                            messages.delete(board.id, 'delete');
+                    });
                 }
 
                 pointerX = pointer.x;
@@ -206,158 +248,23 @@
                     mouseButton +
                     '-' +
                     uuidv5('message-' + $messages?.length, idLength);
-                console.log(id);
 
                 messages.add({
                     id,
                     title: `Name: ${mouseButton}`,
                     aside: (mouseButton as Aside) ?? 'right',
-                    img: '0',
                     message: `x: ${pointerX}, y: ${pointerY}`
                 });
             }
         );
 
+        scene.cameras.main.setSize(w, h);
         cameraControls(scene);
         buildMap(scene);
         placeHouses(scene);
+        crteateSceleton(scene);
 
-        skeletons.push(
-            scene.add.existing(
-                new Skeleton(
-                    scene,
-                    240,
-                    290,
-                    'walk',
-                    'southEast',
-                    100
-                )
-            )
-        );
-        skeletons.push(
-            scene.add.existing(
-                new Skeleton(
-                    scene,
-                    100,
-                    380,
-                    'walk',
-                    'southEast',
-                    230
-                )
-            )
-        );
-        skeletons.push(
-            scene.add.existing(
-                new Skeleton(scene, 620, 140, 'walk', 'south', 380)
-            )
-        );
-        skeletons.push(
-            scene.add.existing(
-                new Skeleton(scene, 460, 180, 'idle', 'south', 0)
-            )
-        );
-
-        skeletons.push(
-            scene.add.existing(
-                new Skeleton(
-                    scene,
-                    760,
-                    100,
-                    'attack',
-                    'southEast',
-                    0
-                )
-            )
-        );
-        skeletons.push(
-            scene.add.existing(
-                new Skeleton(
-                    scene,
-                    800,
-                    140,
-                    'attack',
-                    'northWest',
-                    0
-                )
-            )
-        );
-
-        skeletons.push(
-            scene.add.existing(
-                new Skeleton(scene, 750, 480, 'walk', 'east', 200)
-            )
-        );
-
-        skeletons.push(
-            scene.add.existing(
-                new Skeleton(scene, 1030, 300, 'die', 'west', 0)
-            )
-        );
-
-        skeletons.push(
-            scene.add.existing(
-                new Skeleton(
-                    scene,
-                    1180,
-                    340,
-                    'attack',
-                    'northEast',
-                    0
-                )
-            )
-        );
-
-        skeletons.push(
-            scene.add.existing(
-                new Skeleton(
-                    scene,
-                    1180,
-                    180,
-                    'walk',
-                    'southEast',
-                    160
-                )
-            )
-        );
-
-        skeletons.push(
-            scene.add.existing(
-                new Skeleton(
-                    scene,
-                    1450,
-                    320,
-                    'walk',
-                    'southWest',
-                    320
-                )
-            )
-        );
-        skeletons.push(
-            scene.add.existing(
-                new Skeleton(
-                    scene,
-                    1500,
-                    340,
-                    'walk',
-                    'southWest',
-                    340
-                )
-            )
-        );
-        skeletons.push(
-            scene.add.existing(
-                new Skeleton(
-                    scene,
-                    1550,
-                    360,
-                    'walk',
-                    'southWest',
-                    330
-                )
-            )
-        );
-
-        scene.cameras.main.setSize(w, h);
+        // Post FX
         scene.cameras.main.postFX.addTiltShift(
             0.2,
             0.1,
@@ -368,33 +275,25 @@
         );
     };
 
-    const update = () => {
-        skeletons.forEach(function (skeleton) {
-            skeleton.update();
-        });
-
-        // return;
-
-        if (d) {
-            sceneInstance.cameras.main.scrollX -= 0.5;
-            if (sceneInstance.cameras.main.scrollX <= 0) d = 0;
-        } else {
-            sceneInstance.cameras.main.scrollX += 0.5;
-            if (sceneInstance.cameras.main.scrollX >= 800) d = 1;
-        }
-    };
-
-    onMount(() => start(update));
-    onDestroy(() => stop());
+    // component lifecycle
+    onMount(() =>
+        start(() => {
+            if (!$unit) return;
+            $unit.update();
+            $unit = $unit;
+        })
+    );
 
     afterUpdate(() => {
-        if (sceneInstance) {
+        if (sceneInstance && (newH !== h || newW !== w)) {
             // TODO: responsive scene
             // sceneInstance.physics.world.setBounds(w/2, h/2, w, h, true, true, true, true);
             // const x = sceneInstance.cameras.main.centerX;
             // const y = sceneInstance.cameras.main.centerY;
             // sceneInstance.cameras.main.setBounds(0, 0, w, h);
-            // sceneInstance.cameras.main.setZoom(w > MIN_WIDTH_FOR_ZOOM ? 1.5 : 1);
+            sceneInstance.cameras.main.setZoom(
+                w > MIN_WIDTH_FOR_ZOOM ? 1.5 : 1
+            );
             sceneInstance.scale.scaleMode =
                 Phaser.Scale.ScaleModes.FIT;
             sceneInstance.game.scale.autoCenter =
@@ -407,6 +306,8 @@
             );
         }
     });
+
+    onDestroy(() => stop());
 </script>
 
 <Scene

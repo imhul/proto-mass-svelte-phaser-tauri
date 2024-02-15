@@ -3,6 +3,7 @@
     // store
     import { messages } from '$lib/store/game/notify';
     import user from '$lib/store/user/auth';
+    import { unit, units } from '$lib/store/game/unit';
     // types
     import type { Message } from '$lib/types/ui';
 
@@ -69,9 +70,16 @@
                     <img src={board.img} alt={board.title} />
                 </div>
             {/if} -->
-            {#if board.message?.length}
-                <div class="message">{board.message}</div>
-            {/if}
+
+            <div class="message">
+                {#if board.message?.length}
+                    {board.message}
+                {/if}
+                {#if $unit && board.parent === 'unit'}
+                    x: {`${$unit.x.toFixed(0)}\n`}
+                    y: {`${$unit.y.toFixed(0)}\n`}
+                {/if}
+            </div>
         </div>
         {#if board.actions?.length}
             <div class="actions">
@@ -130,13 +138,13 @@
             }
         }
 
-        .content {
-            .img-wrapper {
-                img {
-                    display: block;
-                    margin: rem(10) auto;
-                }
-            }
-        }
+        // .content {
+        //     .img-wrapper {
+        //         img {
+        //             display: block;
+        //             margin: rem(10) auto;
+        //         }
+        //     }
+        // }
     }
 </style>

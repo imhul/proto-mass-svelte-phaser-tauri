@@ -1,7 +1,14 @@
 import { anims, directions } from './stats';
 import type { IMotion, IOpposite } from './stats';
 
-class Skeleton extends Phaser.GameObjects.Image {
+interface ExtendedSprite {
+    id: string;
+}
+
+class Skeleton
+    extends Phaser.GameObjects.Sprite
+    implements ExtendedSprite
+{
     private startX: number;
     private startY: number;
     private distance: number;
@@ -10,8 +17,10 @@ class Skeleton extends Phaser.GameObjects.Image {
     private direction: any;
     private speed: number;
     private f: number;
+    public id: string;
 
     constructor(
+        id: string,
         scene: Phaser.Scene,
         x: number,
         y: number,
@@ -21,11 +30,12 @@ class Skeleton extends Phaser.GameObjects.Image {
     ) {
         super(scene, x, y, 'skeleton', directions[direction].offset);
 
+        this.id = id;
         this.scene = scene;
         this.startX = x;
         this.startY = y;
         this.distance = distance;
-
+        this.name = 'skeleton';
         this.motion = motion;
         this.anim = anims[motion];
         this.direction = directions[direction];
