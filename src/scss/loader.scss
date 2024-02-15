@@ -23,31 +23,32 @@
             }
         }
     }
-    .ant-progress-outer {
-        margin: 0;
-        padding: 0;
-        .ant-progress-inner {
-            background-color: var(--game-color-dark);
-            border-radius: 0;
-            border: rem(3) solid var(--game-color);
-            .ant-progress-bg {
-                &:before {
-                    border-radius: 0;
-                    background-color: var(--game-color);
-                }
-            }
-        }
-    }
-    .ant-progress-text {
-        font-family: 'PressStart2P-Regular';
-        color: var(--game-color);
-        display: block;
-        width: 100%;
-        font-size: 1em;
-        text-align: center;
-        margin: 0 auto;
-        position: relative;
-        line-height: 0;
-        top: rem(-16);
-    }
+    // TODO: Loading progress bar
+    // .ant-progress-outer {
+    //     margin: 0;
+    //     padding: 0;
+    //     .ant-progress-inner {
+    //         background-color: var(--game-color-dark);
+    //         border-radius: 0;
+    //         border: rem(3) solid var(--game-color);
+    //         .ant-progress-bg {
+    //             &:before {
+    //                 border-radius: 0;
+    //                 background-color: var(--game-color);
+    //             }
+    //         }
+    //     }
+    // }
+    // .ant-progress-text {
+    //     font-family: 'PressStart2P-Regular';
+    //     color: var(--game-color);
+    //     display: block;
+    //     width: 100%;
+    //     font-size: 1em;
+    //     text-align: center;
+    //     margin: 0 auto;
+    //     position: relative;
+    //     line-height: 0;
+    //     top: rem(-16);
+    // }
 }
