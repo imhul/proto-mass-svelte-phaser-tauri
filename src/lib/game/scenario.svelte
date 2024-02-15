@@ -2,11 +2,9 @@
     // TODO: docs: https://github.com/phaserjs/examples/blob/master/public/src/depth%20sorting/isometric%20map.js
     import Phaser from 'phaser';
     import { afterUpdate, onDestroy, onMount } from 'svelte';
-    import { goto } from '$app/navigation';
     // types
     import type { Aside, Message } from '$lib/types/ui';
     // store
-    import user from '$lib/store/user/auth';
     import { unit, units } from '$lib/store/game/unit';
     import { gameUI } from '$lib/store/game/ui';
     import { messages } from '$lib/store/game/notify';
@@ -17,7 +15,6 @@
     // utils
     import { start, stop } from '$lib/utils/interval';
     import { v5 as uuidv5 } from 'uuid';
-    import { assets } from '$lib/utils/config';
     // assets
     import mapJson from '$lib/assets/sprites/isometric-grass-and-water.json';
     import tilesPng from '$lib/assets/sprites/isometric-grass-and-water.png';
@@ -29,7 +26,6 @@
     export let h = 0;
     export let w = 0;
 
-    $: !$user.isLoggedIn && goto('/');
     $: mapwidth = 0;
     $: mapheight = 0;
     $: pointerX = 0;
@@ -104,7 +100,7 @@
     };
 
     const onSceneKeyup = (e: KeyboardEvent, scene: Phaser.Scene) => {
-        if (e.key === 'Escape') pause(scene);
+        if (e.key === 'p') pause(scene);
         if (e.key === 'r') resume(scene);
     };
 
@@ -119,23 +115,12 @@
             frameHeight: 128
         });
         scene.load.image('house', housePng);
-        scene.load.image(
-            'stars-1',
-            $isDev ? '/images/parallax_1.png' : assets.stars1
-        );
-        scene.load.image(
-            'stars-2',
-            $isDev ? '/images/parallax_2.png' : assets.stars2
-        );
-        scene.load.image(
-            'stars-3',
-            $isDev ? '/images/parallax_3.png' : assets.stars3
-        );
+        scene.load.image('stars-1', '/images/parallax_1.png');
+        scene.load.image('stars-2', '/images/parallax_2.png');
+        scene.load.image('stars-3', '/images/parallax_3.png');
         scene.load.image(
             'starship',
-            $isDev
-                ? '/images/parallax_starship_1.png'
-                : assets.starship
+            '/images/parallax_starship_1.png'
         );
     };
 

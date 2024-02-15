@@ -1,52 +1,13 @@
-<script lang="ts">
-    import { getContext } from 'svelte';
-    import { goto } from '$app/navigation';
-    // store
-    import { isDev } from '$lib/store';
-    import user from '$lib/store/user/auth';
-    // components
-    import AuthModal from '$lib/ui/auth.svelte';
-    // utils
-    import config from '$lib//utils/config';
-
-    const { open } = getContext('simple-modal') as { open: Function };
-    $: isLoggedIn = $user.isLoggedIn;
-
-    // const goGame = () => {
-    //     isLoggedIn
-    //         ? goto('/game')
-    //         : open(AuthModal, { message: 'Log in first!' });
-    // };
-
-    const login = () => {
-        open(AuthModal);
-    };
-
-    const logout = () => {
-        $user.isLoggedIn = false;
-    };
-
-    $: console.log('$isDev', $isDev);
-</script>
-
 <header>
     <a href="/" class="logo">
         <i class="icon-i1" />
     </a>
 
     <nav>
-        {#if $user.isLoggedIn}
-            <a
-                href={!$isDev ? config.appURL + '/game' : '/game'}
-                class="menu-link"
-            >
-                <!-- <i class="icon-Y15"></i> -->
-                <span>game</span>
-            </a>
-        {:else}
-            {open(AuthModal, { message: 'Log in first!' })}
-        {/if}
-
+        <a href="/game" class="menu-link">
+            <!-- <i class="icon-Y15"></i> -->
+            <span>game</span>
+        </a>
         <a
             href="https://github.com/imhul/proto-mass-svelte-phaser-tauri/blob/master/README.md"
             rel="noopener noreferrer"
@@ -65,16 +26,6 @@
             <!-- <i class="icon-dollar3"></i> -->
             <span>Donate</span>
         </a>
-        <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <span
-            class="menu-link"
-            tabindex="0"
-            role="button"
-            on:click={isLoggedIn ? logout : login}
-        >
-            <!-- <i class="icon-Y15"></i> -->
-            <span>{isLoggedIn ? 'logout' : 'login'}</span>
-        </span>
     </nav>
 </header>
 

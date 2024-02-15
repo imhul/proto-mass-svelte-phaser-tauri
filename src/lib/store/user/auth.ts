@@ -1,6 +1,6 @@
 import { writable } from 'svelte/store';
 
-export interface Auth {
+export interface User {
     userId: string;
     userAva: string;
     userEmail: string;
@@ -28,7 +28,7 @@ export interface Auth {
     };
 }
 
-const initState: Auth = {
+const initState: User = {
     userId: '',
     userAva: '',
     userEmail: '',
@@ -56,6 +56,17 @@ const initState: Auth = {
     }
 };
 
-const user = writable<Auth>(initState);
+function createUnit() {
+    const { subscribe, set, update } = writable<User>(initState);
+
+    return {
+        subscribe,
+        set,
+        update,
+        reset: () => set(initState)
+    };
+}
+
+export const user = createUnit();
 
 export default user;
