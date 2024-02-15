@@ -2,7 +2,6 @@
 /.git
 /.cache
 /dist
-.vscode
 .DS_Store
 /build
 /.svelte-kit

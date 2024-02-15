@@ -1,0 +1,8 @@
+{
+	"recommendations": [
+		"svelte.svelte-vscode",
+		"gruntfuggly.todo-tree",
+		"rust-lang.rust-analyzer",
+		"redhat.vscode-xml"
+	]
+}

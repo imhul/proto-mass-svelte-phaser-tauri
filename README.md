@@ -4,7 +4,7 @@
 
 ## Genre
 
-> [`#sandbox`](https://en.wikipedia.org/wiki/Sandbox_game) [`#colony-construction`](https://en.wikipedia.org/wiki/City-building_game) > [`#indirect-control`](https://game-studies.fandom.com/wiki/Indirect_Control) [`#pixel-art`](https://en.wikipedia.org/wiki/Pixel_art) [`#browser-game`](https://en.wikipedia.org/wiki/Browser_game)
+> [`#sandbox`](https://en.wikipedia.org/wiki/Sandbox_game) [`#colony-construction`](https://en.wikipedia.org/wiki/City-building_game)[`#indirect-control`](https://game-studies.fandom.com/wiki/Indirect_Control) [`#pixel-art`](https://en.wikipedia.org/wiki/Pixel_art) [`#browser-game`](https://en.wikipedia.org/wiki/Browser_game)
 
 ## Tech
 

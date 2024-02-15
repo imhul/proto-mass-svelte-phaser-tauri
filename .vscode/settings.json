@@ -1,0 +1,11 @@
+{
+	"typescript.enablePromptUseWorkspaceTsdk": true,
+	"eslint.probe": [
+		"javascript",
+		"typescript",
+		"html",
+		"markdown",
+		"svelte"
+	],
+	"compile-hero.disable-compile-files-on-did-save-code": true
+}
