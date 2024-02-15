@@ -1,14 +1,7 @@
-import { anims, directions } from './stats';
-import type { IMotion, IOpposite } from './stats';
+import { anims, directions } from '$lib/objects/stats';
+import type { IMotion, IOpposite, IUnit } from '$lib/types/objects';
 
-interface ExtendedSprite {
-    id: string;
-}
-
-class Skeleton
-    extends Phaser.GameObjects.Sprite
-    implements ExtendedSprite
-{
+class Skeleton extends Phaser.GameObjects.Sprite implements IUnit {
     private startX: number;
     private startY: number;
     private distance: number;

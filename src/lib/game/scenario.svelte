@@ -4,9 +4,7 @@
     import { afterUpdate, onDestroy, onMount } from 'svelte';
     import { goto } from '$app/navigation';
     // types
-    import type { IUnit } from '$lib/types/objects';
     import type { Aside, Message } from '$lib/types/ui';
-    import type { SkeletonType } from './stats';
     // store
     import user from '$lib/store/user/auth';
     import { unit, units } from '$lib/store/game/unit';
@@ -23,7 +21,8 @@
     import tilesPng from '$lib/assets/sprites/isometric-grass-and-water.png';
     import skeletonPng from '$lib/assets/sprites/skeleton8.png';
     import housePng from '$lib/assets/sprites/rem_0002.png';
-    import Skeleton from './skeleton';
+    // objects
+    import Skeleton from '$lib/objects/skeleton';
 
     export let h = 0;
     export let w = 0;
