@@ -25,7 +25,7 @@
             class="menu-link"
             on:click|stopPropagation={() => open(Settings)}
         >
-            <i class="icon-U10" />
+            <i class="icon-adjust" />
         </span>
     </nav>
 </header>

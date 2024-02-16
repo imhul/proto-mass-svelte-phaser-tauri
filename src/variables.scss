@@ -5,8 +5,9 @@
     @return math.div($px * 1px, 16px) * 1rem;
 }
 
-@mixin font($size, $weight, $line, $color) {
+@mixin font($size, $weight, $line, $color, $family: var(--8-bit)) {
     color: $color;
+    font-family: $family;
     font-weight: $weight;
     font-size: $size;
     font-style: normal;
@@ -16,8 +17,8 @@
 
 @mixin scrollbar(
     $size: rem(14),
-    $foreground-color: #999,
-    $background-color: #333
+    $foreground-color: var(--default-foreground-color),
+    $background-color: var(--default-background-color)
 ) {
     // For Chrome & Safari
     &::-webkit-scrollbar {

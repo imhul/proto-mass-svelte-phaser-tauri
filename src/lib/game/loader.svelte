@@ -7,7 +7,7 @@
     import AsideR from '$lib/game/ui/aside-right.svelte';
     import Scenario from '$lib/game/scenario.svelte';
     // utils
-    import { onKeydown } from '$lib/utils/keyboard';
+    import { onKeydown } from '$lib/utils/actions';
 
     $: h = 0;
     $: w = 0;

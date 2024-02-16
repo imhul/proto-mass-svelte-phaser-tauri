@@ -1,9 +1,9 @@
 <script lang="ts">
     import { fly, fade } from 'svelte/transition';
     // store
-    import { messages } from '$lib/store/game/notify';
-    import settings from '$lib/store/game/settings';
-    import { unit } from '$lib/store/game/unit';
+    import { messages } from '$lib/store/notify';
+    import settings from '$lib/store/settings';
+    import { unit } from '$lib/store/unit';
     // types
     import type { Message } from '$lib/types/ui';
 

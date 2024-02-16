@@ -1,19 +1,19 @@
 <script lang="ts">
     // TODO: docs: https://github.com/phaserjs/examples/blob/master/public/src/depth%20sorting/isometric%20map.js
-    import Phaser from 'phaser';
     import { afterUpdate, onDestroy, onMount } from 'svelte';
+    import Phaser from 'phaser';
     // types
     import type { Aside, Message } from '$lib/types/ui';
     // store
-    import { unit, units } from '$lib/store/game/unit';
-    import settings from '$lib/store/game/settings';
-    import { messages } from '$lib/store/game/notify';
-    import { isDev } from '$lib/store';
+    import { unit } from '$lib/store/unit';
+    import settings from '$lib/store/settings';
+    import { messages } from '$lib/store/notify';
     // components
     import { Scene } from 'svelte-phaser';
     import Background from '$lib/game/background.svelte';
     // utils
     import { start, stop } from '$lib/utils/interval';
+    import { loadSave } from '$lib/utils/actions';
     import { v5 as uuidv5 } from 'uuid';
     // assets
     import mapJson from '$lib/assets/sprites/isometric-grass-and-water.json';
@@ -273,17 +273,18 @@
     };
 
     // component lifecycle
-    onMount(() =>
+    onMount(() => {
+        loadSave();
         start(() => {
             if (!$unit) return;
             $unit.update();
             $unit = $unit;
-        })
-    );
+        });
+    });
 
     afterUpdate(() => {
+        // TODO: responsive scene
         if (sceneInstance && (newH !== h || newW !== w)) {
-            // TODO: responsive scene
             // sceneInstance.physics.world.setBounds(w/2, h/2, w, h, true, true, true, true);
             // const x = sceneInstance.cameras.main.centerX;
             // const y = sceneInstance.cameras.main.centerY;

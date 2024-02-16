@@ -2,7 +2,7 @@
     // components
     import Board from '$lib/game/ui/board.svelte';
     // store
-    import { messages } from '$lib/store/game/notify';
+    import { messages } from '$lib/store/notify';
     // types
     import type { Message } from '$lib/types/ui';
 

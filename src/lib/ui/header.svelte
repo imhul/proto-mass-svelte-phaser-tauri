@@ -10,7 +10,6 @@
         </a>
         <a
             href="https://github.com/imhul/proto-mass-svelte-phaser-tauri/blob/master/README.md"
-            rel="noopener noreferrer"
             target="_blank"
             class="menu-link"
         >
@@ -19,7 +18,6 @@
         </a>
         <a
             href="https://www.patreon.com/protomass"
-            rel="noopener noreferrer"
             target="_blank"
             class="menu-link"
         >

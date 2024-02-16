@@ -7,21 +7,15 @@
         width: 100%;
         transform: translate(-50%, -50%) scale(1);
         position: absolute;
-        font-weight: var(--weight-500);
-        font-family: var(--hero);
-        font-size: 13rem;
         text-align: center;
-        color: #ff85e5;
         text-shadow:
-            rem(4) rem(4) 0 #ff0045,
-            rem(8) rem(8) 0 #5500ff;
+            rem(4) rem(4) 0 var(--color-primary),
+            rem(8) rem(8) 0 var(--color-secondary);
         margin: 0 0 rem(10);
         animation: playHero 20s ease-in-out;
         user-select: none;
         touch-action: none;
 
-        &::selection {
-            color: #ff85e5;
-        }
+        @include font(13rem, 500, 1, var(--color-hero), var(--hero));
     }
 </style>

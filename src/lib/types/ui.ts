@@ -38,6 +38,8 @@ export interface Settings {
     isGameOver: boolean;
     isGameMenuOpen: boolean;
     isGameWin: boolean;
+    gameInitTime: number;
+    date: number | string | Date;
 }
 
 export interface Stats {
@@ -51,4 +53,9 @@ export interface Stats {
     map: unknown[];
     units: unknown[];
     taskList: unknown[];
+}
+
+export interface Save {
+    $settings: Settings;
+    $stats: Stats;
 }

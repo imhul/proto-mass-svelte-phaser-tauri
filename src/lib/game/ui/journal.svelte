@@ -4,7 +4,7 @@
     import type { Message } from '$lib/types/ui';
     import type { MouseEventHandler } from 'svelte/elements';
     // store
-    import { messages } from '$lib/store/game/notify';
+    import { messages } from '$lib/store/notify';
 
     const { close } = getContext('simple-modal') as {
         close: MouseEventHandler<HTMLElement>;

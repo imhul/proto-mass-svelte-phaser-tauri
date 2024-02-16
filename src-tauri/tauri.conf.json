@@ -7,12 +7,23 @@
         "distDir": "../build"
     },
     "package": {
-        "productName": "proto-mass",
+        "productName": "ProtoMass",
         "version": "0.1.0"
     },
     "tauri": {
         "allowlist": {
-            "all": false
+            "all": true,
+            "fs": {
+                "all": true,
+                "scope": [
+                    "$APPDATA/",
+                    "$APPDATA/*",
+                    "$APPDATA/**",
+                    "$APPDATA/Roaming/*",
+                    "$APPDATA/Roaming/ProtoMass/*",
+                    "$APPDATA/Roaming/ProtoMass/saves/*"
+                ]
+            }
         },
         "bundle": {
             "active": true,
@@ -29,7 +40,7 @@
                 "icons/icon.icns",
                 "icons/icon.ico"
             ],
-            "identifier": "proto-mass",
+            "identifier": "ProtoMass",
             "longDescription": "",
             "macOS": {
                 "entitlements": null,

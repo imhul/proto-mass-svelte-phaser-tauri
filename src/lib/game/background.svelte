@@ -1,6 +1,6 @@
 <script lang="ts">
     // store
-    import settings from '$lib/store/game/settings';
+    import settings from '$lib/store/settings';
     // components
     import { TileSprite, onGameEvent } from 'svelte-phaser';
 

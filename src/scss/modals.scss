@@ -9,7 +9,7 @@
     border: rem(6) solid var(--game-color);
     box-shadow: rem(2) rem(2) 0 var(--game-color-darkest);
     border-radius: 0;
-    max-width: 50%;
+    max-width: rem(512) !important;
 }
 
 .modal-window {
