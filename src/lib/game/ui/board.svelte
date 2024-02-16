@@ -2,7 +2,7 @@
     import { fly, fade } from 'svelte/transition';
     // store
     import { messages } from '$lib/store/game/notify';
-    import user from '$lib/store/user/auth';
+    import save from '$lib/store/user/save';
     import { unit, units } from '$lib/store/game/unit';
     // types
     import type { Message } from '$lib/types/ui';

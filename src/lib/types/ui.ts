@@ -22,7 +22,14 @@ export interface Message {
     parent?: string;
 }
 
-export interface InitialGameState {
+export interface Settings {
+    volume: number;
+    isFullscreen: boolean;
+    complexity: 'easy' | 'normal' | 'hard';
+    theme: 'dark' | 'light' | 'oldschool';
+    zoom: number;
+    gameHours: number;
+    notifyTimeout: number;
     loadingPercent: number;
     isGameInit: boolean;
     isGameLoaded: boolean;
@@ -31,4 +38,17 @@ export interface InitialGameState {
     isGameOver: boolean;
     isGameMenuOpen: boolean;
     isGameWin: boolean;
+}
+
+export interface Stats {
+    id: string;
+    colony: {
+        id: string;
+        name: string;
+        level: number;
+    };
+    objects: unknown[];
+    map: unknown[];
+    units: unknown[];
+    taskList: unknown[];
 }

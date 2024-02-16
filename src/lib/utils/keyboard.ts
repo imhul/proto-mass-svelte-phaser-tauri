@@ -1,32 +1,29 @@
 // tauri
 import { invoke } from '@tauri-apps/api/tauri';
 // store
-import user from '$lib/store/user/auth';
+import settings from '$lib/store/game/settings';
 
-async function fullscreen() {
+export async function fullscreen() {
     await invoke('fullscreen');
 }
 
-async function minimize() {
+export async function minimize() {
     await invoke('minimize');
 }
 
-const toggleFullscreen = (val: boolean) => {
-    user.update(state => {
+export const toggleFullscreen = (val: boolean) => {
+    settings.update(state => {
         return {
             ...state,
-            settings: {
-                ...state.settings,
-                isFullscreen: val
-            }
+            isFullscreen: val
         };
     });
 };
 
-const getFullscreen = () => {
+export const getFullscreen = () => {
     let isFullscreen: boolean = false;
-    user.subscribe(value => {
-        isFullscreen = value.settings.isFullscreen;
+    settings.subscribe(value => {
+        isFullscreen = value.isFullscreen;
     });
     return isFullscreen;
 };

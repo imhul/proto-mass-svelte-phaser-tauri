@@ -1,8 +1,5 @@
 <script lang="ts">
     import { browser } from '$app/environment';
-    import { goto } from '$app/navigation';
-    // store
-    import user from '$lib/store/user/auth';
     // components
     import { Game } from 'svelte-phaser';
     import Header from '$lib/game/ui/header.svelte';
@@ -12,7 +9,6 @@
     // utils
     import { onKeydown } from '$lib/utils/keyboard';
 
-    $: !$user.isLoggedIn && goto('/');
     $: h = 0;
     $: w = 0;
 </script>

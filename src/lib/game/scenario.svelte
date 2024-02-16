@@ -6,7 +6,7 @@
     import type { Aside, Message } from '$lib/types/ui';
     // store
     import { unit, units } from '$lib/store/game/unit';
-    import { gameUI } from '$lib/store/game/ui';
+    import settings from '$lib/store/game/settings';
     import { messages } from '$lib/store/game/notify';
     import { isDev } from '$lib/store';
     // components
@@ -84,16 +84,16 @@
     };
 
     const pause = (scene: Phaser.Scene) => {
-        gameUI.set({
-            ...$gameUI,
+        settings.set({
+            ...$settings,
             isGamePaused: true
         });
         scene.events.emit('pause');
     };
 
     const resume = (scene: Phaser.Scene) => {
-        gameUI.set({
-            ...$gameUI,
+        settings.set({
+            ...$settings,
             isGamePaused: false
         });
         scene.events.emit('resume');

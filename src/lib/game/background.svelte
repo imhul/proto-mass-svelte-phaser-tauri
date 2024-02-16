@@ -1,6 +1,6 @@
 <script lang="ts">
     // store
-    import { gameUI } from '$lib/store/game/ui';
+    import settings from '$lib/store/game/settings';
     // components
     import { TileSprite, onGameEvent } from 'svelte-phaser';
 
@@ -10,7 +10,7 @@
     let tile2PositionX = 0;
     let tile3PositionX = 0;
     const step = () => {
-        if ($gameUI.isGamePaused) return;
+        if ($settings.isGamePaused) return;
         tile1PositionX += 0.1;
         tile2PositionX += 0.15;
         tile3PositionX += 0.2;

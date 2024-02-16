@@ -1,6 +1,6 @@
 <script lang="ts">
     import { getContext } from 'svelte';
-    import user from '$lib/store/user/auth';
+    import save from '$lib/store/user/save';
 
     export let message = '';
     const { close } = getContext('simple-modal') as {

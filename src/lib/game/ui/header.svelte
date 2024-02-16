@@ -2,6 +2,7 @@
     import { getContext } from 'svelte';
     // components
     import Journal from '$lib/game/ui/journal.svelte';
+    import Settings from '$lib/game/ui/settings.svelte';
 
     const { open } = getContext('simple-modal') as { open: Function };
 </script>
@@ -11,12 +12,20 @@
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <span
             role="button"
-            tabindex="0"
+            tabindex={0}
             class="menu-link"
-            on:click|stopPropagation={() =>
-                open(Journal, { message: 'Journal' })}
+            on:click|stopPropagation={() => open(Journal)}
         >
-            <i class="icon-asciicircum5" />
+            <i class="icon-Odieresis" />
+        </span>
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <span
+            role="button"
+            tabindex={1}
+            class="menu-link"
+            on:click|stopPropagation={() => open(Settings)}
+        >
+            <i class="icon-U10" />
         </span>
     </nav>
 </header>
@@ -42,18 +51,13 @@
                 span,
                 i {
                     color: var(--game-color);
-
-                    // &.icon-asciicircum5 {
-
-                    // }
                 }
 
                 &:hover {
                     background: var(--transparent);
 
                     span,
-                    i,
-                    a {
+                    i {
                         color: var(--game-color-light);
                         text-shadow: none;
                     }
