@@ -2,8 +2,8 @@
     import { fly, fade } from 'svelte/transition';
     // store
     import { messages } from '$lib/store/game/notify';
-    import save from '$lib/store/user/save';
-    import { unit, units } from '$lib/store/game/unit';
+    import settings from '$lib/store/game/settings';
+    import { unit } from '$lib/store/game/unit';
     // types
     import type { Message } from '$lib/types/ui';
 
@@ -20,7 +20,7 @@
         timer = setTimeout(() => {
             messages.delete(board.id, 'archive');
             clearTimeout(timer);
-        }, $user.settings.notifyTimeout);
+        }, $settings.notifyTimeout);
     };
 
     $: filtered = $messages?.filter(
