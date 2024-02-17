@@ -7,8 +7,6 @@ const initState: Settings = {
     isFullscreen: false,
     complexity: 'normal', // easy, normal, hard
     theme: 'dark', // dark, light, oldschool
-    zoom: 100,
-    gameHours: 0,
     notifyTimeout: 3000, // ms
     loadingPercent: 0,
     isGameInit: false,
@@ -19,7 +17,13 @@ const initState: Settings = {
     isGameMenuOpen: false,
     isGameWin: false,
     gameInitTime: 0,
-    date: new Date()
+    saveDate: new Date().getMilliseconds(),
+    mapWidth: 1600,
+    mapHeight: 800,
+    idLength: new Array(16),
+    sceneID: 'proto_mass_main_scene',
+    focusColor: 0x86bfda,
+    playHours: 0
 };
 
 function createSettings() {

@@ -1,6 +1,6 @@
 <script lang="ts">
-    // TODO: docs: https://github.com/phaserjs/examples/blob/master/public/src/depth%20sorting/isometric%20map.js
-    import { afterUpdate, onDestroy, onMount } from 'svelte';
+    // docs: https://github.com/phaserjs/examples/blob/master/public/src/depth%20sorting/isometric%20map.js
+    import { onDestroy, onMount } from 'svelte';
     import Phaser from 'phaser';
     // types
     import type { Aside, Message } from '$lib/types/ui';
@@ -25,59 +25,67 @@
 
     export let h = 0;
     export let w = 0;
-
-    $: mapwidth = 0;
-    $: mapheight = 0;
     $: pointerX = 0;
     $: pointerY = 0;
     $: mouseButton = '';
+    $: zoomSize = 1;
     let sceneInstance: Phaser.Scene;
-    const idLength = new Array(16);
-    const sceneID = 'main_scene';
-    const MIN_WIDTH_FOR_ZOOM = 1500;
-    let tileWidthHalf: number;
-    let tileHeightHalf: number;
-    const newH = h;
-    const newW = w;
-    const hover = 0x86bfda;
+
+    const cameraUpdate = () => {
+        if (!sceneInstance) return;
+        const zoomCoef = w < $settings.mapWidth ? 1.5 : 1.2;
+        zoomSize = Number(
+            (
+                zoomCoef +
+                (w - $settings.mapWidth) / (2 * $settings.mapWidth)
+            ).toFixed(2)
+        );
+        console.info('cam update >> zoom: ', zoomSize);
+        sceneInstance.scale.resize(w, h);
+        sceneInstance.game.scale.resize(w, h);
+        sceneInstance.cameras.main.setBounds(
+            0,
+            0,
+            $settings.mapWidth,
+            $settings.mapHeight,
+            true
+        );
+        sceneInstance.cameras.main.setZoom(zoomSize);
+    };
 
     const cameraControls = (scene: Phaser.Scene) => {
         if (!scene.input.keyboard) return;
-        const camera = scene.cameras.main;
-        // const cursors = scene.input.keyboard.createCursorKeys(); // for ←↑→↓ keys only
+
         const controls =
             new Phaser.Cameras.Controls.SmoothedKeyControl({
-                camera: camera,
+                camera: scene.cameras.main,
                 left: scene.input.keyboard.addKey(
                     Phaser.Input.Keyboard.KeyCodes.A
-                ), // cursors.left,
+                ),
                 right: scene.input.keyboard.addKey(
                     Phaser.Input.Keyboard.KeyCodes.D
-                ), // cursors.right,
+                ),
                 up: scene.input.keyboard.addKey(
                     Phaser.Input.Keyboard.KeyCodes.W
-                ), // cursors.up,
+                ),
                 down: scene.input.keyboard.addKey(
                     Phaser.Input.Keyboard.KeyCodes.S
-                ), // cursors.down,
+                ),
                 zoomIn: scene.input.keyboard.addKey(
                     Phaser.Input.Keyboard.KeyCodes.Q
                 ),
                 zoomOut: scene.input.keyboard.addKey(
                     Phaser.Input.Keyboard.KeyCodes.E
                 ),
-                zoomSpeed: 0.02,
-                acceleration: 0.1,
-                drag: 0.0001,
-                maxSpeed: 1.05,
+                zoomSpeed: 0.05,
+                acceleration: 0.8,
+                drag: 0.5,
+                maxSpeed: 1,
                 minZoom: 1,
                 maxZoom: 2.8
             });
 
         controls.start();
-        camera.setBounds(0, 0, w, h);
-        // camera.setZoom(w > MIN_WIDTH_FOR_ZOOM ? 1.5 : 1);
-
         scene.update = function (_, delta) {
             controls.update(delta);
         };
@@ -130,10 +138,10 @@
         const tilewidth = data.tilewidth;
         const tileheight = data.tileheight;
         const layer = data.layers[0].data;
-        mapwidth = data.layers[0].width;
-        mapheight = data.layers[0].height;
-        tileWidthHalf = tilewidth / 2;
-        tileHeightHalf = tileheight / 2;
+        const mapwidth = data.layers[0].width;
+        const mapheight = data.layers[0].height;
+        const tileWidthHalf = tilewidth / 2;
+        const tileHeightHalf = tileheight / 2;
         const centerX = mapwidth * tileWidthHalf;
         const centerY = 16;
         let i = 0;
@@ -168,7 +176,7 @@
     const unitFocus = (scene: Phaser.Scene) => {
         console.log('unitFocus');
         if (!$unit) return;
-        $unit.setTint(hover);
+        $unit.setTint($settings.focusColor);
         scene.cameras.main.startFollow($unit);
         $messages.forEach((board: Message) => {
             if (board.parent === 'unit')
@@ -193,7 +201,8 @@
     };
 
     const crteateSceleton = (scene: Phaser.Scene) => {
-        const skeletonId = 'skeleton-' + uuidv5('skeleton', idLength);
+        const skeletonId =
+            'skeleton-' + uuidv5('skeleton', $settings.idLength);
 
         unit.set(
             new Skeleton(
@@ -244,7 +253,10 @@
                     'id-' +
                     mouseButton +
                     '-' +
-                    uuidv5('message-' + $messages?.length, idLength);
+                    uuidv5(
+                        'message-' + $messages?.length,
+                        $settings.idLength
+                    );
 
                 messages.add({
                     id,
@@ -255,7 +267,6 @@
             }
         );
 
-        scene.cameras.main.setSize(w, h);
         cameraControls(scene);
         buildMap(scene);
         placeHouses(scene);
@@ -275,6 +286,7 @@
     // component lifecycle
     onMount(() => {
         loadSave();
+        cameraUpdate();
         start(() => {
             if (!$unit) return;
             $unit.update();
@@ -282,35 +294,14 @@
         });
     });
 
-    afterUpdate(() => {
-        // TODO: responsive scene
-        if (sceneInstance && (newH !== h || newW !== w)) {
-            // sceneInstance.physics.world.setBounds(w/2, h/2, w, h, true, true, true, true);
-            // const x = sceneInstance.cameras.main.centerX;
-            // const y = sceneInstance.cameras.main.centerY;
-            // sceneInstance.cameras.main.setBounds(0, 0, w, h);
-            sceneInstance.cameras.main.setZoom(
-                w > MIN_WIDTH_FOR_ZOOM ? 1.5 : 1
-            );
-            sceneInstance.scale.scaleMode =
-                Phaser.Scale.ScaleModes.FIT;
-            sceneInstance.game.scale.autoCenter =
-                Phaser.Scale.Center.CENTER_BOTH;
-            sceneInstance.scale.resize(w, h);
-            sceneInstance.game.scale.resize(w, h);
-            sceneInstance.cameras.main.centerOn(
-                mapwidth / 2,
-                mapheight / 2
-            );
-        }
-    });
-
     onDestroy(() => stop());
 </script>
 
+<svelte:window on:resize={cameraUpdate} />
+
 <Scene
     bind:instance={sceneInstance}
-    key={sceneID}
+    key={$settings.sceneID}
     {preload}
     {create}
     active

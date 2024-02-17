@@ -32,7 +32,7 @@ class Skeleton extends Phaser.GameObjects.Sprite implements IUnit {
         this.motion = motion;
         this.anim = anims[motion];
         this.direction = directions[direction];
-        this.speed = 0.15;
+        this.speed = 0.3;
         this.f = this.anim.startFrame;
 
         this.depth = y + 64;

@@ -27,8 +27,6 @@ export interface Settings {
     isFullscreen: boolean;
     complexity: 'easy' | 'normal' | 'hard';
     theme: 'dark' | 'light' | 'oldschool';
-    zoom: number;
-    gameHours: number;
     notifyTimeout: number;
     loadingPercent: number;
     isGameInit: boolean;
@@ -39,7 +37,13 @@ export interface Settings {
     isGameMenuOpen: boolean;
     isGameWin: boolean;
     gameInitTime: number;
-    date: number | string | Date;
+    saveDate: number | string | Date;
+    mapWidth: number;
+    mapHeight: number;
+    idLength: any[];
+    sceneID: string;
+    focusColor: number;
+    playHours: number;
 }
 
 export interface Stats {

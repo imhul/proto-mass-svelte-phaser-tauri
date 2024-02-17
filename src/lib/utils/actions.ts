@@ -45,7 +45,7 @@ export const getFullscreen = () => {
 };
 
 export const onKeydown = (e: KeyboardEvent) => {
-    console.info('pressed keyboard key: ', e.key);
+    // console.info('pressed keyboard key: ', e.key);
 
     if (e.key === 'F11' || e.key === 'f11' || e.key === 'f') {
         const isFullscreen = getFullscreen();
