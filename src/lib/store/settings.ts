@@ -23,7 +23,9 @@ const initState: Settings = {
     idLength: new Array(16),
     sceneID: 'proto_mass_main_scene',
     focusColor: 0x86bfda,
-    playHours: 0
+    playHours: 0,
+    minimapEnabled: true,
+    minimapPosition: 'right',
 };
 
 function createSettings() {

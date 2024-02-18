@@ -8,9 +8,11 @@
     import { unit } from '$lib/store/unit';
     import settings from '$lib/store/settings';
     import { messages } from '$lib/store/notify';
+    // import minimap from '$lib/store/minimap';
     // components
     import { Scene } from 'svelte-phaser';
     import Background from '$lib/game/background.svelte';
+    // import MinimapWrapper from '$lib/game/ui/minimap/index.svelte';
     // utils
     import { start, stop } from '$lib/utils/interval';
     import { loadSave } from '$lib/utils/actions';
@@ -32,6 +34,8 @@
     let sceneInstance: Phaser.Scene;
 
     const cameraUpdate = () => {
+        // Moving the camera by dragging
+        // docs: https://codepen.io/samme/pen/GRKbxab
         if (!sceneInstance) return;
         const zoomCoef = w < $settings.mapWidth ? 1.5 : 1.2;
         zoomSize = Number(
@@ -138,6 +142,9 @@
         const tilewidth = data.tilewidth;
         const tileheight = data.tileheight;
         const layer = data.layers[0].data;
+        const minimapLayer = layer;
+        // minimapLayer.length = minimapLayer.length - 1;
+        // minimap.set(minimapLayer);
         const mapwidth = data.layers[0].width;
         const mapheight = data.layers[0].height;
         const tileWidthHalf = tilewidth / 2;
@@ -298,7 +305,7 @@
 </script>
 
 <svelte:window on:resize={cameraUpdate} />
-
+<!-- <MinimapWrapper /> -->
 <Scene
     bind:instance={sceneInstance}
     key={$settings.sceneID}

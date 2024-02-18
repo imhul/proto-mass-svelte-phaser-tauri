@@ -6,6 +6,8 @@
     import { unit } from '$lib/store/unit';
     // types
     import type { Message } from '$lib/types/ui';
+    // components
+    import Minimap from '$lib/game/ui/minimap/minimap.svelte';
 
     export let board: Message;
 
@@ -46,7 +48,9 @@
         on:mouseleave|stopPropagation={() => (overBoard = false)}
     >
         <div class="head">
-            <span>{board.title}</span>
+            {#if board.title?.length}
+                <span>{board.title}</span>
+            {/if}
             <div class="controls">
                 <i
                     class="icon-{board.fixed ? 'bar' : 'numbersign'}"
@@ -64,22 +68,20 @@
             </div>
         </div>
         <div class="content">
-            <slot />
-            <!-- {#if board.img?.length}
-                <div class="img-wrapper">
-                    <img src={board.img} alt={board.title} />
+            <!-- <slot /> -->
+            {#if board.parent === 'minimap'}
+                <Minimap />
+            {:else}
+                <div class="message">
+                    {#if board.message?.length}
+                        {board.message}
+                    {/if}
+                    {#if $unit && board.parent === 'unit'}
+                        x: {`${$unit.x.toFixed(0)}\n`}
+                        y: {`${$unit.y.toFixed(0)}\n`}
+                    {/if}
                 </div>
-            {/if} -->
-
-            <div class="message">
-                {#if board.message?.length}
-                    {board.message}
-                {/if}
-                {#if $unit && board.parent === 'unit'}
-                    x: {`${$unit.x.toFixed(0)}\n`}
-                    y: {`${$unit.y.toFixed(0)}\n`}
-                {/if}
-            </div>
+            {/if}
         </div>
         {#if board.actions?.length}
             <div class="actions">
@@ -106,7 +108,7 @@
         display: flex;
         flex-direction: column;
         width: 100%;
-        padding: rem(24);
+        padding: rem(24) rem(16);
         margin-bottom: rem(16);
         text-shadow: rem(2) rem(2) 0 var(--game-color-darkest);
         font-family: var(--8-bit);

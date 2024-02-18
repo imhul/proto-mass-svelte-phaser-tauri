@@ -3,6 +3,7 @@
     // components
     import { Game } from 'svelte-phaser';
     import Header from '$lib/game/ui/header.svelte';
+    import Footer from '$lib/game/ui/footer.svelte';
     import AsideL from '$lib/game/ui/aside-left.svelte';
     import AsideR from '$lib/game/ui/aside-right.svelte';
     import Scenario from '$lib/game/scenario.svelte';
@@ -33,3 +34,4 @@
         <Scenario {w} {h} />
     </Game>
 {/if}
+<Footer />

@@ -1,3 +1,4 @@
+// UI types
 export interface ButtonUIAction {
     id: string;
     title: string;
@@ -6,10 +7,13 @@ export interface ButtonUIAction {
 }
 
 export type Aside = 'left' | 'right';
+export type Complexity = 'easy' | 'normal' | 'hard';
+export type Theme = 'dark' | 'light' | 'oldschool';
+export type MessageType = 'default' | 'danger' | 'success' | 'warn' | 'info';
 
 export interface Message {
     id: string;
-    type?: 'default' | 'danger' | 'success' | 'warn' | 'info';
+    type?: MessageType;
     title?: string;
     message?: string;
     actions?: ButtonUIAction[];
@@ -25,8 +29,8 @@ export interface Message {
 export interface Settings {
     volume: number;
     isFullscreen: boolean;
-    complexity: 'easy' | 'normal' | 'hard';
-    theme: 'dark' | 'light' | 'oldschool';
+    complexity: Complexity;
+    theme: Theme;
     notifyTimeout: number;
     loadingPercent: number;
     isGameInit: boolean;
@@ -44,6 +48,8 @@ export interface Settings {
     sceneID: string;
     focusColor: number;
     playHours: number;
+    minimapEnabled: boolean;
+    minimapPosition: Aside;
 }
 
 export interface Stats {

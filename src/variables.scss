@@ -36,10 +36,14 @@
     scrollbar-color: $foreground-color $background-color;
 }
 
-%nav {
+%flex-center {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+%nav {
+    @extend %flex-center;
 
     .menu-link {
         display: block;
@@ -50,22 +54,6 @@
         background: var(--game-color-dark);
         text-shadow: rem(2) rem(2) 0 var(--game-color-darkest);
         cursor: pointer;
-
-        span {
-            font-size: rem(22);
-            font-family: var(--8-bit);
-            color: var(--game-color);
-        }
-
-        &:hover {
-            background-color: var(--game-color);
-            span,
-            i,
-            a {
-                color: var(--game-color-darkest);
-                text-shadow: rem(2) rem(2) 0 var(--game-color-warn);
-            }
-        }
     }
 }
 

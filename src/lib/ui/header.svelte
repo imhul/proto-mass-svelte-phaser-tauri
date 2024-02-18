@@ -52,6 +52,25 @@
 
         nav {
             @extend %nav;
+
+            .menu-link {
+                span {
+                    font-size: rem(22);
+                    font-family: var(--8-bit);
+                    color: var(--game-color);
+                }
+
+                &:hover {
+                    background-color: var(--game-color);
+                    span,
+                    i,
+                    a {
+                        color: var(--game-color-darkest);
+                        text-shadow: rem(2) rem(2) 0
+                            var(--game-color-warn);
+                    }
+                }
+            }
         }
     }
 </style>

@@ -58,7 +58,7 @@
 
                     span,
                     i {
-                        color: var(--game-color-light);
+                        color: var(--game-color-darker);
                         text-shadow: none;
                     }
                 }
