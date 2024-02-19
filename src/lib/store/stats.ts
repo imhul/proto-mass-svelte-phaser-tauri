@@ -1,18 +1,27 @@
 import { writable } from 'svelte/store';
 // type
-import type { Stats } from '$lib/types/ui';
+import type { Stats } from '$lib/types';
 
 const initState: Stats = {
     id: '',
     colony: {
         id: '',
         name: 'Autopia',
-        level: 0
+        level: 20 // 1-20
     },
     objects: [],
     map: [],
     units: [],
-    taskList: []
+    taskList: [],
+    gameInitTime: 0,
+    saveDate: new Date().getMilliseconds(),
+    playHours: 0,
+    minimapEnabled: true,
+    minimapPosition: 'right',
+    volume: 0.5,
+    isFullscreen: false,
+    complexity: 'normal', // easy, normal, hard
+    theme: 'dark' // dark, light, oldschool
 };
 
 function createStats() {

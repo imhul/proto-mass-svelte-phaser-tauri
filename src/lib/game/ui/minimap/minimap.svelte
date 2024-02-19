@@ -7,10 +7,12 @@
     <div class="map">
         <!-- {($minimap.length = $minimap.length - 1)} -->
         {#each $minimap as pixel, i (`${pixel}-${i}`)}
-        {@const half = 312}
-            <div class="pixel pixel-{pixel}" style="--x:{
-                i < half ? i + 1 : half - i};--y:{
-                i < half ? half - i : i + 1}" 
+            {@const half = 312}
+            <div
+                class="pixel pixel-{pixel}"
+                style="--x:{i < half ? i + 1 : half - i};--y:{i < half
+                    ? half - i
+                    : i + 1}"
             />
         {/each}
     </div>

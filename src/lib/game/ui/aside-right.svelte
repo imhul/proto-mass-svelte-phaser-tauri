@@ -4,7 +4,7 @@
     // store
     import { messages } from '$lib/store/notify';
     // types
-    import type { Message } from '$lib/types/ui';
+    import type { Message } from '$lib/types';
 
     $: boards = $messages
         ? $messages.filter(

@@ -2,12 +2,13 @@
     import { fly, fade } from 'svelte/transition';
     // store
     import { messages } from '$lib/store/notify';
-    import settings from '$lib/store/settings';
     import { unit } from '$lib/store/unit';
     // types
-    import type { Message } from '$lib/types/ui';
+    import type { Message } from '$lib/types';
     // components
     import Minimap from '$lib/game/ui/minimap/minimap.svelte';
+    // utils
+    import config from '$lib/utils/config';
 
     export let board: Message;
 
@@ -22,7 +23,7 @@
         timer = setTimeout(() => {
             messages.delete(board.id, 'archive');
             clearTimeout(timer);
-        }, $settings.notifyTimeout);
+        }, config.notifyTimeout);
     };
 
     $: filtered = $messages?.filter(

@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
-import type { Message } from '$lib/types/ui';
+import type { Message } from '$lib/types';
 
 const initState: Message[] = [];
 

@@ -9,7 +9,9 @@
 
     onMount(() => {
         if (!$settings.minimapEnabled) return;
-        const isMinimapExist = $messages.find((m) => m.id === 'minimap');
+        const isMinimapExist = $messages.find(
+            m => m.id === 'minimap'
+        );
         if (isMinimapExist) return;
 
         messages.add({

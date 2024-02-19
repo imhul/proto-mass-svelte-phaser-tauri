@@ -1,17 +1,14 @@
 <script lang="ts">
     import { getContext } from 'svelte';
     // types
-    import type { Message } from '$lib/types';
     import type { MouseEventHandler } from 'svelte/elements';
     // store
-    import { messages } from '$lib/store/notify';
 
     const { close } = getContext('simple-modal') as {
         close: MouseEventHandler<HTMLElement>;
     };
-    const archive = $messages.filter(
-        (message: Message) => message.archived
-    );
+
+    // TODO: create a view of the task board
 </script>
 
 <div class="big-modal">
@@ -22,23 +19,15 @@
         tabindex="0"
         on:click|stopPropagation={close}
     />
-    <h1 class="title">Actions Journal</h1>
+    <h1 class="title">Task Board</h1>
     <div class="list">
-        {#each archive as message (message.id)}
-            <div class="list-item">
-                <div class="list-item-icon">
-                    {#if message.img}
-                        <img src={message.img} alt={message.title} />
-                    {:else if message.icon}
-                        <i class="icon-{message.icon}" />
-                    {/if}
-                </div>
-                <div class="list-item-text">
-                    <h3>{message.title}</h3>
-                    <p>{message.message}</p>
-                </div>
+        <div class="list-item">
+            <div class="list-item-icon"></div>
+            <div class="list-item-text">
+                <h3>title</h3>
+                <p>message</p>
             </div>
-        {/each}
+        </div>
     </div>
 </div>
 

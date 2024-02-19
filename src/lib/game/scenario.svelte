@@ -3,7 +3,7 @@
     import { onDestroy, onMount } from 'svelte';
     import Phaser from 'phaser';
     // types
-    import type { Aside, Message } from '$lib/types/ui';
+    import type { Aside, IScene, Message } from '$lib/types';
     // store
     import { unit } from '$lib/store/unit';
     import settings from '$lib/store/settings';
@@ -15,6 +15,7 @@
     // import MinimapWrapper from '$lib/game/ui/minimap/index.svelte';
     // utils
     import { start, stop } from '$lib/utils/interval';
+    import config from '$lib/utils/config';
     import { loadSave } from '$lib/utils/actions';
     import { v5 as uuidv5 } from 'uuid';
     // assets
@@ -31,33 +32,30 @@
     $: pointerY = 0;
     $: mouseButton = '';
     $: zoomSize = 1;
-    let sceneInstance: Phaser.Scene;
+    let sceneInstance: IScene;
 
     const cameraUpdate = () => {
-        // Moving the camera by dragging
-        // docs: https://codepen.io/samme/pen/GRKbxab
         if (!sceneInstance) return;
-        const zoomCoef = w < $settings.mapWidth ? 1.5 : 1.2;
+        const zoomCoef = w < config.mapWidth ? 1.5 : 1.2;
         zoomSize = Number(
             (
                 zoomCoef +
-                (w - $settings.mapWidth) / (2 * $settings.mapWidth)
+                (w - config.mapWidth) / (2 * config.mapWidth)
             ).toFixed(2)
         );
-        console.info('cam update >> zoom: ', zoomSize);
         sceneInstance.scale.resize(w, h);
         sceneInstance.game.scale.resize(w, h);
         sceneInstance.cameras.main.setBounds(
             0,
             0,
-            $settings.mapWidth,
-            $settings.mapHeight,
+            config.mapWidth,
+            config.mapHeight,
             true
         );
         sceneInstance.cameras.main.setZoom(zoomSize);
     };
 
-    const cameraControls = (scene: Phaser.Scene) => {
+    const cameraControls = (scene: IScene) => {
         if (!scene.input.keyboard) return;
 
         const controls =
@@ -95,7 +93,7 @@
         };
     };
 
-    const pause = (scene: Phaser.Scene) => {
+    const pause = (scene: IScene) => {
         settings.set({
             ...$settings,
             isGamePaused: true
@@ -103,7 +101,7 @@
         scene.events.emit('pause');
     };
 
-    const resume = (scene: Phaser.Scene) => {
+    const resume = (scene: IScene) => {
         settings.set({
             ...$settings,
             isGamePaused: false
@@ -111,12 +109,12 @@
         scene.events.emit('resume');
     };
 
-    const onSceneKeyup = (e: KeyboardEvent, scene: Phaser.Scene) => {
+    const onSceneKeyup = (e: KeyboardEvent, scene: IScene) => {
         if (e.key === 'p') pause(scene);
         if (e.key === 'r') resume(scene);
     };
 
-    const preload = (scene: Phaser.Scene) => {
+    const preload = (scene: IScene) => {
         scene.load.json('map', mapJson);
         scene.load.spritesheet('tiles', tilesPng, {
             frameWidth: 64,
@@ -136,7 +134,7 @@
         );
     };
 
-    const buildMap = (scene: Phaser.Scene) => {
+    const buildMap = (scene: IScene) => {
         //  Parse the data out of the map
         const data = scene.cache.json.get('map');
         const tilewidth = data.tilewidth;
@@ -172,7 +170,7 @@
         }
     };
 
-    const placeHouses = (scene: Phaser.Scene) => {
+    const placeHouses = (scene: IScene) => {
         const house_1 = scene.add.image(240, 370, 'house');
         house_1.depth = house_1.y + 86;
 
@@ -180,10 +178,10 @@
         house_2.depth = house_2.y + 86;
     };
 
-    const unitFocus = (scene: Phaser.Scene) => {
+    const unitFocus = (scene: IScene) => {
         console.log('unitFocus');
         if (!$unit) return;
-        $unit.setTint($settings.focusColor);
+        $unit.setTint(config.focusColor);
         scene.cameras.main.startFollow($unit);
         $messages.forEach((board: Message) => {
             if (board.parent === 'unit')
@@ -201,15 +199,15 @@
         });
     };
 
-    const unitBlur = (scene: Phaser.Scene) => {
+    const unitBlur = (scene: IScene) => {
         if (!$unit) return;
         $unit.clearTint();
         scene.cameras.main.stopFollow();
     };
 
-    const crteateSceleton = (scene: Phaser.Scene) => {
+    const crteateSceleton = (scene: IScene) => {
         const skeletonId =
-            'skeleton-' + uuidv5('skeleton', $settings.idLength);
+            'skeleton-' + uuidv5('skeleton', config.idLength);
 
         unit.set(
             new Skeleton(
@@ -229,7 +227,7 @@
         $unit.on('pointerdown', () => unitFocus(scene));
     };
 
-    const create = (scene: Phaser.Scene) => {
+    const create = (scene: IScene) => {
         if (scene.input.keyboard)
             scene.input.keyboard.on(
                 'keyup',
@@ -239,6 +237,15 @@
 
         scene.events.on('pause', pause);
         scene.events.on('resume', resume);
+
+        // The mini map
+        scene.minimap = scene.cameras
+            .add(20, 20, 200, 200)
+            .setZoom(0.2)
+            .setName('mini');
+        scene.minimap.setBackgroundColor(0x0f2a3f);
+        scene.minimap.scrollX = 800;
+        scene.minimap.scrollY = 400;
 
         scene.input.on(
             'pointerdown',
@@ -262,7 +269,7 @@
                     '-' +
                     uuidv5(
                         'message-' + $messages?.length,
-                        $settings.idLength
+                        config.idLength
                     );
 
                 messages.add({
@@ -308,7 +315,7 @@
 <!-- <MinimapWrapper /> -->
 <Scene
     bind:instance={sceneInstance}
-    key={$settings.sceneID}
+    key={config.sceneID}
     {preload}
     {create}
     active

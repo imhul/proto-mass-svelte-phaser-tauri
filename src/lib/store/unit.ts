@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
-import type { IUnit } from '$lib/types/objects';
+import type { IUnit } from '$lib/types';
 
 export const unit = writable<IUnit | null>(null);
 

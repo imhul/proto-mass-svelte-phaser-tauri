@@ -1,4 +1,4 @@
-import type { IAnims, IDirections } from '$lib/types/objects';
+import type { IAnims, IDirections } from '$lib/types';
 
 export const directions: IDirections = {
     west: { offset: 0, x: -2, y: 0, opposite: 'east' },

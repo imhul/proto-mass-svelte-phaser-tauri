@@ -5,7 +5,7 @@ import settings from '$lib/store/settings';
 import { messages } from '$lib/store/notify';
 import stats from '$lib/store/stats';
 // types
-import type { Save } from '$lib/types/ui';
+import type { Save } from '$lib/types';
 // utils
 import {
     readTextFile,
@@ -38,7 +38,7 @@ export const toggleFullscreen = (val: boolean) => {
 
 export const getFullscreen = () => {
     let isFullscreen: boolean = false;
-    settings.subscribe(value => {
+    stats.subscribe(value => {
         isFullscreen = value.isFullscreen;
     });
     return isFullscreen;

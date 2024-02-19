@@ -1,5 +1,5 @@
 import { anims, directions } from '$lib/objects/stats';
-import type { IMotion, IOpposite, IUnit } from '$lib/types/objects';
+import type { IMotion, IOpposite, IUnit } from '$lib/types';
 
 class Skeleton extends Phaser.GameObjects.Sprite implements IUnit {
     private startX: number;
