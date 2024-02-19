@@ -86,7 +86,7 @@ const config: Config = {
                     small: false,
                     level: 2,
                     parent: 'construct',
-                    description: 'Details & Units Fabricator'
+                    description: 'Details & Tools Fabricator'
                 },
                 {
                     id: 'mini-factory',
@@ -100,7 +100,7 @@ const config: Config = {
                     id: 'factory',
                     icon: 'celebrate',
                     small: false,
-                    level: 5,
+                    level: 10,
                     parent: 'construct',
                     description: 'Middle Units Factory'
                 },
@@ -108,9 +108,41 @@ const config: Config = {
                     id: 'mega-factory',
                     icon: 'celebrate',
                     small: false,
-                    level: 5,
+                    level: 15,
                     parent: 'construct',
                     description: 'Mega Units Factory'
+                },
+                {
+                    id: 'melter',
+                    icon: 'celebrate',
+                    small: false,
+                    level: 2,
+                    parent: 'construct',
+                    description: 'Ore Processor'
+                },
+                {
+                    id: 'nano-lab',
+                    icon: 'celebrate',
+                    small: false,
+                    level: 5,
+                    parent: 'construct',
+                    description: 'Technologies Research'
+                },
+                {
+                    id: 'turret',
+                    icon: 'celebrate',
+                    small: false,
+                    level: 5,
+                    parent: 'construct',
+                    description: 'Turret'
+                },
+                {
+                    id: 'auto-turret',
+                    icon: 'celebrate',
+                    small: false,
+                    level: 10,
+                    parent: 'construct',
+                    description: 'Auto Turret'
                 }
             ]
         }
