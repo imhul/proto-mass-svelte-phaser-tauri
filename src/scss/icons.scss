@@ -1,82 +1,6 @@
 $icomoon-font-family: 'pixel' !default;
 $icomoon-font-path: 'fonts' !default;
 
-$icon-exclam: '\21';
-$icon-quotedbl: '\22';
-$icon-numbersign: '\23';
-$icon-dollar: '\24';
-$icon-percent: '\25';
-$icon-ampersand: '\26';
-$icon-quotesingle: '\27';
-$icon-parenleft: '\28';
-$icon-parenright: '\29';
-$icon-asterisk: '\2a';
-$icon-plus: '\2b';
-$icon-comma: '\2c';
-$icon-hyphen: '\2d';
-$icon-period: '\2e';
-$icon-slash: '\2f';
-$icon-zero: '\30';
-$icon-one: '\31';
-$icon-two: '\32';
-$icon-three: '\33';
-$icon-four: '\34';
-$icon-five: '\35';
-$icon-six: '\36';
-$icon-seven: '\37';
-$icon-eight: '\38';
-$icon-nine: '\39';
-$icon-colon: '\3a';
-$icon-semicolon: '\3b';
-$icon-less: '\3c';
-$icon-equal: '\3d';
-$icon-greater: '\3e';
-$icon-question: '\3f';
-$icon-A: '\41';
-$icon-B: '\42';
-$icon-C: '\43';
-$icon-D: '\44';
-$icon-E: '\45';
-$icon-F: '\46';
-$icon-G: '\47';
-$icon-H: '\48';
-$icon-I: '\49';
-$icon-J: '\4a';
-$icon-K: '\4b';
-$icon-L: '\4c';
-$icon-M: '\4d';
-$icon-N: '\4e';
-$icon-O: '\4f';
-$icon-P: '\50';
-$icon-Q: '\51';
-$icon-R: '\52';
-$icon-S: '\53';
-$icon-T: '\54';
-$icon-U: '\55';
-$icon-V: '\56';
-$icon-W: '\57';
-$icon-X: '\58';
-$icon-Y: '\59';
-$icon-Z: '\5a';
-$icon-bracketleft: '\5b';
-$icon-backslash: '\5c';
-$icon-bracketright: '\5d';
-$icon-grave: '\60';
-$icon-a: '\61';
-$icon-b: '\62';
-$icon-c: '\63';
-$icon-d: '\64';
-$icon-e: '\65';
-$icon-f: '\66';
-$icon-g: '\67';
-$icon-h: '\68';
-$icon-i: '\69';
-$icon-j: '\6a';
-$icon-k: '\6b';
-$icon-l: '\6c';
-$icon-m: '\6d';
-$icon-n: '\6e';
-$icon-o: '\6f';
 $icon-p: '\70';
 $icon-q: '\71';
 $icon-r: '\72';
@@ -1886,382 +1810,382 @@ i {
 
 .icon-exclam {
     &::before {
-        content: $icon-exclam;
+        content: '\21';
     }
 }
 .icon-quotedbl {
     &::before {
-        content: $icon-quotedbl;
+        content: '\22';
     }
 }
 .icon-numbersign {
     &::before {
-        content: $icon-numbersign;
+        content: '\23';
     }
 }
 .icon-dollar {
     &::before {
-        content: $icon-dollar;
+        content: '\24';
     }
 }
 .icon-percent {
     &::before {
-        content: $icon-percent;
+        content: '\25';
     }
 }
 .icon-ampersand {
     &::before {
-        content: $icon-ampersand;
+        content: '\26';
     }
 }
 .icon-quotesingle {
     &::before {
-        content: $icon-quotesingle;
+        content: '\27';
     }
 }
 .icon-parenleft {
     &::before {
-        content: $icon-parenleft;
+        content: '\28';
     }
 }
 .icon-parenright {
     &::before {
-        content: $icon-parenright;
+        content: '\29';
     }
 }
 .icon-asterisk {
     &::before {
-        content: $icon-asterisk;
+        content: '\2a';
     }
 }
 .icon-plus {
     &::before {
-        content: $icon-plus;
+        content: '\2b';
     }
 }
 .icon-comma {
     &::before {
-        content: $icon-comma;
+        content: '\2c';
     }
 }
 .icon-hyphen {
     &::before {
-        content: $icon-hyphen;
+        content: '\2d';
     }
 }
 .icon-period {
     &::before {
-        content: $icon-period;
+        content: '\2e';
     }
 }
 .icon-slash {
     &::before {
-        content: $icon-slash;
+        content: '\2f';
     }
 }
 .icon-zero {
     &::before {
-        content: $icon-zero;
+        content: '\30';
     }
 }
 .icon-one {
     &::before {
-        content: $icon-one;
+        content: '\31';
     }
 }
 .icon-two {
     &::before {
-        content: $icon-two;
+        content: '\32';
     }
 }
 .icon-three {
     &::before {
-        content: $icon-three;
+        content: '\33';
     }
 }
 .icon-four {
     &::before {
-        content: $icon-four;
+        content: '\34';
     }
 }
 .icon-five {
     &::before {
-        content: $icon-five;
+        content: '\35';
     }
 }
 .icon-six {
     &::before {
-        content: $icon-six;
+        content: '\36';
     }
 }
 .icon-seven {
     &::before {
-        content: $icon-seven;
+        content: '\37';
     }
 }
 .icon-eight {
     &::before {
-        content: $icon-eight;
+        content: '\38';
     }
 }
 .icon-nine {
     &::before {
-        content: $icon-nine;
+        content: '\39';
     }
 }
 .icon-colon {
     &::before {
-        content: $icon-colon;
+        content: '\3a';
     }
 }
 .icon-semicolon {
     &::before {
-        content: $icon-semicolon;
+        content: '\3b';
     }
 }
 .icon-less {
     &::before {
-        content: $icon-less;
+        content: '\3c';
     }
 }
 .icon-equal {
     &::before {
-        content: $icon-equal;
+        content: '\3d';
     }
 }
 .icon-greater {
     &::before {
-        content: $icon-greater;
+        content: '\3e';
     }
 }
 .icon-question {
     &::before {
-        content: $icon-question;
+        content: '\3f';
     }
 }
 .icon-A {
     &::before {
-        content: $icon-A;
+        content: '\41';
     }
 }
 .icon-B {
     &::before {
-        content: $icon-B;
+        content: '\42';
     }
 }
 .icon-C {
     &::before {
-        content: $icon-C;
+        content: '\43';
     }
 }
 .icon-D {
     &::before {
-        content: $icon-D;
+        content: '\44';
     }
 }
 .icon-E {
     &::before {
-        content: $icon-E;
+        content: '\45';
     }
 }
 .icon-F {
     &::before {
-        content: $icon-F;
+        content: '\46';
     }
 }
 .icon-G {
     &::before {
-        content: $icon-G;
+        content: '\47';
     }
 }
 .icon-H {
     &::before {
-        content: $icon-H;
+        content: '\48';
     }
 }
 .icon-I {
     &::before {
-        content: $icon-I;
+        content: '\49';
     }
 }
 .icon-J {
     &::before {
-        content: $icon-J;
+        content: '\4a';
     }
 }
 .icon-K {
     &::before {
-        content: $icon-K;
+        content: '\4b';
     }
 }
 .icon-L {
     &::before {
-        content: $icon-L;
+        content: '\4c';
     }
 }
 .icon-M {
     &::before {
-        content: $icon-M;
+        content: '\4d';
     }
 }
 .icon-N {
     &::before {
-        content: $icon-N;
+        content: '\4e';
     }
 }
 .icon-O {
     &::before {
-        content: $icon-O;
+        content: '\4f';
     }
 }
 .icon-P {
     &::before {
-        content: $icon-P;
+        content: '\50';
     }
 }
 .icon-Q {
     &::before {
-        content: $icon-Q;
+        content: '\51';
     }
 }
 .icon-R {
     &::before {
-        content: $icon-R;
+        content: '\52';
     }
 }
 .icon-S {
     &::before {
-        content: $icon-S;
+        content: '\53';
     }
 }
 .icon-T {
     &::before {
-        content: $icon-T;
+        content: '\54';
     }
 }
 .icon-U {
     &::before {
-        content: $icon-U;
+        content: '\55';
     }
 }
 .icon-V {
     &::before {
-        content: $icon-V;
+        content: '\56';
     }
 }
 .icon-W {
     &::before {
-        content: $icon-W;
+        content: '\57';
     }
 }
 .icon-X {
     &::before {
-        content: $icon-X;
+        content: '\58';
     }
 }
 .icon-Y {
     &::before {
-        content: $icon-Y;
+        content: '\59';
     }
 }
 .icon-Z {
     &::before {
-        content: $icon-Z;
+        content: '\5a';
     }
 }
 .icon-bracketleft {
     &::before {
-        content: $icon-bracketleft;
+        content: '\5b';
     }
 }
 .icon-backslash {
     &::before {
-        content: $icon-backslash;
+        content: '\5c';
     }
 }
 .icon-bracketright {
     &::before {
-        content: $icon-bracketright;
+        content: '\5d';
     }
 }
 .icon-grave {
     &::before {
-        content: $icon-grave;
+        content: '\60';
     }
 }
 .icon-a {
     &::before {
-        content: $icon-a;
+        content: '\61';
     }
 }
 .icon-b {
     &::before {
-        content: $icon-b;
+        content: '\62';
     }
 }
 .icon-c {
     &::before {
-        content: $icon-c;
+        content: '\63';
     }
 }
 .icon-d {
     &::before {
-        content: $icon-d;
+        content: '\64';
     }
 }
 .icon-e {
     &::before {
-        content: $icon-e;
+        content: '\65';
     }
 }
 .icon-f {
     &::before {
-        content: $icon-f;
+        content: '\66';
     }
 }
 .icon-g {
     &::before {
-        content: $icon-g;
+        content: '\67';
     }
 }
 .icon-h {
     &::before {
-        content: $icon-h;
+        content: '\68';
     }
 }
 .icon-i {
     &::before {
-        content: $icon-i;
+        content: '\69';
     }
 }
 .icon-j {
     &::before {
-        content: $icon-j;
+        content: '\6a';
     }
 }
 .icon-k {
     &::before {
-        content: $icon-k;
+        content: '\6b';
     }
 }
 .icon-l {
     &::before {
-        content: $icon-l;
+        content: '\6c';
     }
 }
 .icon-m {
     &::before {
-        content: $icon-m;
+        content: '\6d';
     }
 }
 .icon-n {
     &::before {
-        content: $icon-n;
+        content: '\6e';
     }
 }
 .icon-o {
     &::before {
-        content: $icon-o;
+        content: '\6f';
     }
 }
 .icon-p {

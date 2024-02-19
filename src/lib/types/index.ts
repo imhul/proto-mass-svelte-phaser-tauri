@@ -45,12 +45,12 @@ export type TaskType =
     | 'craft'
     | 'research'
     | 'heal'
-    | 'deliver';
+    | 'carrying';
 
 export type Profession =
     | 'collector'
     | 'constructor'
-    | 'guard'
+    | 'defender'
     | 'warrior'
     | 'explorer'
     | 'harvester'
@@ -155,6 +155,9 @@ export interface Menu {
 
 export interface SubmenuIten extends Menu {
     parent: string;
+    profession?: Profession | Profession[];
+    forMenu?: boolean;
+    context?: string | string[];
 }
 
 export interface MenuItem extends Menu {

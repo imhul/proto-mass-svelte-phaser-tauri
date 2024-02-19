@@ -55,7 +55,7 @@
                         on:focus={() => mouseover(item.id)}
                     >
                         {#each item.submenu as subitem (subitem.id)}
-                            {#if item.id === subitem.parent}
+                            {#if item.id === subitem.parent && subitem.level >= colonyLevel && subitem.forMenu}
                                 <div
                                     role="menuitem"
                                     tabindex={i}
@@ -78,6 +78,9 @@
                                         class="submenu-icon icon-{subitem.icon}"
                                         class:small={subitem.small}
                                     />
+                                    <div class="tooltip">
+                                        {subitem.description}
+                                    </div>
                                 </div>
                             {/if}
                         {/each}
@@ -138,7 +141,6 @@
                         bottom 0.35s;
                     background-color: var(--half-transparent);
                     padding: 0 rem(20);
-                    // pointer-events: none;
 
                     &.active {
                         bottom: rem(80);
@@ -157,19 +159,34 @@
                             var(--game-color-darkest);
                         cursor: pointer;
                         font-size: rem(40);
-                        // pointer-events: auto;
 
                         .submenu-icon {
                             color: var(--game-color);
                             margin-left: rem(10);
                         }
 
-                        &.hover {
-                            // background: var(--transparent);
+                        .tooltip {
+                            position: absolute;
+                            top: rem(-20);
+                            left: 0;
+                            display: none;
 
+                            @include font(
+                                rem(12),
+                                400,
+                                1,
+                                var(--game-color-light)
+                            );
+                        }
+
+                        &.hover {
                             .submenu-icon {
                                 color: var(--game-color-darker);
                                 text-shadow: none;
+                            }
+
+                            .tooltip {
+                                display: block;
                             }
                         }
                     }
