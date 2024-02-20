@@ -313,7 +313,7 @@ const config: Config = {
                 },
                 {
                     id: 'nano-lab',
-                    icon: 'Z12',
+                    icon: 'cedilla1',
                     small: true,
                     forMenu: true,
                     level: 5,

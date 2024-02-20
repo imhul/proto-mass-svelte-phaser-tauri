@@ -1,3 +1,5 @@
+import { Scene } from 'svelte-phaser';
+
 // UI types
 export type Aside = 'left' | 'right';
 export type Complexity = 'easy' | 'normal' | 'hard';
@@ -197,7 +199,7 @@ export interface Config {
     footerMenu: MenuItem[];
 }
 
-export interface IScene extends Phaser.Scene {
+export interface IScene extends Phaser.Scene, Scene {
     minimap: Phaser.Cameras.Scene2D.Camera;
 }
 

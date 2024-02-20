@@ -3,7 +3,7 @@
     import { onDestroy, onMount } from 'svelte';
     import Phaser from 'phaser';
     // types
-    import type { Aside, IScene, Message } from '$lib/types';
+    import type { IScene, Message } from '$lib/types';
     // store
     import { unit } from '$lib/store/unit';
     import settings from '$lib/store/settings';
@@ -37,8 +37,9 @@
     const depth = 86;
     const taskImgOffsetX = 250;
     const taskImgOffsetY = 150;
-    let awaitPlacement = false;
+    $: awaitPlacement = Boolean($memoizedTask.id?.length);
     $: construction = {} as Phaser.GameObjects.Sprite;
+    $: bounds = $sceneInstance?.cameras.main.getBounds();
 
     const cameraUpdate = () => {
         if (!$sceneInstance) return;
@@ -61,7 +62,7 @@
         $sceneInstance.cameras.main.setZoom(zoomSize);
     };
 
-    const cameraControls = (scene: IScene) => {
+    const cameraControls = (scene: Phaser.Scene) => {
         if (!scene.input.keyboard) return;
 
         const controls =
@@ -99,7 +100,7 @@
         };
     };
 
-    const pause = (scene: IScene) => {
+    const pause = (scene: Phaser.Scene) => {
         settings.set({
             ...$settings,
             isGamePaused: true
@@ -107,7 +108,7 @@
         scene.events.emit('pause');
     };
 
-    const resume = (scene: IScene) => {
+    const resume = (scene: Phaser.Scene) => {
         settings.set({
             ...$settings,
             isGamePaused: false
@@ -115,13 +116,13 @@
         scene.events.emit('resume');
     };
 
-    const onSceneKeyup = (e: KeyboardEvent, scene: IScene) => {
+    const onSceneKeyup = (e: KeyboardEvent, scene: Phaser.Scene) => {
         if (e.key === 'p') pause(scene);
         if (e.key === 'r') resume(scene);
     };
 
-    const preload = (scene: IScene) => {
-        sceneInstance.set(scene);
+    const preload = (scene: Phaser.Scene) => {
+        sceneInstance.set(scene as IScene);
         scene.load.json('map', mapJson);
         scene.load.spritesheet('tiles', tilesPng, {
             frameWidth: 64,
@@ -138,10 +139,10 @@
 
         // TODO: moving sprite with cursor
         construction = scene.add.sprite(0, 0, $memoizedTask.context);
-        construction.depth = construction.y + depth;
+        // construction.depth = construction.y + depth;
     };
 
-    const buildMap = (scene: IScene) => {
+    const buildMap = (scene: Phaser.Scene) => {
         //  Parse the data out of the map
         const data = scene.cache.json.get('map');
         const tilewidth = data.tilewidth;
@@ -177,7 +178,7 @@
         }
     };
 
-    // const placeHouses = (scene: IScene) => {
+    // const placeHouses = (scene: Phaser.Scene) => {
     //     const house_1 = scene.add.image(240, 370, 'solar-plant');
     //     house_1.depth = house_1.y + depth;
 
@@ -185,7 +186,7 @@
     //     house_2.depth = house_2.y + depth;
     // };
 
-    const unitFocus = (scene: IScene) => {
+    const unitFocus = (scene: Phaser.Scene) => {
         console.log('unitFocus');
         if (!$unit) return;
         $unit.setTint(config.focusColor);
@@ -213,7 +214,7 @@
         $sceneInstance.cameras.main.stopFollow();
     };
 
-    const crteateSceleton = (scene: IScene) => {
+    const crteateSceleton = (scene: Phaser.Scene) => {
         const skeletonId =
             'skeleton-' + uuidv5('skeleton', config.idLength);
 
@@ -267,11 +268,14 @@
                     ...$memoizedTask,
                     position: { x: pointerX, y: pointerY }
                 });
-            } else if (awaitPlacement) {
-                if (!$sceneInstance) return;
+            } else if (
+                $memoizedTask.context?.length &&
+                awaitPlacement &&
+                $sceneInstance
+            ) {
                 const newConstruction = $sceneInstance.add.sprite(
-                    pointer.x + taskImgOffsetX,
-                    pointer.y - taskImgOffsetY,
+                    pointer.x,
+                    pointer.y,
                     $memoizedTask.context
                 );
                 newConstruction.depth = newConstruction.y + depth;
@@ -289,21 +293,21 @@
             });
         }
 
-        const id =
-            'id-' +
-            mouseButton +
-            '-' +
-            uuidv5('message-' + $messages?.length, config.idLength);
+        // const id =
+        //     'message-id-' +
+        //     mouseButton +
+        //     '-' +
+        //     uuidv5('message-' + $messages?.length, config.idLength);
 
-        messages.add({
-            id,
-            title: `Name: ${mouseButton}`,
-            aside: (mouseButton as Aside) ?? 'right',
-            message: `x: ${pointerX}, y: ${pointerY}`
-        });
+        // messages.add({
+        //     id,
+        //     title: `Name: ${mouseButton}`,
+        //     aside: (mouseButton as Aside) ?? 'right',
+        //     message: `x: ${pointerX}, y: ${pointerY}`
+        // });
     };
 
-    const create = (scene: IScene) => {
+    const create = (scene: Phaser.Scene) => {
         if (scene.input.keyboard)
             scene.input.keyboard.on(
                 'keyup',
@@ -315,13 +319,13 @@
         scene.events.on('resume', resume);
 
         // The mini map
-        scene.minimap = scene.cameras
+        (scene as IScene).minimap = scene.cameras
             .add(20, 20, 200, 200)
             .setZoom(0.2)
             .setName('mini');
-        scene.minimap.setBackgroundColor(0x0f2a3f);
-        scene.minimap.scrollX = 800;
-        scene.minimap.scrollY = 400;
+        (scene as IScene).minimap.setBackgroundColor(0x0f2a3f);
+        (scene as IScene).minimap.scrollX = 800;
+        (scene as IScene).minimap.scrollY = 400;
 
         scene.input.on('pointerdown', onMouseDownScene);
         scene.input.on('pointermove', onMouseMoveOverScene);
@@ -350,7 +354,6 @@
         start(() => {
             if (!$unit) return;
             $unit.update();
-            $unit = $unit;
         });
     });
 
@@ -363,3 +366,23 @@
 <Scene key={config.sceneID} {preload} {create} active>
     <Background {w} {h} />
 </Scene>
+
+<div class="top">
+    awaitPlacement: {awaitPlacement ? 'true' : 'false'}<br />
+    mouseButton: {mouseButton}<br />
+    autozoom size: {zoomSize}<br />
+    pointerX: {pointerX}<br />
+    pointerY: {pointerY}<br />
+</div>
+
+<style lang="scss">
+    .top {
+        position: absolute;
+        left: rem(20);
+        bottom: rem(20);
+        z-index: 100;
+        background: var(--half-transparent);
+        color: var(--game-color);
+        padding: rem(10);
+    }
+</style>
