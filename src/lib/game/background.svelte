@@ -49,13 +49,3 @@
     texture="stars-3"
     tilePositionX={tile3PositionX}
 />
-<TileSprite
-    x={50}
-    y={0}
-    width={w}
-    height={h}
-    originX={0}
-    originY={0}
-    texture="starship"
-    tilePositionX={tile1PositionX}
-/>

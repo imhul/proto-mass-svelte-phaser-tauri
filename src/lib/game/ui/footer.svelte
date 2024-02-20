@@ -1,8 +1,15 @@
 <script lang="ts">
-    // utils
-    import config from '$lib/utils/config';
     // store
     import stats from '$lib/store/stats';
+    import { memoizedTask } from '$lib/store/task';
+    import { sceneInstance } from '$lib/store/scene';
+    // utils
+    import config from '$lib/utils/config';
+    import { v5 as uuidv5 } from 'uuid';
+    // types
+    import type { SubmenuIten } from '$lib/types';
+    // assets
+    // import solarPlantImg from '$lib/assets/sprites/solar-plant.png';
 
     let menuId = '';
     let submenuId = '';
@@ -13,7 +20,7 @@
         timer = setTimeout(() => {
             menuId = '';
             clearTimeout(timer);
-        }, 99000);
+        }, 3000);
     };
 
     const mouseover = (id: string) => {
@@ -21,9 +28,24 @@
         if (timer) clearTimeout(timer);
     };
 
-    const commonHandler = (id: string, isMenu = true) => {
-        console.log('type: ', id);
-        console.log('isMenu: ', isMenu);
+    const commonHandler = (command: SubmenuIten) => {
+        const id = `task-${command.id}-${uuidv5('task-' + command.id, config.idLength)}`;
+        memoizedTask.set({
+            id,
+            status: 'await',
+            level: command.level,
+            type: command.task,
+            workerId: '',
+            priority: 1,
+            profession: command.profession,
+            professionLevel: 'trainee',
+            limit: 1,
+            position: { x: 0, y: 0 },
+            context: command.id
+        });
+        // if (!$sceneInstance) return;
+        // $sceneInstance.input.mouse?.requestPointerLock();
+        // console.log('new task: ', $memoizedTask);
     };
 </script>
 
@@ -39,8 +61,6 @@
                 on:mouseover={() => mouseover(item.id)}
                 on:focus={() => mouseover(item.id)}
                 on:mouseleave={mouselive}
-                on:click={() =>
-                    !item.submenu && commonHandler(item.id)}
             >
                 <i
                     class="menu-icon icon-{item.icon}"
@@ -69,10 +89,7 @@
                                     on:mouseleave={() =>
                                         (submenuId = '')}
                                     on:click={() =>
-                                        commonHandler(
-                                            subitem.id,
-                                            false
-                                        )}
+                                        commonHandler(subitem)}
                                 >
                                     <i
                                         class="submenu-icon icon-{subitem.icon}"
@@ -114,11 +131,18 @@
                 @extend %flex-center;
 
                 background: var(--transparent);
-                font-size: rem(40);
 
                 .menu-icon {
+                    font-size: rem(40);
                     color: var(--game-color);
-                    margin-left: rem(10);
+                    // margin-left: rem(10);
+                }
+
+                .menu-icon,
+                .submenu-icon {
+                    &.small {
+                        font-size: rem(50) !important;
+                    }
                 }
 
                 &:hover {
@@ -126,7 +150,8 @@
 
                     .menu-icon {
                         color: var(--game-color-darker);
-                        text-shadow: none;
+                        text-shadow: rem(2) rem(2) 0
+                            var(--game-color-light);
                     }
                 }
 
@@ -140,7 +165,7 @@
                         opacity 0.35s,
                         bottom 0.35s;
                     background-color: var(--half-transparent);
-                    padding: 0 rem(20);
+                    padding: 0 rem(20) 0 rem(40);
 
                     &.active {
                         bottom: rem(80);
@@ -150,19 +175,25 @@
                     .submenu-link {
                         @extend %flex-center;
 
-                        display: block;
+                        width: rem(60);
                         height: rem(80);
-                        padding: 0 rem(20);
                         line-height: rem(80);
                         text-transform: uppercase;
                         text-shadow: rem(2) rem(2) 0
                             var(--game-color-darkest);
                         cursor: pointer;
-                        font-size: rem(40);
 
                         .submenu-icon {
+                            @extend %flex-center;
+
+                            position: relative;
+                            font-size: rem(40);
                             color: var(--game-color);
-                            margin-left: rem(10);
+
+                            &::before {
+                                position: absolute;
+                                transform: translateX(-50%);
+                            }
                         }
 
                         .tooltip {
@@ -182,7 +213,8 @@
                         &.hover {
                             .submenu-icon {
                                 color: var(--game-color-darker);
-                                text-shadow: none;
+                                text-shadow: rem(2) rem(2) 0
+                                    var(--game-color-light);
                             }
 
                             .tooltip {

@@ -3,6 +3,7 @@ export type Aside = 'left' | 'right';
 export type Complexity = 'easy' | 'normal' | 'hard';
 export type Theme = 'dark' | 'light' | 'oldschool';
 export type IMotion = 'walk' | 'attack' | 'idle' | 'die';
+export type TopLevelMenuId = 'commands' | 'constructions';
 export type IOpposite =
     | 'west'
     | 'northWest'
@@ -45,7 +46,8 @@ export type TaskType =
     | 'craft'
     | 'research'
     | 'heal'
-    | 'carrying';
+    | 'carrying'
+    | 'cancel';
 
 export type Profession =
     | 'collector'
@@ -58,7 +60,8 @@ export type Profession =
     | 'crafter'
     | 'researcher'
     | 'healer'
-    | 'bearer';
+    | 'bearer'
+    | 'any';
 
 export type ProfessionLevel =
     | 'trainee'
@@ -68,6 +71,21 @@ export type ProfessionLevel =
     | 'architect'
     | 'master'
     | 'legendary';
+
+export type Construction =
+    | 'base'
+    | 'auto-turret'
+    | 'turret'
+    | 'nano-lab'
+    | 'melter'
+    | 'mega-factory'
+    | 'factory'
+    | 'mini-factory'
+    | 'fabricator'
+    | 'calibrator'
+    | 'mega-power-plant'
+    | 'power-plant'
+    | 'power-storage';
 
 export interface ButtonUIAction {
     id: string;
@@ -98,9 +116,10 @@ export interface Task {
     type: TaskType;
     workerId: string;
     priority: number;
-    profession: Profession;
+    profession: Profession | Profession[];
     professionLevel: ProfessionLevel;
     limit: number;
+    context: string;
     position: {
         x: number;
         y: number;
@@ -154,13 +173,16 @@ export interface Menu {
 }
 
 export interface SubmenuIten extends Menu {
+    // id: Construction;
     parent: string;
-    profession?: Profession | Profession[];
+    profession: Profession | Profession[];
     forMenu?: boolean;
     context?: string | string[];
+    task: TaskType;
 }
 
 export interface MenuItem extends Menu {
+    id: TopLevelMenuId;
     submenu?: SubmenuIten[];
 }
 
@@ -173,11 +195,31 @@ export interface Config {
     focusColor: number;
     appURL: string;
     footerMenu: MenuItem[];
-    defaultTask: Task;
 }
 
 export interface IScene extends Phaser.Scene {
     minimap: Phaser.Cameras.Scene2D.Camera;
+}
+
+export interface IDirection {
+    offset: number;
+    x: number;
+    y: number;
+    opposite: IOpposite;
+}
+
+export interface IDirections {
+    [key: string]: IDirection;
+}
+
+export interface IAnim {
+    startFrame: number;
+    endFrame: number;
+    speed: number;
+}
+
+export interface IAnims {
+    [key: string]: IAnim;
 }
 
 export interface IUnit extends Phaser.GameObjects.Sprite {
@@ -260,25 +302,4 @@ export interface IUnit extends Phaser.GameObjects.Sprite {
     //         },
     //     ],
     // },
-}
-
-export interface IDirection {
-    offset: number;
-    x: number;
-    y: number;
-    opposite: IOpposite;
-}
-
-export interface IDirections {
-    [key: string]: IDirection;
-}
-
-export interface IAnim {
-    startFrame: number;
-    endFrame: number;
-    speed: number;
-}
-
-export interface IAnims {
-    [key: string]: IAnim;
 }

@@ -8,6 +8,8 @@
     import { unit } from '$lib/store/unit';
     import settings from '$lib/store/settings';
     import { messages } from '$lib/store/notify';
+    import tasks, { memoizedTask } from '$lib/store/task';
+    import { sceneInstance } from '$lib/store/scene';
     // import minimap from '$lib/store/minimap';
     // components
     import { Scene } from 'svelte-phaser';
@@ -22,7 +24,7 @@
     import mapJson from '$lib/assets/sprites/isometric-grass-and-water.json';
     import tilesPng from '$lib/assets/sprites/isometric-grass-and-water.png';
     import skeletonPng from '$lib/assets/sprites/skeleton8.png';
-    import housePng from '$lib/assets/sprites/rem_0002.png';
+    import solarPlantImg from '$lib/assets/sprites/solar-plant.png';
     // objects
     import Skeleton from '$lib/objects/skeleton';
 
@@ -32,10 +34,14 @@
     $: pointerY = 0;
     $: mouseButton = '';
     $: zoomSize = 1;
-    let sceneInstance: IScene;
+    const depth = 86;
+    const taskImgOffsetX = 250;
+    const taskImgOffsetY = 150;
+    let awaitPlacement = false;
+    $: construction = {} as Phaser.GameObjects.Sprite;
 
     const cameraUpdate = () => {
-        if (!sceneInstance) return;
+        if (!$sceneInstance) return;
         const zoomCoef = w < config.mapWidth ? 1.5 : 1.2;
         zoomSize = Number(
             (
@@ -43,16 +49,16 @@
                 (w - config.mapWidth) / (2 * config.mapWidth)
             ).toFixed(2)
         );
-        sceneInstance.scale.resize(w, h);
-        sceneInstance.game.scale.resize(w, h);
-        sceneInstance.cameras.main.setBounds(
+        $sceneInstance.scale.resize(w, h);
+        $sceneInstance.game.scale.resize(w, h);
+        $sceneInstance.cameras.main.setBounds(
             0,
             0,
             config.mapWidth,
             config.mapHeight,
             true
         );
-        sceneInstance.cameras.main.setZoom(zoomSize);
+        $sceneInstance.cameras.main.setZoom(zoomSize);
     };
 
     const cameraControls = (scene: IScene) => {
@@ -115,6 +121,7 @@
     };
 
     const preload = (scene: IScene) => {
+        sceneInstance.set(scene);
         scene.load.json('map', mapJson);
         scene.load.spritesheet('tiles', tilesPng, {
             frameWidth: 64,
@@ -124,14 +131,14 @@
             frameWidth: 128,
             frameHeight: 128
         });
-        scene.load.image('house', housePng);
+        scene.load.image('solar-plant', solarPlantImg);
         scene.load.image('stars-1', '/images/parallax_1.png');
         scene.load.image('stars-2', '/images/parallax_2.png');
         scene.load.image('stars-3', '/images/parallax_3.png');
-        scene.load.image(
-            'starship',
-            '/images/parallax_starship_1.png'
-        );
+
+        // TODO: moving sprite with cursor
+        construction = scene.add.sprite(0, 0, $memoizedTask.context);
+        construction.depth = construction.y + depth;
     };
 
     const buildMap = (scene: IScene) => {
@@ -170,13 +177,13 @@
         }
     };
 
-    const placeHouses = (scene: IScene) => {
-        const house_1 = scene.add.image(240, 370, 'house');
-        house_1.depth = house_1.y + 86;
+    // const placeHouses = (scene: IScene) => {
+    //     const house_1 = scene.add.image(240, 370, 'solar-plant');
+    //     house_1.depth = house_1.y + depth;
 
-        const house_2 = scene.add.image(1300, 290, 'house');
-        house_2.depth = house_2.y + 86;
-    };
+    //     const house_2 = scene.add.image(1300, 290, 'solar-plant');
+    //     house_2.depth = house_2.y + depth;
+    // };
 
     const unitFocus = (scene: IScene) => {
         console.log('unitFocus');
@@ -199,10 +206,11 @@
         });
     };
 
-    const unitBlur = (scene: IScene) => {
+    const unitBlur = () => {
         if (!$unit) return;
         $unit.clearTint();
-        scene.cameras.main.stopFollow();
+        if (!$sceneInstance) return;
+        $sceneInstance.cameras.main.stopFollow();
     };
 
     const crteateSceleton = (scene: IScene) => {
@@ -227,6 +235,74 @@
         $unit.on('pointerdown', () => unitFocus(scene));
     };
 
+    const onMouseMoveOverScene = (pointer: Phaser.Input.Pointer) => {
+        if ($sceneInstance && $memoizedTask.id?.length) {
+            if (!construction) {
+                construction = $sceneInstance.add.sprite(
+                    0,
+                    0,
+                    $memoizedTask.context
+                );
+            }
+            construction.x = pointer.x + taskImgOffsetX;
+            construction.y = pointer.y - taskImgOffsetY;
+            construction.x = Phaser.Math.Wrap(construction.x, 0, w);
+            construction.y = Phaser.Math.Wrap(construction.y, 0, h);
+            construction.depth = construction.y + depth;
+        }
+    };
+
+    const onMouseDownScene = (pointer: Phaser.Input.Pointer) => {
+        pointerX = pointer.x;
+        pointerY = pointer.y;
+
+        // if ($sceneInstance?.input.mouse?.locked) $sceneInstance.input.mouse.releasePointerLock();
+
+        if (pointer.leftButtonDown()) {
+            mouseButton = 'left';
+
+            if ($memoizedTask.id?.length && !awaitPlacement) {
+                awaitPlacement = true;
+                tasks.add({
+                    ...$memoizedTask,
+                    position: { x: pointerX, y: pointerY }
+                });
+            } else if (awaitPlacement) {
+                if (!$sceneInstance) return;
+                const newConstruction = $sceneInstance.add.sprite(
+                    pointer.x + taskImgOffsetX,
+                    pointer.y - taskImgOffsetY,
+                    $memoizedTask.context
+                );
+                newConstruction.depth = newConstruction.y + depth;
+                awaitPlacement = false;
+                console.info('$memoizedTask: ', $memoizedTask);
+                memoizedTask.reset();
+            }
+        } else if (pointer.rightButtonDown()) {
+            mouseButton = 'right';
+            unitBlur();
+            awaitPlacement && memoizedTask.reset();
+            $messages.forEach((board: Message) => {
+                if (board.parent === 'unit')
+                    messages.delete(board.id, 'delete');
+            });
+        }
+
+        const id =
+            'id-' +
+            mouseButton +
+            '-' +
+            uuidv5('message-' + $messages?.length, config.idLength);
+
+        messages.add({
+            id,
+            title: `Name: ${mouseButton}`,
+            aside: (mouseButton as Aside) ?? 'right',
+            message: `x: ${pointerX}, y: ${pointerY}`
+        });
+    };
+
     const create = (scene: IScene) => {
         if (scene.input.keyboard)
             scene.input.keyboard.on(
@@ -247,43 +323,12 @@
         scene.minimap.scrollX = 800;
         scene.minimap.scrollY = 400;
 
-        scene.input.on(
-            'pointerdown',
-            (pointer: Phaser.Input.Pointer) => {
-                if (pointer.leftButtonDown()) {
-                    mouseButton = 'left';
-                } else if (pointer.rightButtonDown()) {
-                    mouseButton = 'right';
-                    unitBlur(scene);
-                    $messages.forEach((board: Message) => {
-                        if (board.parent === 'unit')
-                            messages.delete(board.id, 'delete');
-                    });
-                }
-
-                pointerX = pointer.x;
-                pointerY = pointer.y;
-                const id =
-                    'id-' +
-                    mouseButton +
-                    '-' +
-                    uuidv5(
-                        'message-' + $messages?.length,
-                        config.idLength
-                    );
-
-                messages.add({
-                    id,
-                    title: `Name: ${mouseButton}`,
-                    aside: (mouseButton as Aside) ?? 'right',
-                    message: `x: ${pointerX}, y: ${pointerY}`
-                });
-            }
-        );
+        scene.input.on('pointerdown', onMouseDownScene);
+        scene.input.on('pointermove', onMouseMoveOverScene);
 
         cameraControls(scene);
         buildMap(scene);
-        placeHouses(scene);
+        // placeHouses(scene);
         crteateSceleton(scene);
 
         // Post FX
@@ -300,6 +345,7 @@
     // component lifecycle
     onMount(() => {
         loadSave();
+        if (!$sceneInstance) return;
         cameraUpdate();
         start(() => {
             if (!$unit) return;
@@ -313,12 +359,7 @@
 
 <svelte:window on:resize={cameraUpdate} />
 <!-- <MinimapWrapper /> -->
-<Scene
-    bind:instance={sceneInstance}
-    key={config.sceneID}
-    {preload}
-    {create}
-    active
->
+<!-- bind:instance={$sceneInstance} -->
+<Scene key={config.sceneID} {preload} {create} active>
     <Background {w} {h} />
 </Scene>

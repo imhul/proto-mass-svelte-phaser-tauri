@@ -8,21 +8,6 @@ const config: Config = {
     sceneID: 'proto_mass_main_scene',
     focusColor: 0x86bfda,
     appURL: 'https://imhul.github.io/proto-mass-svelte-phaser-tauri',
-    defaultTask: {
-        id: '',
-        status: 'await', // accepted, paused, continued, await, complete, progress, failed
-        level: 0,
-        type: 'collect',
-        workerId: '',
-        priority: 1,
-        profession: 'collector',
-        professionLevel: 'trainee',
-        limit: 1,
-        position: {
-            x: 0,
-            y: 0
-        }
-    },
     footerMenu: [
         {
             id: 'commands',
@@ -37,6 +22,7 @@ const config: Config = {
                     small: false,
                     forMenu: false,
                     level: 1,
+                    task: 'mine',
                     parent: 'commands',
                     profession: ['collector', 'harvester', 'miner'],
                     description: 'Ore mining'
@@ -47,6 +33,7 @@ const config: Config = {
                     small: false,
                     forMenu: true,
                     level: 1,
+                    task: 'harvest',
                     parent: 'commands',
                     profession: ['collector', 'harvester'],
                     description: 'Сollection and extraction'
@@ -57,6 +44,7 @@ const config: Config = {
                     small: false,
                     forMenu: false,
                     level: 1,
+                    task: 'collect',
                     parent: 'commands',
                     profession: ['collector', 'harvester'],
                     description: 'Сollection and extraction'
@@ -67,6 +55,7 @@ const config: Config = {
                     small: false,
                     forMenu: false,
                     level: 1,
+                    task: 'construct',
                     parent: 'commands',
                     profession: 'constructor',
                     description: 'Construction'
@@ -77,6 +66,7 @@ const config: Config = {
                     small: true,
                     forMenu: true,
                     level: 1,
+                    task: 'deconstruct',
                     parent: 'commands',
                     profession: 'constructor',
                     description: 'Deconstruction'
@@ -87,6 +77,7 @@ const config: Config = {
                     small: false,
                     forMenu: false,
                     level: 1,
+                    task: 'repair',
                     parent: 'commands',
                     profession: 'constructor',
                     description: 'Repair'
@@ -97,6 +88,7 @@ const config: Config = {
                     small: false,
                     forMenu: false,
                     level: 1,
+                    task: 'research',
                     parent: 'commands',
                     profession: 'researcher',
                     description: 'Technologies Research'
@@ -104,22 +96,24 @@ const config: Config = {
                 {
                     id: 'explore',
                     icon: 'semicolon',
-                    small: true,
+                    small: false,
                     forMenu: true,
                     level: 1,
+                    task: 'explore',
                     parent: 'commands',
                     profession: 'explorer',
-                    description: 'Base Defense'
+                    description: 'Explore the Area'
                 },
                 {
                     id: 'patrol',
                     icon: 'Atilde1',
-                    small: true,
+                    small: false,
                     forMenu: true,
                     level: 1,
+                    task: 'patrol',
                     parent: 'commands',
                     profession: 'defender',
-                    description: 'Defense'
+                    description: 'Defense Patrol'
                 },
                 {
                     id: 'attack',
@@ -127,6 +121,7 @@ const config: Config = {
                     small: false,
                     forMenu: false,
                     level: 1,
+                    task: 'attack',
                     parent: 'commands',
                     profession: ['warrior', 'defender', 'explorer'],
                     description: 'Attack the Enemy'
@@ -137,7 +132,9 @@ const config: Config = {
                     small: false,
                     forMenu: false,
                     level: 1,
+                    task: 'move',
                     parent: 'commands',
+                    profession: 'any',
                     description: 'Move'
                 },
                 {
@@ -146,7 +143,9 @@ const config: Config = {
                     small: false,
                     forMenu: true,
                     level: 1,
+                    task: 'cancel',
                     parent: 'commands',
+                    profession: 'any',
                     description: 'Сancel the Сommand'
                 },
                 {
@@ -155,7 +154,9 @@ const config: Config = {
                     small: false,
                     forMenu: false,
                     level: 1,
+                    task: 'upgrade',
                     parent: 'commands',
+                    profession: 'any',
                     description: 'Unit Upgrade'
                 },
                 {
@@ -164,6 +165,7 @@ const config: Config = {
                     small: false,
                     forMenu: false,
                     level: 1,
+                    task: 'heal',
                     parent: 'commands',
                     profession: 'healer',
                     description: 'Heal'
@@ -174,6 +176,7 @@ const config: Config = {
                     small: false,
                     forMenu: false,
                     level: 1,
+                    task: 'craft',
                     parent: 'commands',
                     profession: 'crafter',
                     description: 'Craft'
@@ -184,6 +187,7 @@ const config: Config = {
                     small: false,
                     forMenu: false,
                     level: 1,
+                    task: 'carrying',
                     parent: 'commands',
                     profession: 'bearer',
                     description: 'Carrying'
@@ -198,11 +202,35 @@ const config: Config = {
             description: 'Constructions',
             submenu: [
                 {
-                    id: 'power-plant',
+                    id: 'base',
+                    icon: 'urbanize',
+                    small: false,
+                    forMenu: true,
+                    level: 5,
+                    task: 'construct',
+                    profession: 'constructor',
+                    parent: 'constructions',
+                    description: 'Motherboard'
+                },
+                {
+                    id: 'power-storage',
+                    icon: 'uacute',
+                    small: false,
+                    forMenu: true,
+                    level: 5,
+                    task: 'construct',
+                    profession: 'constructor',
+                    parent: 'constructions',
+                    description: 'Power Storage'
+                },
+                {
+                    id: 'solar-plant',
                     icon: 'blow',
                     small: false,
                     forMenu: true,
                     level: 1,
+                    task: 'construct',
+                    profession: 'constructor',
                     parent: 'constructions',
                     description: 'Solar Mini Power Plant'
                 },
@@ -212,6 +240,8 @@ const config: Config = {
                     small: false,
                     forMenu: true,
                     level: 10,
+                    task: 'construct',
+                    profession: 'constructor',
                     parent: 'constructions',
                     description: 'Solar Mega Power Plant'
                 },
@@ -221,6 +251,8 @@ const config: Config = {
                     small: false,
                     forMenu: true,
                     level: 1,
+                    task: 'construct',
+                    profession: 'constructor',
                     parent: 'constructions',
                     description: 'Level Pumping'
                 },
@@ -230,6 +262,8 @@ const config: Config = {
                     small: false,
                     forMenu: true,
                     level: 2,
+                    task: 'construct',
+                    profession: 'constructor',
                     parent: 'constructions',
                     description: 'Details & Tools Fabricator'
                 },
@@ -239,6 +273,8 @@ const config: Config = {
                     small: false,
                     forMenu: true,
                     level: 5,
+                    task: 'construct',
+                    profession: 'constructor',
                     parent: 'constructions',
                     description: 'Simple Units Factory'
                 },
@@ -248,6 +284,8 @@ const config: Config = {
                     small: false,
                     forMenu: true,
                     level: 10,
+                    task: 'construct',
+                    profession: 'constructor',
                     parent: 'constructions',
                     description: 'Middle Units Factory'
                 },
@@ -257,6 +295,8 @@ const config: Config = {
                     small: false,
                     forMenu: true,
                     level: 15,
+                    task: 'construct',
+                    profession: 'constructor',
                     parent: 'constructions',
                     description: 'Mega Units Factory'
                 },
@@ -266,6 +306,8 @@ const config: Config = {
                     small: false,
                     forMenu: true,
                     level: 2,
+                    task: 'construct',
+                    profession: 'constructor',
                     parent: 'constructions',
                     description: 'Ore Processor'
                 },
@@ -275,6 +317,8 @@ const config: Config = {
                     small: true,
                     forMenu: true,
                     level: 5,
+                    task: 'construct',
+                    profession: 'constructor',
                     parent: 'constructions',
                     description: 'Technologies Research'
                 },
@@ -284,6 +328,8 @@ const config: Config = {
                     small: true,
                     forMenu: true,
                     level: 5,
+                    task: 'construct',
+                    profession: 'constructor',
                     parent: 'constructions',
                     description: 'Turret'
                 },
@@ -293,6 +339,8 @@ const config: Config = {
                     small: true,
                     forMenu: true,
                     level: 10,
+                    task: 'construct',
+                    profession: 'constructor',
                     parent: 'constructions',
                     description: 'Auto Turret'
                 }

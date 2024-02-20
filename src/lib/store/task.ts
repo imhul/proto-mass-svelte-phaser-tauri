@@ -2,6 +2,7 @@ import { writable } from 'svelte/store';
 import type { Task } from '$lib/types';
 
 const initState: Task[] = [];
+const initTask: Task = {} as Task;
 
 function createTasks() {
     // TODO: Create a tasks store
@@ -11,36 +12,41 @@ function createTasks() {
         subscribe,
         set,
         update,
-        add: (board: Task) =>
-            update((boards: Task[]) => {
-                boards.push(board);
-                return boards;
-            }),
+        add: (task: Task) => {
+            return update((allTasks: Task[]) => {
+                allTasks.push(task);
+                // memoizedTask.set(initTask);
+                return allTasks;
+            });
+        },
         reset: () => set(initState),
-        delete: (id: string, type: string) =>
-            update((boards: Task[]) => {
-                const toTrash = () => {
-                    const current = boards.find(
-                        board => board.id === id
-                    );
-                    if (!current) return boards;
-                    const filtered = boards.filter(
-                        board => board !== current
-                        // board => board.parent !== current.parent
-                    );
-                    return filtered;
-                };
 
-                const toArchive = () => {
-                    boards.forEach((board: Task) => {
-                        // if (board.id === id) board.archived = true;
-                    });
-                    return boards;
-                };
+        delete: (id: string) =>
+            update((allTasks: Task[]) => {
+                const current = allTasks.find(task => task.id === id);
 
-                return type === 'archive' ? toArchive() : toTrash();
+                if (!current) return allTasks;
+
+                return allTasks.filter(
+                    task => task.id !== current.id
+                );
             })
     };
 }
 
-export const tasks = createTasks();
+const createMemoizedTask = () => {
+    const { subscribe, set, update } = writable<Task>(initTask);
+
+    return {
+        subscribe,
+        set,
+        update,
+        reset: () => set(initTask)
+    };
+};
+
+export const memoizedTask = createMemoizedTask();
+
+const tasks = createTasks();
+
+export default tasks;
