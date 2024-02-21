@@ -1,6 +1,6 @@
 <script lang="ts">
     // docs: https://github.com/phaserjs/examples/blob/master/public/src/depth%20sorting/isometric%20map.js
-    import { onDestroy, onMount } from 'svelte';
+    import { afterUpdate, onDestroy, onMount } from 'svelte';
     import Phaser from 'phaser';
     // types
     import type { IScene, Message } from '$lib/types';
@@ -10,6 +10,7 @@
     import { messages } from '$lib/store/notify';
     import tasks, { memoizedTask } from '$lib/store/task';
     import { sceneInstance } from '$lib/store/scene';
+    import keyboard from '$lib/store/keyboard';
     // import minimap from '$lib/store/minimap';
     // components
     import { Scene } from 'svelte-phaser';
@@ -40,6 +41,7 @@
     const taskImgOffsetY = 150;
     $: awaitPlacement = Boolean($memoizedTask.id?.length);
     $: construction = {} as Phaser.GameObjects.Sprite;
+    $: console.info('keyboard: ', $keyboard.shift);
 
     const cameraUpdate = () => {
         if (!$sceneInstance) return;
@@ -105,7 +107,7 @@
             ...$settings,
             isGamePaused: true
         });
-        scene.events.emit('pause');
+        // scene.events.emit('pause');
     };
 
     const resume = (scene: Phaser.Scene) => {
@@ -113,10 +115,13 @@
             ...$settings,
             isGamePaused: false
         });
-        scene.events.emit('resume');
+        // scene.events.emit('resume');
     };
 
-    const onSceneKeyup = (e: KeyboardEvent, scene: Phaser.Scene) => {
+    const onSceneKeydown = (
+        e: KeyboardEvent,
+        scene: Phaser.Scene
+    ) => {
         if (e.key === 'p') pause(scene);
         if (e.key === 'r') resume(scene);
     };
@@ -235,15 +240,16 @@
             //     );
             // }
 
-            construction = $sceneInstance.add.sprite(
-                pointer.x,
-                pointer.y,
-                $memoizedTask.context
-            );
+            // construction = $sceneInstance.add.sprite(
+            //     pointer.x + taskImgOffsetX,
+            //     pointer.y - taskImgOffsetY,
+            //     $memoizedTask.context
+            // );
 
-            construction.name = $memoizedTask.context;
-            construction.x = pointer.x + taskImgOffsetX; // construction.x = pointer.x
-            construction.y = pointer.y - taskImgOffsetY; // construction.y = pointer.y
+            // construction.x = pointer.x + taskImgOffsetX; // construction.x = pointer.x
+            // construction.y = pointer.y - taskImgOffsetY; // construction.y = pointer.y
+            construction.x += pointer.x;
+            construction.y += pointer.y;
             // console.info('movementX', pointer.movementX);
             // console.info('movementY', pointer.movementY);
             construction.x = Phaser.Math.Wrap(pointer.x, 0, w);
@@ -275,8 +281,10 @@
             ) {
                 const allSprites =
                     $sceneInstance.children.list.filter(
-                        x => x instanceof Phaser.GameObjects.Sprite
+                        obj =>
+                            obj instanceof Phaser.GameObjects.Sprite
                     );
+
                 allSprites.forEach(
                     (sprite: Phaser.GameObjects.GameObject) => {
                         if (sprite.name === $memoizedTask.context) {
@@ -284,17 +292,32 @@
                         }
                     }
                 );
+
                 const newConstruction = $sceneInstance.add.sprite(
                     pointer.x,
                     pointer.y,
                     $memoizedTask.context
                 );
+
                 newConstruction.depth =
                     newConstruction.y + config.offsetZ;
+
                 tasks.add({
                     ...$memoizedTask,
                     position: { x: pointerX, y: pointerY }
                 });
+
+                if ($keyboard.shift.isShift) {
+                    const newTaskId = getId(
+                        'task-id',
+                        $memoizedTask.context
+                    );
+                    memoizedTask.set({
+                        ...$memoizedTask,
+                        id: newTaskId
+                    });
+                    return;
+                }
                 awaitPlacement = false;
                 memoizedTask.reset();
             }
@@ -337,16 +360,6 @@
     };
 
     const create = (scene: Phaser.Scene) => {
-        if (scene.input.keyboard)
-            scene.input.keyboard.on(
-                'keyup',
-                (event: KeyboardEvent) => onSceneKeyup(event, scene),
-                scene
-            );
-
-        scene.events.on('pause', pause);
-        scene.events.on('resume', resume);
-
         // The mini map
         (scene as IScene).minimap = scene.cameras
             .add(20, 20, 200, 200)
@@ -356,18 +369,35 @@
         (scene as IScene).minimap.scrollX = 800;
         (scene as IScene).minimap.scrollY = 400;
 
-        scene.input.on('pointerdown', onMouseDownScene);
-        scene.input.on('pointermove', onMouseMoveOverScene);
-        scene.input.on(
-            'wheel',
-            (
-                p: Phaser.Input.Pointer,
-                x: number,
-                y: number,
-                z: number
-            ) => onWheel(scene, z)
-        );
+        // actions
+        if (scene.input.keyboard && scene.events) {
+            scene.events.on('pause', pause, scene);
+            scene.events.on('resume', resume, scene);
+            scene.input.on('pointerdown', onMouseDownScene, scene);
+            scene.input.on(
+                'pointermove',
+                onMouseMoveOverScene,
+                scene
+            );
+            scene.input.keyboard.on(
+                'keydown',
+                (event: KeyboardEvent) =>
+                    onSceneKeydown(event, scene),
+                scene
+            );
+            scene.input.on(
+                'wheel',
+                (
+                    p: Phaser.Input.Pointer,
+                    x: number,
+                    y: number,
+                    z: number
+                ) => onWheel(scene, z),
+                scene
+            );
+        }
 
+        // initializations
         cameraControls(scene);
         buildMap(scene);
         // placeHouses(scene);
@@ -393,6 +423,22 @@
             if (!$unit) return;
             $unit.update();
         });
+    });
+
+    afterUpdate(() => {
+        if (
+            $sceneInstance &&
+            !construction &&
+            $memoizedTask.context?.length
+        ) {
+            construction = $sceneInstance.add.sprite(
+                0,
+                0,
+                $memoizedTask.context
+            );
+
+            construction.name = $memoizedTask.context;
+        }
     });
 
     onDestroy(() => stop());

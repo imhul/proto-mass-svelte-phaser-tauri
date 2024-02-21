@@ -4,6 +4,8 @@ import { invoke } from '@tauri-apps/api/tauri';
 import settings from '$lib/store/settings';
 import { messages } from '$lib/store/notify';
 import stats from '$lib/store/stats';
+import keyboard from '$lib/store/keyboard';
+import { memoizedTask } from '$lib/store/task';
 // types
 import type { Save } from '$lib/types';
 // utils
@@ -44,10 +46,50 @@ export const getFullscreen = () => {
     return isFullscreen;
 };
 
-export const onKeydown = (e: KeyboardEvent) => {
-    // console.info('pressed keyboard key: ', e.key);
+export const onKeyup = (e: KeyboardEvent) => {
+    if (
+        e.key === 'Shift' ||
+        e.code === 'ShiftLeft' ||
+        e.code === 'ShiftRight'
+    ) {
+        memoizedTask.reset();
+        keyboard.reset();
+    }
+};
 
-    if (e.key === 'F11' || e.key === 'f11' || e.key === 'f') {
+export const onKeydown = (e: KeyboardEvent) => {
+    keyboard.set({
+        key: e.key || e.code,
+        ctrl: {
+            isCtrl: e.ctrlKey,
+            key: e.key ?? '',
+            code: e.code ?? ''
+        },
+        alt: {
+            isAlt: e.altKey,
+            key: e.key ?? '',
+            code: e.code ?? ''
+        },
+        shift: {
+            isShift: e.shiftKey,
+            key: e.key ?? '',
+            code: e.code ?? ''
+        },
+        meta: {
+            isMeta: e.metaKey,
+            key: e.key ?? '',
+            code: e.code ?? ''
+        }
+    });
+
+    if (
+        e.key === 'F11' ||
+        e.key === 'f11' ||
+        e.key === 'f' ||
+        e.code === 'F11' ||
+        e.code === 'f11' ||
+        e.code === 'f'
+    ) {
         const isFullscreen = getFullscreen();
 
         if (isFullscreen) {
@@ -57,15 +99,19 @@ export const onKeydown = (e: KeyboardEvent) => {
             toggleFullscreen(true);
             fullscreen();
         }
-    }
-
-    if (e.key === 'Escape') {
+    } else if (
+        e.key === 'Escape' ||
+        e.code === 'Escape' ||
+        e.key === 'esc' ||
+        e.code === 'esc' ||
+        e.key === 'Esc' ||
+        e.code === 'Esc'
+    ) {
         toggleFullscreen(false);
         minimize();
+    } else {
+        console.info('pressed keyboard key: ', e.key || e.code);
     }
-
-    // if (e.key === 'p')
-    // if (e.key === 'r')
 };
 
 export const makeSave = async (save: Save) => {

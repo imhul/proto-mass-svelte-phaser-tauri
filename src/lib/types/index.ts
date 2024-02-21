@@ -171,6 +171,30 @@ export interface Save {
     $stats: Stats;
 }
 
+export interface Keyboard {
+    key: string;
+    ctrl: {
+        isCtrl: boolean;
+        key: string;
+        code: string;
+    };
+    alt: {
+        isAlt: boolean;
+        key: string;
+        code: string;
+    };
+    shift: {
+        isShift: boolean;
+        key: string;
+        code: string;
+    };
+    meta: {
+        isMeta: boolean;
+        key: string;
+        code: string;
+    };
+}
+
 export interface Menu {
     id: string;
     icon: string;

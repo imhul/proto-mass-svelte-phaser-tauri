@@ -8,7 +8,7 @@
     import AsideR from '$lib/game/ui/aside-right.svelte';
     import Scenario from '$lib/game/scenario.svelte';
     // utils
-    import { onKeydown } from '$lib/utils/actions';
+    import { onKeydown, onKeyup } from '$lib/utils/actions';
 
     $: h = 0;
     $: w = 0;
@@ -19,7 +19,7 @@
     bind:innerWidth={w}
     on:contextmenu|preventDefault={() => false}
 />
-<svelte:document on:keydown={e => onKeydown(e)} />
+<svelte:document on:keydown={onKeydown} on:keyup={onKeyup} />
 
 <Header />
 <AsideL />

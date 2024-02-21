@@ -28,7 +28,7 @@
     };
 
     const commonHandler = (command: SubmenuIten) => {
-        const id = getId('task', command.id);
+        const id = getId('task-id', command.id);
         memoizedTask.set({
             id,
             status: 'await',

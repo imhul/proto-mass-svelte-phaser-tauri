@@ -5,12 +5,10 @@
     // store
     import tasks from '$lib/store/task';
 
-    let open = false;
+    let open = '';
     const { close } = getContext('simple-modal') as {
         close: MouseEventHandler<HTMLElement>;
     };
-
-    $: console.info('$tasks: ', $tasks);
 </script>
 
 <div class="big-modal">
@@ -33,18 +31,20 @@
                     class="list-item-text"
                     role="button"
                     tabindex={i}
-                    on:click={() => (open = !open)}
+                    on:click={() =>
+                        (open = open === task.id ? '' : task.id)}
                 >
                     <h3>{task.type}: {task.context}</h3>
-                    {#if open}
-                        {#each Object.keys(task) as param}
-                            <p>
+                    {#if open === task.id}
+                        <p>
+                            {#each Object.keys(task) as param}
                                 {param}: {typeof task[param] ===
                                 'object'
                                     ? JSON.stringify(task[param])
                                     : task[param]}
-                            </p>
-                        {/each}
+                                <br />
+                            {/each}
+                        </p>
                     {:else}
                         <p>task id: {task.id}</p>
                     {/if}
