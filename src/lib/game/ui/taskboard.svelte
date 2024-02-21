@@ -3,12 +3,13 @@
     // types
     import type { MouseEventHandler } from 'svelte/elements';
     // store
+    import tasks from '$lib/store/task';
 
     const { close } = getContext('simple-modal') as {
         close: MouseEventHandler<HTMLElement>;
     };
 
-    // TODO: create a view of the task board
+    $: console.info('$tasks: ', $tasks);
 </script>
 
 <div class="big-modal">
@@ -21,13 +22,17 @@
     />
     <h1 class="title">Task Board</h1>
     <div class="list">
-        <div class="list-item">
-            <div class="list-item-icon"></div>
-            <div class="list-item-text">
-                <h3>title</h3>
-                <p>message</p>
+        {#each $tasks as task (task.id)}
+            <div class="list-item">
+                <div class="list-item-icon">
+                    <i class="icon-{task.icon}" />
+                </div>
+                <div class="list-item-text">
+                    <h3>{task.type}: {task.context}</h3>
+                    <p>task id: {task.id}</p>
+                </div>
             </div>
-        </div>
+        {/each}
     </div>
 </div>
 

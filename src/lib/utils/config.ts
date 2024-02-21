@@ -347,6 +347,173 @@ const config: Config = {
                 }
             ]
         }
+    ],
+    resources: [
+        {
+            typeId: 101,
+            type: 'ground',
+            name: 'ground',
+            status: 'inactive',
+            blocker: false,
+            src: '',
+            width: 42,
+            height: 42,
+            stats: {
+                health: 80,
+                damage: 0,
+                healthPoints: 80
+            }
+        },
+        {
+            typeId: 102,
+            type: 'mineral',
+            name: 'titanum',
+            status: 'grow',
+            blocker: true,
+            src: '',
+            width: 42,
+            height: 42,
+            stats: {
+                health: 80,
+                damage: 0,
+                healthPoints: 80
+            }
+        },
+        {
+            typeId: 103,
+            type: 'mineral',
+            name: 'sand',
+            status: 'grow',
+            blocker: true,
+            src: '',
+            width: 42,
+            height: 42,
+            stats: {
+                health: 60,
+                damage: 0,
+                healthPoints: 60
+            }
+        },
+        {
+            typeId: 104,
+            type: 'ground',
+            name: 'grass',
+            status: 'inactive',
+            blocker: false,
+            src: '',
+            width: 42,
+            height: 42,
+            stats: {
+                health: 55,
+                damage: 0,
+                healthPoints: 55
+            }
+        },
+        {
+            typeId: 105,
+            type: 'mineral',
+            name: 'platinum',
+            status: 'grow',
+            blocker: true,
+            src: '',
+            width: 42,
+            height: 42,
+            stats: {
+                health: 55,
+                damage: 0,
+                healthPoints: 55
+            }
+        },
+        {
+            typeId: 106,
+            type: 'mineral',
+            name: 'resin',
+            status: 'grow',
+            blocker: true,
+            src: '',
+            width: 42,
+            height: 42,
+            stats: {
+                health: 55,
+                damage: 0,
+                healthPoints: 55
+            }
+        },
+        {
+            typeId: 107,
+            type: 'mineral',
+            name: 'ferrum',
+            status: 'grow',
+            blocker: true,
+            src: '',
+            width: 42,
+            height: 42,
+            stats: {
+                health: 55,
+                damage: 0,
+                healthPoints: 55
+            }
+        },
+        {
+            typeId: 108,
+            type: 'mineral',
+            name: 'uranium',
+            status: 'grow',
+            blocker: true,
+            src: '',
+            width: 42,
+            height: 42,
+            stats: {
+                health: 55,
+                damage: 0,
+                healthPoints: 55
+            }
+        },
+        {
+            typeId: 109,
+            type: 'tree',
+            name: 'gammfitum',
+            status: 'grow',
+            blocker: true,
+            src: '',
+            width: 42,
+            height: 42,
+            stats: {
+                health: 55,
+                damage: 0,
+                healthPoints: 55
+            }
+        },
+        {
+            typeId: 110,
+            type: 'tree',
+            name: 'filonterius',
+            status: 'grow',
+            blocker: true,
+            src: '',
+            width: 42,
+            height: 42,
+            stats: {
+                health: 55,
+                damage: 0,
+                healthPoints: 55
+            }
+        },
+        {
+            typeId: 111,
+            type: 'ground',
+            name: 'rock',
+            status: 'inactive',
+            blocker: true,
+            src: '',
+            width: 42,
+            height: 42,
+            stats: {
+                health: 80,
+                damage: 0,
+                healthPoints: 80
+            }
+        }
     ]
 };
 

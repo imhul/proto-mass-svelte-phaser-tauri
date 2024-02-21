@@ -3,6 +3,7 @@
     // components
     import Journal from '$lib/game/ui/journal.svelte';
     import Settings from '$lib/game/ui/settings.svelte';
+    import Taskboard from '$lib/game/ui/taskboard.svelte';
 
     const { open } = getContext('simple-modal') as { open: Function };
 </script>
@@ -14,9 +15,18 @@
             role="button"
             tabindex={0}
             class="menu-link"
-            on:click|stopPropagation={() => open(Journal)}
+            on:click|stopPropagation={() => open(Taskboard)}
         >
             <i class="icon-Odieresis" />
+        </span>
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <span
+            role="button"
+            tabindex={0}
+            class="menu-link"
+            on:click|stopPropagation={() => open(Journal)}
+        >
+            <i class="icon-time" />
         </span>
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <span

@@ -17,8 +17,9 @@
     // import MinimapWrapper from '$lib/game/ui/minimap/index.svelte';
     // utils
     import { start, stop } from '$lib/utils/interval';
-    import config from '$lib/utils/config';
     import { loadSave } from '$lib/utils/actions';
+    import config from '$lib/utils/config';
+    import getId from '$lib/utils/getId';
     // assets
     import mapJson from '$lib/assets/sprites/isometric-grass-and-water.json';
     import tilesPng from '$lib/assets/sprites/isometric-grass-and-water.png';
@@ -26,7 +27,6 @@
     import solarPlantImg from '$lib/assets/sprites/solar-plant.png';
     // objects
     import Skeleton from '$lib/objects/skeleton';
-    import getId from '$lib/utils/getId';
 
     export let h = 0;
     export let w = 0;
@@ -40,7 +40,6 @@
     const taskImgOffsetY = 150;
     $: awaitPlacement = Boolean($memoizedTask.id?.length);
     $: construction = {} as Phaser.GameObjects.Sprite;
-    $: console.info('$tasks: ', $tasks);
 
     const cameraUpdate = () => {
         if (!$sceneInstance) return;
@@ -226,7 +225,7 @@
     const onMouseMoveOverScene = (pointer: Phaser.Input.Pointer) => {
         movingPionterX = pointer.x;
         movingPionterY = pointer.y;
-        // TODO: moving sprite with cursor
+        // TODO: moving sprite with cursor !!!
         if ($sceneInstance && $memoizedTask.context?.length) {
             if (!construction) {
                 construction = $sceneInstance.add.sprite(
@@ -284,13 +283,14 @@
             });
         }
 
-        // const id = getId('message-id', mouseButton);
-        // messages.add({
-        //     id,
-        //     title: `Name: ${mouseButton}`,
-        //     aside: (mouseButton as Aside) ?? 'right',
-        //     message: `x: ${pointerX}, y: ${pointerY}`
-        // });
+        // for journal
+        const id = getId('message-id', mouseButton);
+        messages.add({
+            id,
+            title: `Name: ${mouseButton}`,
+            aside: 'right',
+            message: `x: ${pointerX}, y: ${pointerY}`
+        });
     };
 
     const create = (scene: Phaser.Scene) => {

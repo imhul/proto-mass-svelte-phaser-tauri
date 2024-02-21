@@ -122,6 +122,7 @@ export interface Task {
     professionLevel: ProfessionLevel;
     limit: number;
     context: string;
+    icon: string;
     position: {
         x: number;
         y: number;
@@ -198,6 +199,7 @@ export interface Config {
     appURL: string;
     offsetZ: number;
     footerMenu: MenuItem[];
+    resources: Resource[];
 }
 
 export interface IScene extends Phaser.Scene, Scene {
@@ -223,6 +225,22 @@ export interface IAnim {
 
 export interface IAnims {
     [key: string]: IAnim;
+}
+
+export interface Resource {
+    typeId: number;
+    type: string;
+    name: string; // to show title
+    status: string; // inactive, grow, damage, attack, repair, dead
+    blocker: boolean; // for collisions
+    src: string;
+    width: number;
+    height: number;
+    stats: {
+        health: number; // real health points now
+        damage: number;
+        healthPoints: number; // total health points
+    };
 }
 
 export interface IUnit extends Phaser.GameObjects.Sprite {

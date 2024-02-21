@@ -40,7 +40,8 @@
             professionLevel: 'trainee',
             limit: 1,
             position: { x: 0, y: 0 },
-            context: command.id
+            context: command.id,
+            icon: command.icon
         });
         // if (!$sceneInstance) return;
         // $sceneInstance.input.mouse?.requestPointerLock();
