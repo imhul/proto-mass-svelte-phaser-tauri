@@ -18,7 +18,7 @@ const initState: Stats = {
     playHours: 0,
     minimapEnabled: true,
     minimapPosition: 'right',
-    volume: 0.5,
+    volume: 50,
     isFullscreen: false,
     complexity: 'normal', // easy, normal, hard
     theme: 'dark' // dark, light, oldschool

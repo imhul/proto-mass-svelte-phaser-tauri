@@ -59,6 +59,8 @@
         @extend %big-modal;
 
         .list {
+            margin-top: rem(50);
+
             .list-item {
                 &-icon {
                     display: flex;

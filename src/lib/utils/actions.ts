@@ -16,6 +16,7 @@ import {
     exists,
     Dir
 } from '@tauri-apps/api/fs';
+import getId from '$lib/utils/getId';
 
 export async function fullscreen() {
     await invoke('fullscreen')
@@ -30,7 +31,7 @@ export async function minimize() {
 }
 
 export const toggleFullscreen = (val: boolean) => {
-    settings.update(state => {
+    stats.update(state => {
         return {
             ...state,
             isFullscreen: val
@@ -85,10 +86,8 @@ export const onKeydown = (e: KeyboardEvent) => {
     if (
         e.key === 'F11' ||
         e.key === 'f11' ||
-        e.key === 'f' ||
         e.code === 'F11' ||
-        e.code === 'f11' ||
-        e.code === 'f'
+        e.code === 'f11'
     ) {
         const isFullscreen = getFullscreen();
 
@@ -114,6 +113,24 @@ export const onKeydown = (e: KeyboardEvent) => {
     }
 };
 
+export const getSave = async () => {
+    const isSaveFileExist = await exists('saves\\save.json', {
+        dir: Dir.AppData
+    });
+
+    if (!isSaveFileExist) {
+        // TODO: start new game here
+        console.error('Save file does not exist!');
+        return null;
+    }
+
+    const saveData = await readTextFile('saves\\save.json', {
+        dir: Dir.AppConfig
+    });
+    if (!saveData) throw new Error('Save file loading error!');
+    return JSON.parse(saveData);
+};
+
 export const makeSave = async (save: Save) => {
     const isSaveDirExist = await exists('saves', {
         dir: Dir.AppData
@@ -125,10 +142,23 @@ export const makeSave = async (save: Save) => {
             recursive: true
         });
 
+    const localSave = await getSave();
+    const isSaveIdExist = Boolean(localSave?.$stats.id?.length);
+
     await writeFile(
         {
             path: 'saves\\save.json',
-            contents: JSON.stringify(save)
+            contents: JSON.stringify(
+                !isSaveIdExist
+                    ? {
+                          ...save,
+                          $stats: {
+                              ...save.$stats,
+                              id: getId('save', 'id')
+                          }
+                      }
+                    : save
+            )
         },
         {
             dir: Dir.AppData,
@@ -137,7 +167,7 @@ export const makeSave = async (save: Save) => {
     )
         .then(() =>
             messages.add({
-                id: 'game-saved-success-' + Date.now(),
+                id: getId('game-saved', 'success'),
                 type: 'success',
                 title: 'Game saved!',
                 aside: 'right',
@@ -151,21 +181,8 @@ export const makeSave = async (save: Save) => {
 };
 
 export const loadSave = async () => {
-    const isSaveFileExist = await exists('saves\\save.json', {
-        dir: Dir.AppData
-    });
-
-    if (!isSaveFileExist) {
-        // TODO: start new game here
-        throw new Error('Save file does not exist!');
-    }
-
-    const saveData = await readTextFile('saves\\save.json', {
-        dir: Dir.AppConfig
-    });
-    if (!saveData) throw new Error('Save file loading error!');
-    const save = JSON.parse(saveData);
-
+    const save = await getSave();
+    if (!save) return;
     settings.update(() => save.$settings);
     stats.update(() => save.$stats);
 };

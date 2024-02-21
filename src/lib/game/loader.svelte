@@ -12,6 +12,7 @@
 
     $: h = 0;
     $: w = 0;
+    // TODO: add a loading screen with a progress bar
 </script>
 
 <svelte:window
