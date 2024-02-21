@@ -2,6 +2,7 @@ import type { Config } from '$lib/types';
 
 const config: Config = {
     notifyTimeout: 3000, // ms
+    offsetZ: 86,
     mapWidth: 1600,
     mapHeight: 800,
     idLength: new Array(16),

@@ -19,7 +19,6 @@
     import { start, stop } from '$lib/utils/interval';
     import config from '$lib/utils/config';
     import { loadSave } from '$lib/utils/actions';
-    import { v5 as uuidv5 } from 'uuid';
     // assets
     import mapJson from '$lib/assets/sprites/isometric-grass-and-water.json';
     import tilesPng from '$lib/assets/sprites/isometric-grass-and-water.png';
@@ -27,19 +26,21 @@
     import solarPlantImg from '$lib/assets/sprites/solar-plant.png';
     // objects
     import Skeleton from '$lib/objects/skeleton';
+    import getId from '$lib/utils/getId';
 
     export let h = 0;
     export let w = 0;
     $: pointerX = 0;
     $: pointerY = 0;
+    $: movingPionterX = 0;
+    $: movingPionterY = 0;
     $: mouseButton = '';
     $: zoomSize = 1;
-    const depth = 86;
     const taskImgOffsetX = 250;
     const taskImgOffsetY = 150;
     $: awaitPlacement = Boolean($memoizedTask.id?.length);
     $: construction = {} as Phaser.GameObjects.Sprite;
-    $: bounds = $sceneInstance?.cameras.main.getBounds();
+    $: console.info('$tasks: ', $tasks);
 
     const cameraUpdate = () => {
         if (!$sceneInstance) return;
@@ -136,10 +137,6 @@
         scene.load.image('stars-1', '/images/parallax_1.png');
         scene.load.image('stars-2', '/images/parallax_2.png');
         scene.load.image('stars-3', '/images/parallax_3.png');
-
-        // TODO: moving sprite with cursor
-        construction = scene.add.sprite(0, 0, $memoizedTask.context);
-        // construction.depth = construction.y + depth;
     };
 
     const buildMap = (scene: Phaser.Scene) => {
@@ -148,7 +145,7 @@
         const tilewidth = data.tilewidth;
         const tileheight = data.tileheight;
         const layer = data.layers[0].data;
-        const minimapLayer = layer;
+        // const minimapLayer = layer;
         // minimapLayer.length = minimapLayer.length - 1;
         // minimap.set(minimapLayer);
         const mapwidth = data.layers[0].width;
@@ -178,16 +175,7 @@
         }
     };
 
-    // const placeHouses = (scene: Phaser.Scene) => {
-    //     const house_1 = scene.add.image(240, 370, 'solar-plant');
-    //     house_1.depth = house_1.y + depth;
-
-    //     const house_2 = scene.add.image(1300, 290, 'solar-plant');
-    //     house_2.depth = house_2.y + depth;
-    // };
-
     const unitFocus = (scene: Phaser.Scene) => {
-        console.log('unitFocus');
         if (!$unit) return;
         $unit.setTint(config.focusColor);
         scene.cameras.main.startFollow($unit);
@@ -215,8 +203,7 @@
     };
 
     const crteateSceleton = (scene: Phaser.Scene) => {
-        const skeletonId =
-            'skeleton-' + uuidv5('skeleton', config.idLength);
+        const skeletonId = getId('unit', 'skeleton');
 
         unit.set(
             new Skeleton(
@@ -237,19 +224,23 @@
     };
 
     const onMouseMoveOverScene = (pointer: Phaser.Input.Pointer) => {
-        if ($sceneInstance && $memoizedTask.id?.length) {
+        movingPionterX = pointer.x;
+        movingPionterY = pointer.y;
+        // TODO: moving sprite with cursor
+        if ($sceneInstance && $memoizedTask.context?.length) {
             if (!construction) {
                 construction = $sceneInstance.add.sprite(
-                    0,
-                    0,
+                    pointer.x,
+                    pointer.y,
                     $memoizedTask.context
                 );
             }
-            construction.x = pointer.x + taskImgOffsetX;
-            construction.y = pointer.y - taskImgOffsetY;
-            construction.x = Phaser.Math.Wrap(construction.x, 0, w);
-            construction.y = Phaser.Math.Wrap(construction.y, 0, h);
-            construction.depth = construction.y + depth;
+
+            construction.x = pointer.x + taskImgOffsetX; // construction.x = pointer.x
+            construction.y = pointer.y - taskImgOffsetY; // construction.y = pointer.y
+            construction.x = Phaser.Math.Wrap(pointer.x, 0, w);
+            construction.y = Phaser.Math.Wrap(pointer.y, 0, h);
+            construction.depth = pointer.y + config.offsetZ;
         }
     };
 
@@ -264,10 +255,6 @@
 
             if ($memoizedTask.id?.length && !awaitPlacement) {
                 awaitPlacement = true;
-                tasks.add({
-                    ...$memoizedTask,
-                    position: { x: pointerX, y: pointerY }
-                });
             } else if (
                 $memoizedTask.context?.length &&
                 awaitPlacement &&
@@ -278,9 +265,13 @@
                     pointer.y,
                     $memoizedTask.context
                 );
-                newConstruction.depth = newConstruction.y + depth;
+                newConstruction.depth =
+                    newConstruction.y + config.offsetZ;
+                tasks.add({
+                    ...$memoizedTask,
+                    position: { x: pointerX, y: pointerY }
+                });
                 awaitPlacement = false;
-                console.info('$memoizedTask: ', $memoizedTask);
                 memoizedTask.reset();
             }
         } else if (pointer.rightButtonDown()) {
@@ -293,12 +284,7 @@
             });
         }
 
-        // const id =
-        //     'message-id-' +
-        //     mouseButton +
-        //     '-' +
-        //     uuidv5('message-' + $messages?.length, config.idLength);
-
+        // const id = getId('message-id', mouseButton);
         // messages.add({
         //     id,
         //     title: `Name: ${mouseButton}`,
@@ -373,6 +359,10 @@
     autozoom size: {zoomSize}<br />
     pointerX: {pointerX}<br />
     pointerY: {pointerY}<br />
+    window width: {w}<br />
+    window height: {h}<br />
+    movingPionterX: {movingPionterX}<br />
+    movingPionterY: {movingPionterY}<br />
 </div>
 
 <style lang="scss">

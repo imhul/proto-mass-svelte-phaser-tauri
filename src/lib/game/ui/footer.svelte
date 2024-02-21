@@ -2,10 +2,9 @@
     // store
     import stats from '$lib/store/stats';
     import { memoizedTask } from '$lib/store/task';
-    import { sceneInstance } from '$lib/store/scene';
     // utils
     import config from '$lib/utils/config';
-    import { v5 as uuidv5 } from 'uuid';
+    import getId from '$lib/utils/getId';
     // types
     import type { SubmenuIten } from '$lib/types';
     // assets
@@ -29,7 +28,7 @@
     };
 
     const commonHandler = (command: SubmenuIten) => {
-        const id = `task-${command.id}-${uuidv5('task-' + command.id, config.idLength)}`;
+        const id = getId('task', command.id);
         memoizedTask.set({
             id,
             status: 'await',

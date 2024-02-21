@@ -196,6 +196,7 @@ export interface Config {
     sceneID: string;
     focusColor: number;
     appURL: string;
+    offsetZ: number;
     footerMenu: MenuItem[];
 }
 
