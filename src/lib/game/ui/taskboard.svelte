@@ -5,6 +5,7 @@
     // store
     import tasks from '$lib/store/task';
 
+    let open = false;
     const { close } = getContext('simple-modal') as {
         close: MouseEventHandler<HTMLElement>;
     };
@@ -22,14 +23,31 @@
     />
     <h1 class="title">Task Board</h1>
     <div class="list">
-        {#each $tasks as task (task.id)}
+        {#each $tasks as task, i (task.id)}
             <div class="list-item">
                 <div class="list-item-icon">
                     <i class="icon-{task.icon}" />
                 </div>
-                <div class="list-item-text">
+                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                <div
+                    class="list-item-text"
+                    role="button"
+                    tabindex={i}
+                    on:click={() => (open = !open)}
+                >
                     <h3>{task.type}: {task.context}</h3>
-                    <p>task id: {task.id}</p>
+                    {#if open}
+                        {#each Object.keys(task) as param}
+                            <p>
+                                {param}: {typeof task[param] ===
+                                'object'
+                                    ? JSON.stringify(task[param])
+                                    : task[param]}
+                            </p>
+                        {/each}
+                    {:else}
+                        <p>task id: {task.id}</p>
+                    {/if}
                 </div>
             </div>
         {/each}
@@ -54,7 +72,7 @@
 
                     i {
                         font-size: rem(50);
-                        margin-top: 10px;
+                        margin-top: rem(10);
                     }
                 }
             }

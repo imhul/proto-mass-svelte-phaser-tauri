@@ -227,19 +227,33 @@
         movingPionterY = pointer.y;
         // TODO: moving sprite with cursor !!!
         if ($sceneInstance && $memoizedTask.context?.length) {
-            if (!construction) {
-                construction = $sceneInstance.add.sprite(
-                    pointer.x,
-                    pointer.y,
-                    $memoizedTask.context
-                );
-            }
+            // if (!construction) {
+            //     construction = $sceneInstance.add.sprite(
+            //         pointer.x,
+            //         pointer.y,
+            //         $memoizedTask.context
+            //     );
+            // }
 
+            construction = $sceneInstance.add.sprite(
+                pointer.x,
+                pointer.y,
+                $memoizedTask.context
+            );
+
+            construction.name = $memoizedTask.context;
             construction.x = pointer.x + taskImgOffsetX; // construction.x = pointer.x
             construction.y = pointer.y - taskImgOffsetY; // construction.y = pointer.y
+            // console.info('movementX', pointer.movementX);
+            // console.info('movementY', pointer.movementY);
             construction.x = Phaser.Math.Wrap(pointer.x, 0, w);
             construction.y = Phaser.Math.Wrap(pointer.y, 0, h);
             construction.depth = pointer.y + config.offsetZ;
+
+            // const timer = setTimeout(() => {
+            //     construction.destroy();
+            //     clearTimeout(timer);
+            // }, 100);
         }
     };
 
@@ -259,6 +273,17 @@
                 awaitPlacement &&
                 $sceneInstance
             ) {
+                const allSprites =
+                    $sceneInstance.children.list.filter(
+                        x => x instanceof Phaser.GameObjects.Sprite
+                    );
+                allSprites.forEach(
+                    (sprite: Phaser.GameObjects.GameObject) => {
+                        if (sprite.name === $memoizedTask.context) {
+                            sprite.destroy();
+                        }
+                    }
+                );
                 const newConstruction = $sceneInstance.add.sprite(
                     pointer.x,
                     pointer.y,
@@ -289,8 +314,26 @@
             id,
             title: `Name: ${mouseButton}`,
             aside: 'right',
+            icon: 'n18',
             message: `x: ${pointerX}, y: ${pointerY}`
         });
+    };
+
+    const onWheel = (scene: Phaser.Scene, z: number) => {
+        if (
+            zoomSize >= config.minZoom &&
+            zoomSize <= config.maxZoom
+        ) {
+            scene.cameras.main.setZoom(
+                z < 0
+                    ? (zoomSize = Number((zoomSize + 0.1).toFixed(2)))
+                    : (zoomSize = Number((zoomSize - 0.1).toFixed(2)))
+            );
+        } else if (zoomSize < config.minZoom) {
+            zoomSize = config.minZoom;
+        } else if (zoomSize > config.maxZoom) {
+            zoomSize = config.maxZoom;
+        }
     };
 
     const create = (scene: Phaser.Scene) => {
@@ -315,6 +358,15 @@
 
         scene.input.on('pointerdown', onMouseDownScene);
         scene.input.on('pointermove', onMouseMoveOverScene);
+        scene.input.on(
+            'wheel',
+            (
+                p: Phaser.Input.Pointer,
+                x: number,
+                y: number,
+                z: number
+            ) => onWheel(scene, z)
+        );
 
         cameraControls(scene);
         buildMap(scene);

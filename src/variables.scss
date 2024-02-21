@@ -96,7 +96,7 @@
         .list-item {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
             width: 100%;
             background-color: var(--game-color);
             transition: background-color 0.3s;

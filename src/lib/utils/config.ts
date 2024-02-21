@@ -3,6 +3,8 @@ import type { Config } from '$lib/types';
 const config: Config = {
     notifyTimeout: 3000, // ms
     offsetZ: 86,
+    minZoom: 0.9,
+    maxZoom: 2.8,
     mapWidth: 1600,
     mapHeight: 800,
     idLength: new Array(16),
@@ -237,7 +239,7 @@ const config: Config = {
                 },
                 {
                     id: 'mega-power-plant',
-                    icon: 'explore',
+                    icon: 'power',
                     small: false,
                     forMenu: true,
                     level: 10,
@@ -314,7 +316,7 @@ const config: Config = {
                 },
                 {
                     id: 'nano-lab',
-                    icon: 'cedilla1',
+                    icon: 'I16',
                     small: true,
                     forMenu: true,
                     level: 5,

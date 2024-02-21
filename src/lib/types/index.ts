@@ -111,7 +111,11 @@ export interface Message {
     parent?: string;
 }
 
-export interface Task {
+interface ITask {
+    [key: string]: any;
+}
+
+export interface Task extends ITask {
     id: string;
     status: TaskStatus;
     level: number;
@@ -200,6 +204,8 @@ export interface Config {
     offsetZ: number;
     footerMenu: MenuItem[];
     resources: Resource[];
+    minZoom: number;
+    maxZoom: number;
 }
 
 export interface IScene extends Phaser.Scene, Scene {

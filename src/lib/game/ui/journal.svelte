@@ -9,7 +9,7 @@
     const { close } = getContext('simple-modal') as {
         close: MouseEventHandler<HTMLElement>;
     };
-    const archive = $messages.filter(
+    $: archive = $messages.filter(
         (message: Message) => message.archived
     );
 </script>
@@ -31,6 +31,8 @@
                         <img src={message.img} alt={message.title} />
                     {:else if message.icon}
                         <i class="icon-{message.icon}" />
+                    {:else}
+                        <i class="icon-question7" />
                     {/if}
                 </div>
                 <div class="list-item-text">
@@ -60,7 +62,7 @@
 
                     i {
                         font-size: rem(50);
-                        margin-top: 10px;
+                        margin-top: rem(10);
                     }
                 }
             }
