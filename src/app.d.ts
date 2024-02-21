@@ -7,58 +7,12 @@ declare global {
         // interface PageData {}
         // interface PageState {}
         // interface Platform {}
+
+        declare module '*.cur' {
+            const src: string;
+            export default src;
+        }
     }
-}
-
-declare module '*.gif' {
-    const value: string;
-    export = value;
-}
-
-declare module '*.jpg' {
-    const value: string;
-    export = value;
-}
-
-declare module '*.jpeg' {
-    const value: string;
-    export = value;
-}
-
-declare module '*.png' {
-    const value: string;
-    export = value;
-}
-
-declare module '*.JPG' {
-    const value: string;
-    export = value;
-}
-
-declare module '*.JPEG' {
-    const value: string;
-    export = value;
-}
-
-declare module '*.PNG' {
-    const value: string;
-    export = value;
-}
-
-declare module '*.svg' {
-    const value: string;
-    export = value;
-}
-
-declare module '*.wbep' {
-    const value: string;
-    export = value;
-}
-
-// Start: Interfaces
-
-interface Locals {
-    userid: string;
 }
 
 interface ImportMetaEnv {
@@ -70,5 +24,3 @@ interface ImportMetaEnv {
     PROTO_MASS_TWITTER_SEARCH_URL: string;
     PROTO_MASS_GITHUB_API_URL: string;
 }
-
-export {};

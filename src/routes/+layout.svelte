@@ -11,5 +11,14 @@
     classWindow="modal-window"
     classContent="modal-content"
 >
-    <slot />
+    <div class="game">
+        <slot />
+    </div>
 </Modal>
+
+<style lang="scss">
+    .game {
+        position: relative;
+        display: contents;
+    }
+</style>

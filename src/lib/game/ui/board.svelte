@@ -5,8 +5,6 @@
     import { unit } from '$lib/store/unit';
     // types
     import type { Message } from '$lib/types';
-    // components
-    import Minimap from '$lib/game/ui/minimap/minimap.svelte';
     // utils
     import config from '$lib/utils/config';
 
@@ -70,19 +68,15 @@
         </div>
         <div class="content">
             <!-- <slot /> -->
-            {#if board.parent === 'minimap'}
-                <Minimap />
-            {:else}
-                <div class="message">
-                    {#if board.message?.length}
-                        {board.message}
-                    {/if}
-                    {#if $unit && board.parent === 'unit'}
-                        x: {`${$unit.x.toFixed(0)}\n`}
-                        y: {`${$unit.y.toFixed(0)}\n`}
-                    {/if}
-                </div>
-            {/if}
+            <div class="message">
+                {#if board.message?.length}
+                    {board.message}
+                {/if}
+                {#if $unit && board.parent === 'unit'}
+                    x: {`${$unit.x.toFixed(0)}\n`}
+                    y: {`${$unit.y.toFixed(0)}\n`}
+                {/if}
+            </div>
         </div>
         {#if board.actions?.length}
             <div class="actions">

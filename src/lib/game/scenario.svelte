@@ -1,6 +1,5 @@
 <script lang="ts">
-    // docs: https://github.com/phaserjs/examples/blob/master/public/src/depth%20sorting/isometric%20map.js
-    import { afterUpdate, onDestroy, onMount } from 'svelte';
+    import { onDestroy, onMount } from 'svelte';
     import Phaser from 'phaser';
     // types
     import type { IScene, Message } from '$lib/types';
@@ -11,11 +10,10 @@
     import tasks, { memoizedTask } from '$lib/store/task';
     import { sceneInstance } from '$lib/store/scene';
     import keyboard from '$lib/store/keyboard';
-    // import minimap from '$lib/store/minimap';
     // components
     import { Scene } from 'svelte-phaser';
     import Background from '$lib/game/background.svelte';
-    // import MinimapWrapper from '$lib/game/ui/minimap/index.svelte';
+    import Cursor from '$lib/game/ui/cursor.svelte';
     // utils
     import { start, stop } from '$lib/utils/interval';
     import { loadSave } from '$lib/utils/actions';
@@ -37,11 +35,7 @@
     $: movingPionterY = 0;
     $: mouseButton = '';
     $: zoomSize = 1;
-    const taskImgOffsetX = 250;
-    const taskImgOffsetY = 150;
     $: awaitPlacement = Boolean($memoizedTask.id?.length);
-    $: construction = {} as Phaser.GameObjects.Sprite;
-    $: console.info('keyboard: ', $keyboard.shift);
 
     const cameraUpdate = () => {
         if (!$sceneInstance) return;
@@ -149,9 +143,6 @@
         const tilewidth = data.tilewidth;
         const tileheight = data.tileheight;
         const layer = data.layers[0].data;
-        // const minimapLayer = layer;
-        // minimapLayer.length = minimapLayer.length - 1;
-        // minimap.set(minimapLayer);
         const mapwidth = data.layers[0].width;
         const mapheight = data.layers[0].height;
         const tileWidthHalf = tilewidth / 2;
@@ -230,45 +221,13 @@
     const onMouseMoveOverScene = (pointer: Phaser.Input.Pointer) => {
         movingPionterX = pointer.x;
         movingPionterY = pointer.y;
-        // TODO: moving sprite with cursor !!!
-        if ($sceneInstance && $memoizedTask.context?.length) {
-            // if (!construction) {
-            //     construction = $sceneInstance.add.sprite(
-            //         pointer.x,
-            //         pointer.y,
-            //         $memoizedTask.context
-            //     );
-            // }
-
-            // construction = $sceneInstance.add.sprite(
-            //     pointer.x + taskImgOffsetX,
-            //     pointer.y - taskImgOffsetY,
-            //     $memoizedTask.context
-            // );
-
-            // construction.x = pointer.x + taskImgOffsetX; // construction.x = pointer.x
-            // construction.y = pointer.y - taskImgOffsetY; // construction.y = pointer.y
-            construction.x += pointer.x;
-            construction.y += pointer.y;
-            // console.info('movementX', pointer.movementX);
-            // console.info('movementY', pointer.movementY);
-            construction.x = Phaser.Math.Wrap(pointer.x, 0, w);
-            construction.y = Phaser.Math.Wrap(pointer.y, 0, h);
-            construction.depth = pointer.y + config.offsetZ;
-
-            // const timer = setTimeout(() => {
-            //     construction.destroy();
-            //     clearTimeout(timer);
-            // }, 100);
-        }
     };
 
     const onMouseDownScene = (pointer: Phaser.Input.Pointer) => {
         pointerX = pointer.x;
         pointerY = pointer.y;
 
-        // if ($sceneInstance?.input.mouse?.locked) $sceneInstance.input.mouse.releasePointerLock();
-
+        // task flow
         if (pointer.leftButtonDown()) {
             mouseButton = 'left';
 
@@ -279,20 +238,6 @@
                 awaitPlacement &&
                 $sceneInstance
             ) {
-                const allSprites =
-                    $sceneInstance.children.list.filter(
-                        obj =>
-                            obj instanceof Phaser.GameObjects.Sprite
-                    );
-
-                allSprites.forEach(
-                    (sprite: Phaser.GameObjects.GameObject) => {
-                        if (sprite.name === $memoizedTask.context) {
-                            sprite.destroy();
-                        }
-                    }
-                );
-
                 const newConstruction = $sceneInstance.add.sprite(
                     pointer.x,
                     pointer.y,
@@ -331,7 +276,7 @@
             });
         }
 
-        // for journal
+        // journal update
         const id = getId('message-id', mouseButton);
         messages.add({
             id,
@@ -425,28 +370,13 @@
         });
     });
 
-    afterUpdate(() => {
-        if (
-            $sceneInstance &&
-            !construction &&
-            $memoizedTask.context?.length
-        ) {
-            construction = $sceneInstance.add.sprite(
-                0,
-                0,
-                $memoizedTask.context
-            );
-
-            construction.name = $memoizedTask.context;
-        }
-    });
-
     onDestroy(() => stop());
 </script>
 
 <svelte:window on:resize={cameraUpdate} />
-<!-- <MinimapWrapper /> -->
-<!-- bind:instance={$sceneInstance} -->
+
+<Cursor img="images/constructions/{$memoizedTask.context}.png" />
+
 <Scene key={config.sceneID} {preload} {create} active>
     <Background {w} {h} />
 </Scene>
