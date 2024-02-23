@@ -1,27 +1,69 @@
-<header>
-    <a href="/" class="logo">
-        <i class="icon-i1" />
-    </a>
+<script lang="ts">
+    import settings from '$lib/store/settings';
 
+    export let isSaveLoaded: boolean = false;
+
+    const gameContinue = () => {
+        settings.set({
+            ...$settings,
+            isSaveExists: true,
+            isNewGame: false
+        });
+    };
+
+    const startNewGame = () => {
+        settings.set({
+            ...$settings,
+            isSaveExists: false,
+            isNewGame: true
+        });
+    };
+</script>
+
+<header>
+    <div class="title">
+        <!-- svelte-ignore missing-declaration -->
+        Proto-Mass <span class="small">v</span>{PKG.version}
+    </div>
     <nav>
-        <a href="/game" class="menu-link">
-            <!-- <i class="icon-Y15"></i> -->
-            <span>game</span>
-        </a>
+        {#if isSaveLoaded}
+            <a
+                href="/game#continue"
+                on:click={gameContinue}
+                class="menu-link"
+            >
+                <span>continue</span>
+            </a>
+
+            <a
+                href="/game#new"
+                on:click={startNewGame}
+                class="menu-link"
+            >
+                <span>new game</span>
+            </a>
+        {:else}
+            <a
+                href="/game#new"
+                on:click={startNewGame}
+                class="menu-link"
+            >
+                <span>new game</span>
+            </a>
+        {/if}
+
         <a
             href="https://github.com/imhul/proto-mass-svelte-phaser-tauri/blob/master/README.md"
             target="_blank"
             class="menu-link"
         >
-            <!-- <i class="icon-Y15"></i> -->
             <span>About</span>
         </a>
         <a
-            href="https://www.patreon.com/protomass"
+            href="https://www.buymeacoffee.com/blashirkz"
             target="_blank"
             class="menu-link"
         >
-            <!-- <i class="icon-dollar3"></i> -->
             <span>Donate</span>
         </a>
     </nav>
@@ -39,14 +81,20 @@
         padding: 0 rem(30);
         background-color: var(--game-color-dark);
 
-        .logo {
-            font-size: rem(32);
-            color: var(--game-color);
+        .title {
+            @include font(
+                rem(22),
+                400,
+                1,
+                var(--game-color),
+                var(--8-bit)
+            );
+
+            text-transform: uppercase;
             text-shadow: rem(2) rem(2) 0 var(--game-color-darkest);
 
-            &:hover {
-                color: var(--game-color-darkest);
-                text-shadow: rem(2) rem(2) 0 var(--game-color-warn);
+            .small {
+                text-transform: none;
             }
         }
 
@@ -63,7 +111,6 @@
                 &:hover {
                     background-color: var(--game-color);
                     span,
-                    i,
                     a {
                         color: var(--game-color-darkest);
                         text-shadow: rem(2) rem(2) 0

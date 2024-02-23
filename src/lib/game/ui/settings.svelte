@@ -44,8 +44,6 @@
             (currentComplexity + 1) % complexity.length;
         $stats.complexity = complexity[currentComplexity];
     };
-
-    $: console.log('stats', $stats);
 </script>
 
 <div class="big-modal">
@@ -170,6 +168,17 @@
                             <button on:click={() => loadSave()}>
                                 <i class="icon-degree1" /> Load Game
                             </button>
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <div class="btn-flex-wrapper">
+                            <a
+                                class="btn"
+                                href="/"
+                                on:click|stopPropagation={close}
+                            >
+                                <i class="icon-degree1" /> Exit
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -404,7 +413,8 @@
                             justify-content: space-evenly;
                             padding: rem(20);
 
-                            button {
+                            button,
+                            a {
                                 display: flex;
                                 align-items: center;
                                 height: rem(30);

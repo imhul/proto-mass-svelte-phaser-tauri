@@ -19,7 +19,6 @@
         "importHelpers": true,
         "types": ["node"]
     },
-    "assetsInclude": ["**/*.cur"],
     "exclude": [
         "node_modules/*",
         "dist/*",

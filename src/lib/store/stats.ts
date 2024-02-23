@@ -14,7 +14,7 @@ const initState: Stats = {
     units: [],
     taskList: [],
     gameInitTime: 0,
-    saveDate: new Date().getMilliseconds(),
+    saveDate: 0,
     playHours: 0,
     minimapEnabled: true,
     minimapPosition: 'right',

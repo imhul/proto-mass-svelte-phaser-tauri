@@ -10,7 +10,9 @@ const initState: Settings = {
     isGamePaused: false,
     isGameOver: false,
     isGameMenuOpen: false,
-    isGameWin: false
+    isGameWin: false,
+    isSaveExists: false,
+    isNewGame: true
 };
 
 function createSettings() {

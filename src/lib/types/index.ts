@@ -142,6 +142,8 @@ export interface Settings {
     isGameOver: boolean;
     isGameMenuOpen: boolean;
     isGameWin: boolean;
+    isSaveExists: boolean;
+    isNewGame: boolean;
 }
 
 export interface Stats {
@@ -221,7 +223,7 @@ export interface Config {
     notifyTimeout: number; // ms
     mapWidth: number;
     mapHeight: number;
-    idLength: any[];
+    idLength: null[];
     sceneID: string;
     focusColor: number;
     appURL: string;
@@ -257,6 +259,22 @@ export interface IAnims {
     [key: string]: IAnim;
 }
 
+export interface Coordinates {
+    x: number;
+    y: number;
+}
+
+export interface ObjectStats {
+    position: Coordinates;
+    level?: number; // max 20
+    health: number; // current h-points
+    damage: number; // h-points
+    speed?: number;
+    hp: number; // total h-points
+    healSpeed?: number;
+    xp: number;
+}
+
 export interface Resource {
     typeId: number;
     type: string;
@@ -266,11 +284,7 @@ export interface Resource {
     src: string;
     width: number;
     height: number;
-    stats: {
-        health: number; // real health points now
-        damage: number;
-        healthPoints: number; // total health points
-    };
+    stats: ObjectStats;
 }
 
 export interface IUnit extends Phaser.GameObjects.Sprite {

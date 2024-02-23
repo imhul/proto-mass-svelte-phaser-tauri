@@ -14,11 +14,13 @@
     import { Scene } from 'svelte-phaser';
     import Background from '$lib/game/background.svelte';
     import Cursor from '$lib/game/ui/cursor.svelte';
+    import Progress from '$lib/game/ui/progress.svelte';
     // utils
     import { start, stop } from '$lib/utils/interval';
-    import { loadSave } from '$lib/utils/actions';
+    import { getPercent } from '$lib/utils/percent';
     import config from '$lib/utils/config';
     import getId from '$lib/utils/getId';
+    import { delay } from '$lib/utils/delay';
     // assets
     import mapJson from '$lib/assets/sprites/isometric-grass-and-water.json';
     import tilesPng from '$lib/assets/sprites/isometric-grass-and-water.png';
@@ -36,6 +38,10 @@
     $: mouseButton = '';
     $: zoomSize = 1;
     $: awaitPlacement = Boolean($memoizedTask.id?.length);
+
+    const loading = async () => {
+        await delay(1000);
+    };
 
     const cameraUpdate = () => {
         if (!$sceneInstance) return;
@@ -121,7 +127,6 @@
     };
 
     const preload = (scene: Phaser.Scene) => {
-        sceneInstance.set(scene as IScene);
         scene.load.json('map', mapJson);
         scene.load.spritesheet('tiles', tilesPng, {
             frameWidth: 64,
@@ -135,6 +140,31 @@
         scene.load.image('stars-1', '/images/parallax_1.png');
         scene.load.image('stars-2', '/images/parallax_2.png');
         scene.load.image('stars-3', '/images/parallax_3.png');
+        sceneInstance.set(scene as IScene);
+
+        scene.load.on(
+            'progress',
+            (progress: number) => {
+                settings.set({
+                    ...$settings,
+                    loadingPercent: getPercent(progress),
+                    isGameLoaded: false
+                });
+            },
+            scene
+        );
+
+        scene.load.on(
+            'complete',
+            () => {
+                settings.set({
+                    ...$settings,
+                    isGameLoaded: true,
+                    loadingPercent: 100
+                });
+            },
+            scene
+        );
     };
 
     const buildMap = (scene: Phaser.Scene) => {
@@ -360,9 +390,10 @@
     };
 
     // component lifecycle
-    onMount(() => {
-        loadSave();
+    onMount(async () => {
+        await delay(1000);
         if (!$sceneInstance) return;
+        $settings.isGameInit = true;
         cameraUpdate();
         start(() => {
             if (!$unit) return;
@@ -371,17 +402,27 @@
     });
 
     onDestroy(() => stop());
+
+    // $: console.log('$settings', $settings);
 </script>
 
-<svelte:window on:resize={cameraUpdate} />
+<svelte:window
+    on:resize={$settings.isGameLoaded ? cameraUpdate : () => {}}
+/>
+
+{#if !$settings.isGameLoaded}
+    <Progress value={$settings.loadingPercent} />
+{/if}
 
 <Cursor img="images/constructions/{$memoizedTask.context}.png" />
 
-<Scene key={config.sceneID} {preload} {create} active>
-    <Background {w} {h} />
-</Scene>
+{#await delay(1000) then _}
+    <Scene key={config.sceneID} {preload} {create} active>
+        <Background {w} {h} />
+    </Scene>
+{/await}
 
-<div class="top">
+<div class="stats">
     awaitPlacement: {awaitPlacement ? 'true' : 'false'}<br />
     mouseButton: {mouseButton}<br />
     autozoom size: {zoomSize}<br />
@@ -394,7 +435,7 @@
 </div>
 
 <style lang="scss">
-    .top {
+    .stats {
         position: absolute;
         left: rem(20);
         bottom: rem(20);

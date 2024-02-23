@@ -363,7 +363,12 @@ const config: Config = {
             stats: {
                 health: 80,
                 damage: 0,
-                healthPoints: 80
+                hp: 80,
+                position: {
+                    x: 0,
+                    y: 0
+                },
+                xp: 0
             }
         },
         {
@@ -378,7 +383,12 @@ const config: Config = {
             stats: {
                 health: 80,
                 damage: 0,
-                healthPoints: 80
+                hp: 80,
+                position: {
+                    x: 0,
+                    y: 0
+                },
+                xp: 0
             }
         },
         {
@@ -393,7 +403,12 @@ const config: Config = {
             stats: {
                 health: 60,
                 damage: 0,
-                healthPoints: 60
+                hp: 60,
+                position: {
+                    x: 0,
+                    y: 0
+                },
+                xp: 0
             }
         },
         {
@@ -408,7 +423,12 @@ const config: Config = {
             stats: {
                 health: 55,
                 damage: 0,
-                healthPoints: 55
+                hp: 55,
+                position: {
+                    x: 0,
+                    y: 0
+                },
+                xp: 0
             }
         },
         {
@@ -423,7 +443,12 @@ const config: Config = {
             stats: {
                 health: 55,
                 damage: 0,
-                healthPoints: 55
+                hp: 55,
+                position: {
+                    x: 0,
+                    y: 0
+                },
+                xp: 0
             }
         },
         {
@@ -438,7 +463,12 @@ const config: Config = {
             stats: {
                 health: 55,
                 damage: 0,
-                healthPoints: 55
+                hp: 55,
+                position: {
+                    x: 0,
+                    y: 0
+                },
+                xp: 0
             }
         },
         {
@@ -453,7 +483,12 @@ const config: Config = {
             stats: {
                 health: 55,
                 damage: 0,
-                healthPoints: 55
+                hp: 55,
+                position: {
+                    x: 0,
+                    y: 0
+                },
+                xp: 0
             }
         },
         {
@@ -468,7 +503,12 @@ const config: Config = {
             stats: {
                 health: 55,
                 damage: 0,
-                healthPoints: 55
+                hp: 55,
+                position: {
+                    x: 0,
+                    y: 0
+                },
+                xp: 0
             }
         },
         {
@@ -483,7 +523,12 @@ const config: Config = {
             stats: {
                 health: 55,
                 damage: 0,
-                healthPoints: 55
+                hp: 55,
+                position: {
+                    x: 0,
+                    y: 0
+                },
+                xp: 0
             }
         },
         {
@@ -498,7 +543,12 @@ const config: Config = {
             stats: {
                 health: 55,
                 damage: 0,
-                healthPoints: 55
+                hp: 55,
+                position: {
+                    x: 0,
+                    y: 0
+                },
+                xp: 0
             }
         },
         {
@@ -513,7 +563,12 @@ const config: Config = {
             stats: {
                 health: 80,
                 damage: 0,
-                healthPoints: 80
+                hp: 80,
+                position: {
+                    x: 0,
+                    y: 0
+                },
+                xp: 0
             }
         }
     ]

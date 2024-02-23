@@ -24,6 +24,7 @@
 
     const mouseover = (id: string) => {
         menuId = id;
+        console.log('mouseover', id);
         if (timer) clearTimeout(timer);
     };
 
@@ -43,9 +44,6 @@
             context: command.id,
             icon: command.icon
         });
-        // if (!$sceneInstance) return;
-        // $sceneInstance.input.mouse?.requestPointerLock();
-        // console.log('new task: ', $memoizedTask);
     };
 </script>
 
@@ -66,6 +64,7 @@
                     class="menu-icon icon-{item.icon}"
                     class:small={item.small}
                 />
+
                 {#if menuId === item.id && item.submenu?.length}
                     <nav
                         class="submenu"
@@ -75,7 +74,7 @@
                         on:focus={() => mouseover(item.id)}
                     >
                         {#each item.submenu as subitem (subitem.id)}
-                            {#if item.id === subitem.parent && subitem.level >= colonyLevel && subitem.forMenu}
+                            {#if item.id === subitem.parent && subitem.level <= colonyLevel && subitem.forMenu}
                                 <div
                                     role="menuitem"
                                     tabindex={i}
@@ -135,7 +134,6 @@
                 .menu-icon {
                     font-size: rem(40);
                     color: var(--game-color);
-                    // margin-left: rem(10);
                 }
 
                 .menu-icon,

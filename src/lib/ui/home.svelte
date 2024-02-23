@@ -1,12 +1,24 @@
 <script lang="ts">
+    import { onMount } from 'svelte';
     // components
     import Hero from '$lib/ui/hero.svelte';
     import Header from '$lib/ui/header.svelte';
     import Footer from '$lib/ui/footer.svelte';
+    // utils
+    import { loadSave } from '$lib/utils/actions';
+
+    let isSaveLoaded = false;
+
+    onMount(async () => {
+        const save = await loadSave();
+        if (save) {
+            isSaveLoaded = true;
+        }
+    });
 </script>
 
 <div class="container">
-    <Header />
+    <Header isSaveLoaded />
     <main>
         <Hero />
     </main>

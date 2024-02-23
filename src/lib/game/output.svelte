@@ -1,5 +1,7 @@
 <script lang="ts">
     import { browser } from '$app/environment';
+    // store
+    import settings from '$lib/store/settings';
     // components
     import { Game } from 'svelte-phaser';
     import Header from '$lib/game/ui/header.svelte';
@@ -12,7 +14,6 @@
 
     $: h = 0;
     $: w = 0;
-    // TODO: add a loading screen with a progress bar
 </script>
 
 <svelte:window
@@ -22,9 +23,12 @@
 />
 <svelte:document on:keydown={onKeydown} on:keyup={onKeyup} />
 
-<Header />
-<AsideL />
-<AsideR />
+{#if $settings.isGameLoaded}
+    <Header />
+    <AsideL />
+    <AsideR />
+    <Footer />
+{/if}
 {#if browser && w !== 0 && h !== 0}
     <Game
         physics={{ default: 'arcade' }}
@@ -35,4 +39,3 @@
         <Scenario {w} {h} />
     </Game>
 {/if}
-<Footer />

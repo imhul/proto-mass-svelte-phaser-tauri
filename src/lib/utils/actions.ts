@@ -5,7 +5,7 @@ import settings from '$lib/store/settings';
 import { messages } from '$lib/store/notify';
 import stats from '$lib/store/stats';
 import keyboard from '$lib/store/keyboard';
-import { memoizedTask } from '$lib/store/task';
+import tasks, { memoizedTask } from '$lib/store/task';
 // types
 import type { Save } from '$lib/types';
 // utils
@@ -144,6 +144,9 @@ export const makeSave = async (save: Save) => {
 
     const localSave = await getSave();
     const isSaveIdExist = Boolean(localSave?.$stats.id?.length);
+    const isColonyIdExist = Boolean(
+        localSave?.$stats.colony.id?.length
+    );
 
     await writeFile(
         {
@@ -154,7 +157,14 @@ export const makeSave = async (save: Save) => {
                           ...save,
                           $stats: {
                               ...save.$stats,
-                              id: getId('save', 'id')
+                              id: getId('save', 'id'),
+                              colony: !isColonyIdExist
+                                  ? {
+                                        ...save.$stats.colony,
+                                        id: getId('colony', 'id')
+                                    }
+                                  : save.$stats.colony,
+                              saveDate: new Date().getTime()
                           }
                       }
                     : save
@@ -185,4 +195,6 @@ export const loadSave = async () => {
     if (!save) return;
     settings.update(() => save.$settings);
     stats.update(() => save.$stats);
+    tasks.set(save.$stats.taskList);
+    return save;
 };

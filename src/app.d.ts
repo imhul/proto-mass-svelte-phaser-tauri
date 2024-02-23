@@ -7,11 +7,6 @@ declare global {
         // interface PageData {}
         // interface PageState {}
         // interface Platform {}
-
-        declare module '*.cur' {
-            const src: string;
-            export default src;
-        }
     }
 }
 
@@ -24,3 +19,5 @@ interface ImportMetaEnv {
     PROTO_MASS_TWITTER_SEARCH_URL: string;
     PROTO_MASS_GITHUB_API_URL: string;
 }
+
+export {};
