@@ -10,6 +10,7 @@
     import tasks, { memoizedTask } from '$lib/store/task';
     import { sceneInstance } from '$lib/store/scene';
     import keyboard from '$lib/store/keyboard';
+    import stats from '$lib/store/stats';
     // components
     import { Scene } from 'svelte-phaser';
     import Background from '$lib/game/background.svelte';
@@ -38,10 +39,7 @@
     $: mouseButton = '';
     $: zoomSize = 1;
     $: awaitPlacement = Boolean($memoizedTask.id?.length);
-
-    const loading = async () => {
-        await delay(1000);
-    };
+    let playTimeCounter: NodeJS.Timeout | undefined;
 
     const cameraUpdate = () => {
         if (!$sceneInstance) return;
@@ -399,11 +397,21 @@
             if (!$unit) return;
             $unit.update();
         });
+
+        playTimeCounter = setInterval(() => {
+            stats.set({
+                ...$stats,
+                playTime: $stats.playTime + 1000
+            });
+        }, 1000);
     });
 
-    onDestroy(() => stop());
+    onDestroy(() => {
+        stop();
+        clearInterval(playTimeCounter);
+    });
 
-    // $: console.log('$settings', $settings);
+    $: console.log('$settings', $settings);
 </script>
 
 <svelte:window

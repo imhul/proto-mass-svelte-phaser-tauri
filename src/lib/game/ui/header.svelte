@@ -1,9 +1,10 @@
 <script lang="ts">
     import { getContext } from 'svelte';
     // components
-    import Journal from '$lib/game/ui/journal.svelte';
-    import Settings from '$lib/game/ui/settings.svelte';
-    import Taskboard from '$lib/game/ui/taskboard.svelte';
+    import Journal from '$lib/game/ui/modals/journal.svelte';
+    import Settings from '$lib/game/ui/modals/settings.svelte';
+    import Taskboard from '$lib/game/ui/modals/taskboard.svelte';
+    import settings from '$lib/store/settings';
 
     const { open } = getContext('simple-modal') as { open: Function };
 </script>
@@ -33,7 +34,14 @@
             role="button"
             tabindex={1}
             class="menu-link"
-            on:click|stopPropagation={() => open(Settings)}
+            on:click|stopPropagation={() => {
+                settings.set({
+                    ...$settings,
+                    isGameMenuOpen: true,
+                    isGamePaused: true
+                });
+                open(Settings);
+            }}
         >
             <i class="icon-adjust" />
         </span>

@@ -119,3 +119,34 @@
         }
     }
 }
+
+%btn-flex-wrapper {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    padding: rem(20);
+
+    button,
+    a {
+        display: flex;
+        align-items: center;
+        height: rem(30);
+        padding: 0 rem(20);
+        background-color: var(--game-color-light);
+        border: rem(2) solid var(--game-color-darkest);
+        cursor: pointer;
+
+        @include font(rem(14), 400, 1, var(--game-color-darkest));
+
+        &:hover {
+            background-color: var(--game-color-dark);
+            color: var(--game-color-light);
+        }
+
+        i {
+            width: rem(20);
+            font-size: rem(20);
+        }
+    }
+}

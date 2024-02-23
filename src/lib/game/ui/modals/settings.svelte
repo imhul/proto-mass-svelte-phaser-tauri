@@ -1,19 +1,23 @@
 <script lang="ts">
-    import { getContext } from 'svelte';
+    import { getContext, onDestroy } from 'svelte';
     // types
     import type { MouseEventHandler } from 'svelte/elements';
     import type { Complexity } from '$lib/types';
     // stores
     import save from '$lib/store/save';
     import stats from '$lib/store/stats';
+    import settings from '$lib/store/settings';
     // utils
     import {
         loadSave,
         makeSave,
         fullscreen,
         minimize,
-        toggleFullscreen
+        toggleFullscreen,
+        getSave
     } from '$lib/utils/actions';
+    import getId from '$lib/utils/getId';
+    import { millisToTimeString } from '$lib/utils/date';
 
     let currentTab = 'Settings';
     let fullscreenChecked = false;
@@ -44,6 +48,48 @@
             (currentComplexity + 1) % complexity.length;
         $stats.complexity = complexity[currentComplexity];
     };
+
+    const onSave = async () => {
+        const localSave = await getSave();
+        const isSaveIdExist = Boolean(localSave?.stats.id?.length);
+        const isColonyIdExist = Boolean(
+            localSave?.stats.colony.id?.length
+        );
+
+        const newSave = !isSaveIdExist
+            ? {
+                  ...$save,
+                  stats: {
+                      ...$stats,
+                      id: getId('save', 'id'),
+                      colony:
+                          !isColonyIdExist || !$stats.colony.id
+                              ? {
+                                    ...$stats.colony,
+                                    id: getId('colony', 'id')
+                                }
+                              : $stats.colony,
+                      saveDate: new Date().getTime()
+                  }
+              }
+            : {
+                  ...$save,
+                  stats: {
+                      ...$stats,
+                      saveDate: new Date().getTime()
+                  }
+              };
+
+        makeSave(newSave);
+    };
+
+    onDestroy(() => {
+        settings.set({
+            ...$settings,
+            isGameMenuOpen: false,
+            isGamePaused: false
+        });
+    });
 </script>
 
 <div class="big-modal">
@@ -160,8 +206,19 @@
                     </div>
 
                     <div class="list-item">
+                        <div class="list-item-text">
+                            <h3>Playing Time</h3>
+                        </div>
+                        <div class="list-item-input large">
+                            <span>
+                                {millisToTimeString($stats.playTime)}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="list-item">
                         <div class="btn-flex-wrapper">
-                            <button on:click={() => makeSave($save)}>
+                            <button on:click={onSave}>
                                 <i class="icon-degree1" /> Save Game
                             </button>
 
@@ -299,8 +356,8 @@
                             margin: rem(10);
 
                             &.large {
-                                flex: 0 0 rem(100);
-                                width: rem(100);
+                                flex: 0 0 rem(140);
+                                width: rem(140);
                                 text-align: center;
                             }
 
@@ -407,44 +464,7 @@
                         }
 
                         .btn-flex-wrapper {
-                            width: 100%;
-                            display: flex;
-                            align-items: center;
-                            justify-content: space-evenly;
-                            padding: rem(20);
-
-                            button,
-                            a {
-                                display: flex;
-                                align-items: center;
-                                height: rem(30);
-                                padding: 0 rem(20);
-                                background-color: var(
-                                    --game-color-light
-                                );
-                                border: rem(2) solid
-                                    var(--game-color-darkest);
-                                cursor: pointer;
-
-                                @include font(
-                                    rem(14),
-                                    400,
-                                    1,
-                                    var(--game-color-darkest)
-                                );
-
-                                &:hover {
-                                    background-color: var(
-                                        --game-color-dark
-                                    );
-                                    color: var(--game-color-light);
-                                }
-
-                                i {
-                                    width: rem(20);
-                                    font-size: rem(20);
-                                }
-                            }
+                            @extend %btn-flex-wrapper;
                         }
                     }
                 }

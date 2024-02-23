@@ -1,7 +1,6 @@
 // tauri
 import { invoke } from '@tauri-apps/api/tauri';
 // store
-import settings from '$lib/store/settings';
 import { messages } from '$lib/store/notify';
 import stats from '$lib/store/stats';
 import keyboard from '$lib/store/keyboard';
@@ -142,33 +141,10 @@ export const makeSave = async (save: Save) => {
             recursive: true
         });
 
-    const localSave = await getSave();
-    const isSaveIdExist = Boolean(localSave?.$stats.id?.length);
-    const isColonyIdExist = Boolean(
-        localSave?.$stats.colony.id?.length
-    );
-
     await writeFile(
         {
             path: 'saves\\save.json',
-            contents: JSON.stringify(
-                !isSaveIdExist
-                    ? {
-                          ...save,
-                          $stats: {
-                              ...save.$stats,
-                              id: getId('save', 'id'),
-                              colony: !isColonyIdExist
-                                  ? {
-                                        ...save.$stats.colony,
-                                        id: getId('colony', 'id')
-                                    }
-                                  : save.$stats.colony,
-                              saveDate: new Date().getTime()
-                          }
-                      }
-                    : save
-            )
+            contents: JSON.stringify(save)
         },
         {
             dir: Dir.AppData,
@@ -193,8 +169,7 @@ export const makeSave = async (save: Save) => {
 export const loadSave = async () => {
     const save = await getSave();
     if (!save) return;
-    settings.update(() => save.$settings);
-    stats.update(() => save.$stats);
-    tasks.set(save.$stats.taskList);
+    stats.set(save.stats);
+    tasks.set(save.stats.taskList);
     return save;
 };

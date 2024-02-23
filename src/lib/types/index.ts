@@ -159,7 +159,7 @@ export interface Stats {
     taskList: unknown[];
     gameInitTime: number;
     saveDate: number | string | Date;
-    playHours: number;
+    playTime: number;
     minimapEnabled?: boolean;
     minimapPosition?: Aside;
     volume: number;
@@ -169,8 +169,7 @@ export interface Stats {
 }
 
 export interface Save {
-    $settings: Settings;
-    $stats: Stats;
+    stats: Stats;
 }
 
 export interface Keyboard {

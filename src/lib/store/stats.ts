@@ -15,7 +15,7 @@ const initState: Stats = {
     taskList: [],
     gameInitTime: 0,
     saveDate: 0,
-    playHours: 0,
+    playTime: 0,
     minimapEnabled: true,
     minimapPosition: 'right',
     volume: 50,

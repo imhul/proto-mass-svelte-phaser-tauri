@@ -1,7 +1,33 @@
 <script lang="ts">
+    import { goto } from '$app/navigation';
+    import { bind } from 'svelte-simple-modal';
+    // store
     import settings from '$lib/store/settings';
+    import stats from '$lib/store/stats';
+    import { modal } from '$lib/store/modal';
+    // components
+    import Confirm from '$lib/game/ui/modals/confirm.svelte';
+    import Modal from 'svelte-simple-modal';
 
     export let isSaveLoaded: boolean = false;
+    const message =
+        'WARNING! This action ' +
+        'will delete your previous save! ' +
+        'Are you sure you want to start a new game?';
+
+    const onOkay = () => {
+        settings.set({
+            ...$settings,
+            isSaveExists: true,
+            isNewGame: true
+        });
+        stats.reset();
+        stats.set({
+            ...$stats,
+            gameInitTime: new Date().getTime()
+        });
+        goto('/game');
+    };
 
     const gameContinue = () => {
         settings.set({
@@ -12,13 +38,35 @@
     };
 
     const startNewGame = () => {
-        settings.set({
-            ...$settings,
-            isSaveExists: false,
-            isNewGame: true
-        });
+        if (isSaveLoaded) {
+            modal.set(bind(Confirm, { message, onOkay }));
+        } else {
+            settings.set({
+                ...$settings,
+                isSaveExists: false,
+                isNewGame: true
+            });
+            stats.reset();
+            stats.set({
+                ...$stats,
+                gameInitTime: new Date().getTime()
+            });
+            goto('/game');
+        }
     };
 </script>
+
+<Modal
+    id="confirm-dialog"
+    show={$modal}
+    closeButton={false}
+    closeOnEsc={false}
+    closeOnOuterClick={false}
+    classBg="modal-bg"
+    classWindowWrap="modal-window-wrap"
+    classWindow="modal-window"
+    classContent="modal-content"
+/>
 
 <header>
     <div class="title">
@@ -27,25 +75,21 @@
     </div>
     <nav>
         {#if isSaveLoaded}
-            <a
-                href="/game#continue"
-                on:click={gameContinue}
-                class="menu-link"
-            >
+            <a href="/game" on:click={gameContinue} class="menu-link">
                 <span>continue</span>
             </a>
 
             <a
-                href="/game#new"
-                on:click={startNewGame}
+                href="/game"
+                on:click|preventDefault={startNewGame}
                 class="menu-link"
             >
                 <span>new game</span>
             </a>
         {:else}
             <a
-                href="/game#new"
-                on:click={startNewGame}
+                href="/game"
+                on:click|preventDefault={startNewGame}
                 class="menu-link"
             >
                 <span>new game</span>

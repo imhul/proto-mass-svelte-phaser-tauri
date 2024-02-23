@@ -1,6 +1,6 @@
 <script lang="ts">
     // components
-    import Board from '$lib/game/ui/board.svelte';
+    import Board from '$lib/game/ui/modals/board.svelte';
     // store
     import { messages } from '$lib/store/notify';
     // types
