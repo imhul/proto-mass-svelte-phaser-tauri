@@ -6,6 +6,15 @@ export type Complexity = 'easy' | 'normal' | 'hard';
 export type Theme = 'dark' | 'light' | 'oldschool';
 export type IMotion = 'walk' | 'attack' | 'idle' | 'die';
 export type TopLevelMenuId = 'commands' | 'constructions';
+export type TooltipPosition =
+    | 'left'
+    | 'right'
+    | 'up'
+    | 'down'
+    | 'l-up'
+    | 'l-down'
+    | 'r-up'
+    | 'r-down';
 export type IOpposite =
     | 'west'
     | 'northWest'
