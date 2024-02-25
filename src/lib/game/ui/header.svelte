@@ -13,46 +13,48 @@
 
 <header>
     <nav>
-        <Tooltip text="Taskboard" position="down">
-            <!-- svelte-ignore a11y-click-events-have-key-events -->
-            <span
-                role="button"
-                tabindex={0}
-                class="menu-link"
-                on:click|stopPropagation={() => open(Taskboard)}
-            >
-                <i class="icon-Odieresis" />
-            </span>
-        </Tooltip>
-        <Tooltip text="Journal" position="down">
-            <!-- svelte-ignore a11y-click-events-have-key-events -->
-            <span
-                role="button"
-                tabindex={0}
-                class="menu-link"
-                on:click|stopPropagation={() => open(Journal)}
-            >
-                <i class="icon-time" />
-            </span>
-        </Tooltip>
-        <Tooltip text="Settings" position="down">
-            <!-- svelte-ignore a11y-click-events-have-key-events -->
-            <span
-                role="button"
-                tabindex={1}
-                class="menu-link"
-                on:click|stopPropagation={() => {
-                    settings.set({
-                        ...$settings,
-                        isGameMenuOpen: true,
-                        isGamePaused: true
-                    });
-                    open(Settings);
-                }}
-            >
-                <i class="icon-adjust" />
-            </span>
-        </Tooltip>
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <span
+            role="button"
+            tabindex={0}
+            class="menu-link"
+            on:click|stopPropagation={() => open(Taskboard)}
+        >
+            <!-- <Tooltip text="Taskboard" position="down"> -->
+            <i class="icon-Odieresis" />
+            <!-- </Tooltip> -->
+        </span>
+
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <span
+            role="button"
+            tabindex={0}
+            class="menu-link"
+            on:click|stopPropagation={() => open(Journal)}
+        >
+            <!-- <Tooltip text="Journal" position="down"> -->
+            <i class="icon-time" />
+            <!-- </Tooltip> -->
+        </span>
+
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <span
+            role="button"
+            tabindex={1}
+            class="menu-link"
+            on:click|stopPropagation={() => {
+                settings.set({
+                    ...$settings,
+                    isGameMenuOpen: true,
+                    isGamePaused: true
+                });
+                open(Settings);
+            }}
+        >
+            <!-- <Tooltip text="Settings" position="down"> -->
+            <i class="icon-adjust" />
+            <!-- </Tooltip> -->
+        </span>
     </nav>
 </header>
 

@@ -15,6 +15,7 @@ import {
     exists,
     Dir
 } from '@tauri-apps/api/fs';
+import { appWindow } from '@tauri-apps/api/window';
 import getId from '$lib/utils/getId';
 
 export async function fullscreen() {
@@ -172,4 +173,8 @@ export const loadSave = async () => {
     stats.set(save.stats);
     tasks.set(save.stats.taskList);
     return save;
+};
+
+export const killWindow = async () => {
+    await appWindow.close();
 };

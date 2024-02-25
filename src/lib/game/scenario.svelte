@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { onDestroy, onMount } from 'svelte';
+    import { afterUpdate, onDestroy, onMount } from 'svelte';
     import Phaser from 'phaser';
     // types
     import type { IScene, Message } from '$lib/types';
@@ -12,8 +12,7 @@
     import keyboard from '$lib/store/keyboard';
     import stats from '$lib/store/stats';
     // components
-    import { Scene } from 'svelte-phaser';
-    import Background from '$lib/game/background.svelte';
+    import { Scene, onGameEvent } from 'svelte-phaser';
     import Cursor from '$lib/game/ui/cursor.svelte';
     import Progress from '$lib/game/ui/progress.svelte';
     // utils
@@ -40,6 +39,14 @@
     $: zoomSize = 1;
     $: awaitPlacement = Boolean($memoizedTask.id?.length);
     let playTimeCounter: NodeJS.Timeout | undefined;
+    let unpaused = false;
+    let wasStopped = false;
+    let stars1: Phaser.GameObjects.TileSprite;
+    let stars2: Phaser.GameObjects.TileSprite;
+    let stars3: Phaser.GameObjects.TileSprite;
+    let tile1PositionX = 0;
+    let tile2PositionX = 0;
+    let tile3PositionX = 0;
 
     const cameraUpdate = () => {
         if (!$sceneInstance) return;
@@ -100,20 +107,36 @@
         };
     };
 
+    const playTimeCount = () => {
+        playTimeCounter = setInterval(() => {
+            stats.set({
+                ...$stats,
+                playTime: $stats.playTime + 1000
+            });
+        }, 1000);
+    };
+
     const pause = (scene: Phaser.Scene) => {
-        settings.set({
-            ...$settings,
-            isGamePaused: true
-        });
-        // scene.events.emit('pause');
+        console.log('pause');
+        if (!$settings.isGamePaused) $settings.isGamePaused = true;
+        unpaused = false;
+        // if (scene?.events) scene.events.emit('pause');
     };
 
     const resume = (scene: Phaser.Scene) => {
-        settings.set({
-            ...$settings,
-            isGamePaused: false
-        });
-        // scene.events.emit('resume');
+        if (!unpaused) {
+            console.log('resume');
+            unpaused = true;
+            if ($settings.isGamePaused)
+                $settings.isGamePaused = false;
+            playTimeCount();
+
+            // start(() => {
+            //     if (!$unit) return;
+            //     $unit.update();
+            // });
+        }
+        // if (scene?.events) scene.events.emit('resume');
     };
 
     const onSceneKeydown = (
@@ -223,6 +246,23 @@
         $unit.clearTint();
         if (!$sceneInstance) return;
         $sceneInstance.cameras.main.stopFollow();
+    };
+
+    const cerateBackground = (scene: Phaser.Scene) => {
+        stars1 = scene.add
+            .tileSprite(0, 0, w, h, 'stars-1')
+            .setOrigin(0, 0)
+            .setScrollFactor(0);
+
+        stars2 = scene.add
+            .tileSprite(0, 0, w, h, 'stars-2')
+            .setOrigin(0, 0)
+            .setScrollFactor(0);
+
+        stars3 = scene.add
+            .tileSprite(0, 0, w, h, 'stars-3')
+            .setOrigin(0, 0)
+            .setScrollFactor(0);
     };
 
     const crteateSceleton = (scene: Phaser.Scene) => {
@@ -344,8 +384,8 @@
 
         // actions
         if (scene.input.keyboard && scene.events) {
-            scene.events.on('pause', pause, scene);
-            scene.events.on('resume', resume, scene);
+            // scene.events.on('pause', pause, scene);
+            // scene.events.on('resume', resume, scene);
             scene.input.on('pointerdown', onMouseDownScene, scene);
             scene.input.on(
                 'pointermove',
@@ -373,8 +413,8 @@
         // initializations
         cameraControls(scene);
         buildMap(scene);
-        // placeHouses(scene);
         crteateSceleton(scene);
+        cerateBackground(scene);
 
         // Post FX
         scene.cameras.main.postFX.addTiltShift(
@@ -387,31 +427,55 @@
         );
     };
 
+    // updates
+    const updateUnit = () => {
+        if (!$unit) return;
+        $unit.update();
+    };
+
+    const updateBg = () => {
+        if (!stars1 && !stars2 && !stars3) return;
+        stars1.tilePositionX += 0.1;
+        stars2.tilePositionX += 0.15;
+        stars3.tilePositionX += 0.2;
+    };
+
+    onGameEvent('step', () => {
+        console.log('step');
+        if ($settings.isGamePaused) return;
+        updateBg();
+        updateUnit();
+    });
+
     // component lifecycle
     onMount(async () => {
-        await delay(1000);
+        // await delay(1000);
         if (!$sceneInstance) return;
         $settings.isGameInit = true;
         cameraUpdate();
-        start(() => {
-            if (!$unit) return;
-            $unit.update();
-        });
+        playTimeCount();
+    });
 
-        playTimeCounter = setInterval(() => {
-            stats.set({
-                ...$stats,
-                playTime: $stats.playTime + 1000
-            });
-        }, 1000);
+    afterUpdate(() => {
+        if ($settings.isGamePaused && $sceneInstance) {
+            clearInterval(playTimeCounter);
+            wasStopped = true;
+            // $sceneInstance.events.emit('pause');
+        } else if (
+            wasStopped &&
+            !$settings.isGamePaused &&
+            $sceneInstance
+        ) {
+            wasStopped = false;
+            resume($sceneInstance as Phaser.Scene);
+        }
     });
 
     onDestroy(() => {
-        stop();
         clearInterval(playTimeCounter);
     });
 
-    $: console.log('$settings', $settings);
+    // $: console.log('$settings', $settings);
 </script>
 
 <svelte:window
@@ -424,11 +488,9 @@
 
 <Cursor img="images/constructions/{$memoizedTask.context}.png" />
 
-{#await delay(1000) then _}
-    <Scene key={config.sceneID} {preload} {create} active>
-        <Background {w} {h} />
-    </Scene>
-{/await}
+<!-- {#await delay(1000) then _} -->
+<Scene key={config.sceneID} {preload} {create} active />
+<!-- {/await} -->
 
 <div class="stats">
     awaitPlacement: {awaitPlacement ? 'true' : 'false'}<br />

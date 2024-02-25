@@ -14,6 +14,7 @@
         fullscreen,
         minimize,
         toggleFullscreen,
+        killWindow,
         getSave
     } from '$lib/utils/actions';
     import getId from '$lib/utils/getId';
@@ -81,6 +82,11 @@
               };
 
         makeSave(newSave);
+    };
+
+    const beforeExit = async () => {
+        await onSave();
+        await killWindow();
     };
 
     onDestroy(() => {
@@ -218,25 +224,39 @@
 
                     <div class="list-item">
                         <div class="btn-flex-wrapper">
-                            <button on:click={onSave}>
+                            <button class="btn" on:click={onSave}>
                                 <i class="icon-degree1" /> Save Game
                             </button>
 
-                            <button on:click={() => loadSave()}>
+                            <button
+                                class="btn"
+                                on:click={() => loadSave()}
+                            >
                                 <i class="icon-degree1" /> Load Game
                             </button>
                         </div>
                     </div>
                     <div class="list-item">
                         <div class="btn-flex-wrapper">
-                            <a
-                                class="btn"
-                                href="/"
-                                on:click|stopPropagation={close}
-                            >
-                                <i class="icon-degree1" /> Exit
-                            </a>
+                            <!-- svelte-ignore a11y-invalid-attribute -->
+                            <button class="btn" on:click={close}>
+                                <i class="icon-W8 rm-10" /> Resume
+                            </button>
                         </div>
+                    </div>
+                    <div class="list-item">
+                        <div class="btn-flex-wrapper">
+                            <a class="btn" href="/" on:click={close}>
+                                <i class="icon-Otilde1 rm-10" /> Exit to
+                                menu
+                            </a>
+                            <button class="btn" on:click={beforeExit}>
+                                <i class="icon-Ntilde rm-10" /> Exit
+                            </button>
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <div class="btn-flex-wrapper"></div>
                     </div>
                 </div>
             {/if}
@@ -465,6 +485,13 @@
 
                         .btn-flex-wrapper {
                             @extend %btn-flex-wrapper;
+
+                            padding: rem(10);
+
+                            i.rm-10 {
+                                display: block;
+                                margin-right: rem(10);
+                            }
                         }
                     }
                 }
