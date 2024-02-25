@@ -31,7 +31,7 @@
     const tabs = ['Settings', 'Controls'];
     const complexity: Complexity[] = ['easy', 'normal', 'hard'];
     const { close } = getContext('simple-modal') as {
-        close: MouseEventHandler<HTMLElement>;
+        close: Function;
     };
 
     const onFullscreen = () => {
@@ -89,12 +89,18 @@
         await killWindow();
     };
 
-    onDestroy(() => {
+    const onClose = (() => {
         settings.set({
             ...$settings,
             isGameMenuOpen: false,
             isGamePaused: false
         });
+        close();
+    });
+
+    // component lifecycle
+    onDestroy(() => {
+        onClose();
     });
 </script>
 
@@ -104,7 +110,7 @@
         class="icon-forbid close"
         role="button"
         tabindex="0"
-        on:click|stopPropagation={close}
+        on:click|stopPropagation={onClose}
     />
 
     <div class="tabs">
@@ -239,14 +245,14 @@
                     <div class="list-item">
                         <div class="btn-flex-wrapper">
                             <!-- svelte-ignore a11y-invalid-attribute -->
-                            <button class="btn" on:click={close}>
+                            <button class="btn" on:click={onClose}>
                                 <i class="icon-W8 rm-10" /> Resume
                             </button>
                         </div>
                     </div>
                     <div class="list-item">
                         <div class="btn-flex-wrapper">
-                            <a class="btn" href="/" on:click={close}>
+                            <a class="btn" href="/" on:click={onClose}>
                                 <i class="icon-Otilde1 rm-10" /> Exit to
                                 menu
                             </a>
@@ -269,8 +275,8 @@
         @extend %big-modal;
 
         .tabs {
-            height: 90vh;
-
+            height: 100%;
+            
             .tabs-controls {
                 display: flex;
                 align-items: center;

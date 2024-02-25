@@ -1,5 +1,5 @@
 /* Variables and mixins declared here will be available in all other SCSS files */
-@use 'sass:math';
+@use "sass:math";
 
 @function rem($px) {
     @return math.div($px * 1px, 16px) * 1rem;
@@ -58,6 +58,9 @@
 }
 
 %big-modal {
+    max-height: 90vh;
+    min-height: rem(500);
+
     .close {
         position: absolute;
         right: rem(6);
@@ -80,15 +83,11 @@
     }
 
     .list {
-        @include scrollbar(
-            rem(24),
-            var(--game-color-dark),
-            var(--game-color-light)
-        );
+        @include scrollbar(rem(24), var(--game-color-dark), var(--game-color-light));
         display: flex;
         flex-direction: column;
         align-items: flex-start;
-        height: 90vh;
+        max-height: 90vh;
         margin-top: rem(20);
         overflow-y: auto;
         overflow-x: hidden;
@@ -112,8 +111,7 @@
                 h3 {
                     font-size: rem(14);
                     font-family: var(--8-bit);
-                    text-shadow: rem(2) rem(2) 0
-                        var(--game-color-light);
+                    text-shadow: rem(2) rem(2) 0 var(--game-color-light);
                 }
             }
         }

@@ -16,11 +16,9 @@
     import Cursor from '$lib/game/ui/cursor.svelte';
     import Progress from '$lib/game/ui/progress.svelte';
     // utils
-    import { start, stop } from '$lib/utils/interval';
     import { getPercent } from '$lib/utils/percent';
     import config from '$lib/utils/config';
     import getId from '$lib/utils/getId';
-    import { delay } from '$lib/utils/delay';
     // assets
     import mapJson from '$lib/assets/sprites/isometric-grass-and-water.json';
     import tilesPng from '$lib/assets/sprites/isometric-grass-and-water.png';
@@ -44,9 +42,6 @@
     let stars1: Phaser.GameObjects.TileSprite;
     let stars2: Phaser.GameObjects.TileSprite;
     let stars3: Phaser.GameObjects.TileSprite;
-    let tile1PositionX = 0;
-    let tile2PositionX = 0;
-    let tile3PositionX = 0;
 
     const cameraUpdate = () => {
         if (!$sceneInstance) return;
@@ -441,7 +436,6 @@
     };
 
     onGameEvent('step', () => {
-        console.log('step');
         if ($settings.isGamePaused) return;
         updateBg();
         updateUnit();
@@ -449,7 +443,6 @@
 
     // component lifecycle
     onMount(async () => {
-        // await delay(1000);
         if (!$sceneInstance) return;
         $settings.isGameInit = true;
         cameraUpdate();
