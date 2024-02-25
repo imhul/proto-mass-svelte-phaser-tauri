@@ -1,3 +1,4 @@
+import type Skeleton from '$lib/objects/skeleton';
 import { Scene } from 'svelte-phaser';
 
 // UI types
@@ -293,6 +294,18 @@ export interface Resource {
     width: number;
     height: number;
     stats: ObjectStats;
+}
+
+export interface ShortUnit {
+    id: string;
+    name: string;
+    x: number;
+    y: number;
+    z: number;
+    status: string;
+    distance: number;
+    depth: number;
+    type: string;
 }
 
 export interface IUnit extends Phaser.GameObjects.Sprite {

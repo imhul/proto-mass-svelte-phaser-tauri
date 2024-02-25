@@ -30,6 +30,8 @@ body {
     background: radial-gradient(circle, #000 70%, #111719 100%);
     overflow: hidden;
     font-family: var(--mono);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 
     &.game {
         // background: radial-gradient(circle, #000 70%, #111719 100%);

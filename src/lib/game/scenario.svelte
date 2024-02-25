@@ -1,10 +1,11 @@
 <script lang="ts">
     import { afterUpdate, onDestroy, onMount } from 'svelte';
     import Phaser from 'phaser';
+    import { PhaserNavMeshPlugin } from 'phaser-navmesh/src';
     // types
     import type { IScene, Message } from '$lib/types';
     // store
-    import { unit } from '$lib/store/unit';
+    import { unit, units } from '$lib/store/unit';
     import settings from '$lib/store/settings';
     import { messages } from '$lib/store/notify';
     import tasks, { memoizedTask } from '$lib/store/task';
@@ -42,6 +43,20 @@
     let stars1: Phaser.GameObjects.TileSprite;
     let stars2: Phaser.GameObjects.TileSprite;
     let stars3: Phaser.GameObjects.TileSprite;
+    let mapSpriteId: number;
+    let mapSpriteX: number;
+    let mapSpriteY: number;
+
+    const plugins = {
+        scene: [
+            {
+                key: 'NavMeshPlugin',
+                plugin: PhaserNavMeshPlugin,
+                mapping: 'navMeshPlugin',
+                start: true
+            }
+        ]
+    };
 
     const cameraUpdate = () => {
         if (!$sceneInstance) return;
@@ -186,6 +201,7 @@
     const buildMap = (scene: Phaser.Scene) => {
         //  Parse the data out of the map
         const data = scene.cache.json.get('map');
+        stats.set({ ...$stats, map: data });
         const tilewidth = data.tilewidth;
         const tileheight = data.tileheight;
         const layer = data.layers[0].data;
@@ -210,6 +226,21 @@
                 );
 
                 tile.depth = centerY + ty;
+                tile.setInteractive();
+                tile.on(
+                    'pointerdown',
+                    (pointer: Phaser.Input.Pointer) => {
+                        if ($settings.isGamePaused) return;
+                        mapSpriteId = id;
+                        mapSpriteX = centerX + tx;
+                        mapSpriteY = centerY + ty;
+                        if (pointer.leftButtonDown()) {
+                            tile.setTint(config.focusColor);
+                        } else {
+                            tile.clearTint();
+                        }
+                    }
+                );
 
                 i++;
             }
@@ -262,6 +293,8 @@
 
     const crteateSceleton = (scene: Phaser.Scene) => {
         const skeletonId = getId('unit', 'skeleton');
+        const distance = 380;
+        const motion = 'walk';
 
         unit.set(
             new Skeleton(
@@ -269,9 +302,9 @@
                 scene,
                 620,
                 140,
-                'walk',
+                motion,
                 'south',
-                380
+                distance
             )
         );
 
@@ -279,6 +312,19 @@
         $unit.setInteractive();
         scene.add.existing($unit);
         $unit.on('pointerdown', () => unitFocus(scene));
+        units.set([
+            {
+                id: $unit.id,
+                name: $unit.name,
+                x: $unit.x,
+                y: $unit.y,
+                z: $unit.z,
+                status: motion,
+                distance: distance,
+                depth: $unit.depth,
+                type: $unit.type
+            }
+        ]);
     };
 
     const onMouseMoveOverScene = (pointer: Phaser.Input.Pointer) => {
@@ -469,6 +515,7 @@
     });
 
     // $: console.log('$settings', $settings);
+    $: console.log('$units', $units);
 </script>
 
 <svelte:window
@@ -482,12 +529,17 @@
 <Cursor img="images/constructions/{$memoizedTask.context}.png" />
 
 <!-- {#await delay(1000) then _} -->
-<Scene key={config.sceneID} {preload} {create} active />
+<Scene key={config.sceneID} {preload} {create} {plugins} active />
 <!-- {/await} -->
 
 <div class="stats">
+    {#if mapSpriteId}
+        map sprite: id: {mapSpriteId}, posX: {mapSpriteX}, posY: {mapSpriteY}<br
+        />
+    {/if}
+
     awaitPlacement: {awaitPlacement ? 'true' : 'false'}<br />
-    mouseButton: {mouseButton}<br />
+    mouse button: {mouseButton}<br />
     autozoom size: {zoomSize}<br />
     pointerX: {pointerX}<br />
     pointerY: {pointerY}<br />

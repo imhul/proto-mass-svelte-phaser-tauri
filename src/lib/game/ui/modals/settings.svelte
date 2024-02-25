@@ -110,7 +110,7 @@
         class="icon-forbid close"
         role="button"
         tabindex="0"
-        on:click|stopPropagation={onClose}
+        on:click|stopPropagation|stopPropagation={onClose}
     />
 
     <div class="tabs">
@@ -122,7 +122,8 @@
                     class="title"
                     role="button"
                     tabindex={i}
-                    on:click={() => (currentTab = tab)}
+                    on:click|stopPropagation={() =>
+                        (currentTab = tab)}
                 >
                     {tab}
                 </h1>
@@ -211,7 +212,9 @@
                         <div class="list-item-input large">
                             <!-- svelte-ignore a11y-no-static-element-interactions -->
                             <!-- svelte-ignore a11y-click-events-have-key-events -->
-                            <span on:click={changeComplexity}>
+                            <span
+                                on:click|stopPropagation={changeComplexity}
+                            >
                                 {complexity[currentComplexity]}
                             </span>
                         </div>
@@ -230,13 +233,17 @@
 
                     <div class="list-item">
                         <div class="btn-flex-wrapper">
-                            <button class="btn" on:click={onSave}>
+                            <button
+                                class="btn"
+                                on:click|stopPropagation={onSave}
+                            >
                                 <i class="icon-degree1" /> Save Game
                             </button>
 
                             <button
                                 class="btn"
-                                on:click={() => loadSave()}
+                                on:click|stopPropagation={() =>
+                                    loadSave()}
                             >
                                 <i class="icon-degree1" /> Load Game
                             </button>
@@ -245,7 +252,10 @@
                     <div class="list-item">
                         <div class="btn-flex-wrapper">
                             <!-- svelte-ignore a11y-invalid-attribute -->
-                            <button class="btn" on:click={onClose}>
+                            <button
+                                class="btn"
+                                on:click|stopPropagation={onClose}
+                            >
                                 <i class="icon-W8 rm-10" /> Resume
                             </button>
                         </div>
@@ -255,12 +265,15 @@
                             <a
                                 class="btn"
                                 href="/"
-                                on:click={onClose}
+                                on:click|stopPropagation={onClose}
                             >
                                 <i class="icon-Otilde1 rm-10" /> Exit to
                                 menu
                             </a>
-                            <button class="btn" on:click={beforeExit}>
+                            <button
+                                class="btn"
+                                on:click|stopPropagation={beforeExit}
+                            >
                                 <i class="icon-Ntilde rm-10" /> Exit
                             </button>
                         </div>
