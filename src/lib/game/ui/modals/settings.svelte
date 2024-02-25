@@ -89,14 +89,14 @@
         await killWindow();
     };
 
-    const onClose = (() => {
+    const onClose = () => {
         settings.set({
             ...$settings,
             isGameMenuOpen: false,
             isGamePaused: false
         });
         close();
-    });
+    };
 
     // component lifecycle
     onDestroy(() => {
@@ -252,7 +252,11 @@
                     </div>
                     <div class="list-item">
                         <div class="btn-flex-wrapper">
-                            <a class="btn" href="/" on:click={onClose}>
+                            <a
+                                class="btn"
+                                href="/"
+                                on:click={onClose}
+                            >
                                 <i class="icon-Otilde1 rm-10" /> Exit to
                                 menu
                             </a>
@@ -276,7 +280,7 @@
 
         .tabs {
             height: 100%;
-            
+
             .tabs-controls {
                 display: flex;
                 align-items: center;
