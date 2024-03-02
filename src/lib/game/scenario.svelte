@@ -28,6 +28,7 @@
     import solarPlantImg from '$lib/assets/sprites/common/solar-plant.png';
     // objects
     import Skeleton from '$lib/objects/skeleton';
+    import FollowerSprite from '$lib/objects/follower';
 
     export let h = 0;
     export let w = 0;
@@ -50,17 +51,6 @@
     let mapSpritePixelX: number;
     let mapSpritePixelY: number;
     const boundXOffset = -990;
-
-    const plugins = {
-        scene: [
-            {
-                key: 'NavMeshPlugin',
-                plugin: PhaserNavMeshPlugin,
-                mapping: 'navMeshPlugin',
-                start: true
-            }
-        ]
-    };
 
     const cameraUpdate = () => {
         if (!$sceneInstance) return;
@@ -162,14 +152,20 @@
     };
 
     const preload = (scene: Phaser.Scene) => {
-        // scene.load.json('map', mapJson);
-        // scene.load.spritesheet('tiles', tilesPng, {
-        //     frameWidth: 64,
-        //     frameHeight: 64
-        // });
         // scene.load.image('stars-1', '/images/parallax_1.png');
         // scene.load.image('stars-2', '/images/parallax_2.png');
         // scene.load.image('stars-3', '/images/parallax_3.png');
+
+        // install plugins
+        scene.plugins.installScenePlugin(
+            'NavMeshPlugin',
+            PhaserNavMeshPlugin,
+            'navMeshPlugin',
+            scene,
+            true
+        );
+
+        // load assets
         scene.load.image('tiles', tilesOutside);
         scene.load.image('tiles2', tilesBuilding);
         scene.load.tilemapTiledJSON('map', mapJson);
@@ -240,6 +236,21 @@
             tileset2
         ]);
 
+        // grass: 111, 112, 115, 118, 119
+
+        walls && walls.setCollisionByProperty({ collides: true });
+        const navMesh = scene.navMeshPlugin.buildMeshFromTilemap(
+            'mesh1',
+            map,
+            [walls]
+        );
+
+        // Graphics overlay for visualizing path
+        const graphics = scene.add.graphics().setAlpha(0.5);
+        navMesh.enableDebug(graphics);
+        const follower = new FollowerSprite(scene, 50, 200, navMesh);
+        console.info('follower', follower);
+
         const layers = [ground, walls, topFloor, roofs, tubes];
 
         scene.input.on(
@@ -265,8 +276,36 @@
                         }
                     }
                 );
+
+                const start = new Phaser.Math.Vector2(
+                    follower.x,
+                    follower.y
+                );
+                const end = new Phaser.Math.Vector2(
+                    pointer.worldX,
+                    pointer.worldY
+                );
+                // Tell the follower sprite to find its path to the target
+                follower.goTo(end);
+                // For demo purposes, let's recalculate the path here and draw it on the screen
+                const path = navMesh.findPath(start, end);
+                // -> path is now an array of points, or null if no valid path found
+                navMesh.debugDrawClear();
+                navMesh.debugDrawPath(path, 0xffd900);
             }
         );
+
+        // Toggle the navmesh visibility on/off
+        scene.input.keyboard &&
+            scene.input.keyboard.on('keydown-M', () => {
+                navMesh.debugDrawClear();
+                navMesh.debugDrawMesh({
+                    drawCentroid: true,
+                    drawBounds: false,
+                    drawNeighbors: false,
+                    drawPortals: true
+                });
+            });
     };
 
     const unitFocus = (scene: Phaser.Scene) => {
@@ -496,16 +535,17 @@
         $unit.update();
     };
 
-    const updateBg = () => {
-        if (!stars1 && !stars2 && !stars3) return;
-        stars1.tilePositionX += 0.1;
-        stars2.tilePositionX += 0.15;
-        stars3.tilePositionX += 0.2;
-    };
+    // const updateBg = () => {
+    //     if (!stars1 && !stars2 && !stars3) return;
+    //     stars1.tilePositionX += 0.1;
+    //     stars2.tilePositionX += 0.15;
+    //     stars3.tilePositionX += 0.2;
+    // };
 
+    // game tick event
     onGameEvent('step', () => {
         if ($settings.isGamePaused) return;
-        updateBg();
+        // updateBg();
         updateUnit();
     });
 
@@ -551,7 +591,7 @@
 <Cursor img="images/constructions/{$memoizedTask.context}.png" />
 
 <!-- {#await delay(1000) then _} -->
-<Scene key={config.sceneID} {preload} {create} {plugins} active />
+<Scene key={config.sceneID} {preload} {create} active />
 <!-- {/await} -->
 
 <div class="stats">
