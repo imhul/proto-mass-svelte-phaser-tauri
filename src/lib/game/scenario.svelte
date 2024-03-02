@@ -239,10 +239,11 @@
         // grass: 111, 112, 115, 118, 119
 
         walls && walls.setCollisionByProperty({ collides: true });
+        const layers = [ground, walls, topFloor, roofs, tubes];
         const navMesh = scene.navMeshPlugin.buildMeshFromTilemap(
             'mesh1',
             map,
-            [walls]
+            layers
         );
 
         // Graphics overlay for visualizing path
@@ -250,8 +251,6 @@
         navMesh.enableDebug(graphics);
         const follower = new FollowerSprite(scene, 50, 200, navMesh);
         console.info('follower', follower);
-
-        const layers = [ground, walls, topFloor, roofs, tubes];
 
         scene.input.on(
             'pointerdown',
