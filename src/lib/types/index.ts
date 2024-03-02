@@ -235,12 +235,17 @@ export interface Config {
     idLength: null[];
     sceneID: string;
     focusColor: number;
+    blurColor: number;
     appURL: string;
     offsetZ: number;
     footerMenu: MenuItem[];
     resources: Resource[];
     minZoom: number;
     maxZoom: number;
+    bounds: {
+        w: number;
+        h: number;
+    };
 }
 
 export interface IScene extends Phaser.Scene, Scene {

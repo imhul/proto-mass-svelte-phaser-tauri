@@ -21,10 +21,11 @@
     import config from '$lib/utils/config';
     import getId from '$lib/utils/getId';
     // assets
-    import mapJson from '$lib/assets/sprites/isometric-grass-and-water.json';
-    import tilesPng from '$lib/assets/sprites/isometric-grass-and-water.png';
-    import skeletonPng from '$lib/assets/sprites/skeleton8.png';
-    import solarPlantImg from '$lib/assets/sprites/solar-plant.png';
+    import mapJson from '$lib/assets/sprites/common/isorpg.json';
+    import tilesOutside from '$lib/assets/sprites/common/iso-64x64-outside.png';
+    import tilesBuilding from '$lib/assets/sprites/common/iso-64x64-building.png';
+    import skeletonPng from '$lib/assets/sprites/common/skeleton8.png';
+    import solarPlantImg from '$lib/assets/sprites/common/solar-plant.png';
     // objects
     import Skeleton from '$lib/objects/skeleton';
 
@@ -43,9 +44,12 @@
     let stars1: Phaser.GameObjects.TileSprite;
     let stars2: Phaser.GameObjects.TileSprite;
     let stars3: Phaser.GameObjects.TileSprite;
-    let mapSpriteId: number;
+    let mapSpriteId: string;
     let mapSpriteX: number;
     let mapSpriteY: number;
+    let mapSpritePixelX: number;
+    let mapSpritePixelY: number;
+    const boundXOffset = -990;
 
     const plugins = {
         scene: [
@@ -60,20 +64,20 @@
 
     const cameraUpdate = () => {
         if (!$sceneInstance) return;
-        const zoomCoef = w < config.mapWidth ? 1.5 : 1.2;
+        const zoomCoef = w < config.bounds.w ? 1.5 : 1.2;
         zoomSize = Number(
             (
                 zoomCoef +
-                (w - config.mapWidth) / (2 * config.mapWidth)
+                (w - config.bounds.w) / (2 * config.bounds.w)
             ).toFixed(2)
         );
         $sceneInstance.scale.resize(w, h);
         $sceneInstance.game.scale.resize(w, h);
         $sceneInstance.cameras.main.setBounds(
+            boundXOffset,
             0,
-            0,
-            config.mapWidth,
-            config.mapHeight,
+            config.bounds.w,
+            config.bounds.h,
             true
         );
         $sceneInstance.cameras.main.setZoom(zoomSize);
@@ -158,21 +162,22 @@
     };
 
     const preload = (scene: Phaser.Scene) => {
-        scene.load.json('map', mapJson);
-        scene.load.spritesheet('tiles', tilesPng, {
-            frameWidth: 64,
-            frameHeight: 64
-        });
+        // scene.load.json('map', mapJson);
+        // scene.load.spritesheet('tiles', tilesPng, {
+        //     frameWidth: 64,
+        //     frameHeight: 64
+        // });
+        // scene.load.image('stars-1', '/images/parallax_1.png');
+        // scene.load.image('stars-2', '/images/parallax_2.png');
+        // scene.load.image('stars-3', '/images/parallax_3.png');
+        scene.load.image('tiles', tilesOutside);
+        scene.load.image('tiles2', tilesBuilding);
+        scene.load.tilemapTiledJSON('map', mapJson);
         scene.load.spritesheet('skeleton', skeletonPng, {
             frameWidth: 128,
             frameHeight: 128
         });
         scene.load.image('solar-plant', solarPlantImg);
-        scene.load.image('stars-1', '/images/parallax_1.png');
-        scene.load.image('stars-2', '/images/parallax_2.png');
-        scene.load.image('stars-3', '/images/parallax_3.png');
-        sceneInstance.set(scene as IScene);
-
         scene.load.on(
             'progress',
             (progress: number) => {
@@ -196,55 +201,72 @@
             },
             scene
         );
+
+        sceneInstance.set(scene as IScene);
     };
 
     const buildMap = (scene: Phaser.Scene) => {
-        //  Parse the data out of the map
-        const data = scene.cache.json.get('map');
-        stats.set({ ...$stats, map: data });
-        const tilewidth = data.tilewidth;
-        const tileheight = data.tileheight;
-        const layer = data.layers[0].data;
-        const mapwidth = data.layers[0].width;
-        const mapheight = data.layers[0].height;
-        const tileWidthHalf = tilewidth / 2;
-        const tileHeightHalf = tileheight / 2;
-        const centerX = mapwidth * tileWidthHalf;
-        const centerY = 16;
-        let i = 0;
+        const map = scene.add.tilemap('map', 64, 32, 32, 32);
 
-        for (let y = 0; y < mapheight; y++) {
-            for (let x = 0; x < mapwidth; x++) {
-                const id = layer[i] - 1;
-                const tx = (x - y) * tileWidthHalf;
-                const ty = (x + y) * tileHeightHalf;
-                const tile = scene.add.image(
-                    centerX + tx,
-                    centerY + ty,
-                    'tiles',
-                    id
-                );
+        const tileset1 = map.addTilesetImage(
+            'iso-64x64-outside',
+            'tiles'
+        );
+        const tileset2 = map.addTilesetImage(
+            'iso-64x64-building',
+            'tiles2'
+        );
 
-                tile.depth = centerY + ty;
-                tile.setInteractive();
-                tile.on(
-                    'pointerdown',
-                    (pointer: Phaser.Input.Pointer) => {
-                        if ($settings.isGamePaused) return;
-                        mapSpriteId = id;
-                        mapSpriteX = centerX + tx;
-                        mapSpriteY = centerY + ty;
+        if (!tileset1 || !tileset2) return;
+
+        const ground = map.createLayer('Tile Layer 1', [
+            tileset1,
+            tileset2
+        ]);
+        const walls = map.createLayer('Tile Layer 2', [
+            tileset1,
+            tileset2
+        ]);
+        const topFloor = map.createLayer('Tile Layer 3', [
+            tileset1,
+            tileset2
+        ]);
+        const roofs = map.createLayer('Tile Layer 4', [
+            tileset1,
+            tileset2
+        ]);
+        const tubes = map.createLayer('Tile Layer 5', [
+            tileset1,
+            tileset2
+        ]);
+
+        const layers = [ground, walls, topFloor, roofs, tubes];
+
+        scene.input.on(
+            'pointerdown',
+            (pointer: Phaser.Input.Pointer) => {
+                layers.forEach(
+                    (layer: Phaser.Tilemaps.TilemapLayer | null) => {
+                        if (!layer) return;
+                        const tile = layer.getIsoTileAtWorldXY(
+                            pointer.worldX,
+                            pointer.worldY - 32
+                        );
+                        if (!tile) return;
+                        mapSpriteId = `${tile.layer.name}-(${tile.index})`;
+                        mapSpriteX = tile.x;
+                        mapSpriteY = tile.y;
+                        mapSpritePixelX = tile.pixelX;
+                        mapSpritePixelY = tile.pixelY;
                         if (pointer.leftButtonDown()) {
-                            tile.setTint(config.focusColor);
+                            tile.tint = config.focusColor;
                         } else {
-                            tile.clearTint();
+                            tile.tint = config.blurColor;
                         }
                     }
                 );
-
-                i++;
             }
-        }
+        );
     };
 
     const unitFocus = (scene: Phaser.Scene) => {
@@ -274,22 +296,22 @@
         $sceneInstance.cameras.main.stopFollow();
     };
 
-    const cerateBackground = (scene: Phaser.Scene) => {
-        stars1 = scene.add
-            .tileSprite(0, 0, w, h, 'stars-1')
-            .setOrigin(0, 0)
-            .setScrollFactor(0);
+    // const cerateBackground = (scene: Phaser.Scene) => {
+    //     stars1 = scene.add
+    //         .tileSprite(0, 0, w, h, 'stars-1')
+    //         .setOrigin(0, 0)
+    //         .setScrollFactor(0);
 
-        stars2 = scene.add
-            .tileSprite(0, 0, w, h, 'stars-2')
-            .setOrigin(0, 0)
-            .setScrollFactor(0);
+    //     stars2 = scene.add
+    //         .tileSprite(0, 0, w, h, 'stars-2')
+    //         .setOrigin(0, 0)
+    //         .setScrollFactor(0);
 
-        stars3 = scene.add
-            .tileSprite(0, 0, w, h, 'stars-3')
-            .setOrigin(0, 0)
-            .setScrollFactor(0);
-    };
+    //     stars3 = scene.add
+    //         .tileSprite(0, 0, w, h, 'stars-3')
+    //         .setOrigin(0, 0)
+    //         .setScrollFactor(0);
+    // };
 
     const crteateSceleton = (scene: Phaser.Scene) => {
         const skeletonId = getId('unit', 'skeleton');
@@ -300,8 +322,8 @@
             new Skeleton(
                 skeletonId,
                 scene,
-                620,
-                140,
+                -160,
+                224,
                 motion,
                 'south',
                 distance
@@ -455,7 +477,7 @@
         cameraControls(scene);
         buildMap(scene);
         crteateSceleton(scene);
-        cerateBackground(scene);
+        // cerateBackground(scene);
 
         // Post FX
         scene.cameras.main.postFX.addTiltShift(
@@ -515,7 +537,7 @@
     });
 
     // $: console.log('$settings', $settings);
-    $: console.log('$units', $units);
+    // $: console.log('$units', $units);
 </script>
 
 <svelte:window
@@ -534,8 +556,9 @@
 
 <div class="stats">
     {#if mapSpriteId}
-        map sprite: id: {mapSpriteId}, posX: {mapSpriteX}, posY: {mapSpriteY}<br
-        />
+        map sprite: id: {mapSpriteId},<br />
+        posX: {mapSpriteX}, posY: {mapSpriteY},<br />
+        pixelX: {mapSpritePixelX}, pixelY: {mapSpritePixelY}<br />
     {/if}
 
     awaitPlacement: {awaitPlacement ? 'true' : 'false'}<br />
@@ -558,5 +581,9 @@
         background: var(--half-transparent);
         color: var(--game-color);
         padding: rem(10);
+
+        &:hover {
+            background-color: var(--game-color-darkest);
+        }
     }
 </style>

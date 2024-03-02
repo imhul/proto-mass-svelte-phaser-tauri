@@ -7,9 +7,14 @@ const config: Config = {
     maxZoom: 2.8,
     mapWidth: 1600,
     mapHeight: 800,
+    bounds: {
+        w: 2048,
+        h: 1024
+    },
     idLength: new Array(16),
     sceneID: 'proto_mass_main_scene',
     focusColor: 0x86bfda,
+    blurColor: 0xffffff,
     appURL: 'https://imhul.github.io/proto-mass-svelte-phaser-tauri',
     footerMenu: [
         {
