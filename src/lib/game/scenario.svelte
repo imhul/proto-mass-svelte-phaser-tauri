@@ -42,9 +42,9 @@
     let playTimeCounter: NodeJS.Timeout | undefined;
     let unpaused = false;
     let wasStopped = false;
-    let stars1: Phaser.GameObjects.TileSprite;
-    let stars2: Phaser.GameObjects.TileSprite;
-    let stars3: Phaser.GameObjects.TileSprite;
+    // let stars1: Phaser.GameObjects.TileSprite;
+    // let stars2: Phaser.GameObjects.TileSprite;
+    // let stars3: Phaser.GameObjects.TileSprite;
     let mapSpriteId: string;
     let mapSpriteX: number;
     let mapSpriteY: number;
@@ -237,6 +237,9 @@
         ]);
 
         // grass: 111, 112, 115, 118, 119
+        // water: 83, 85, 86, 87, 89, 90, 95, 101, 103,
+        // stones: 53, 54, 67, 68,
+        // ground: 102,
 
         walls && walls.setCollisionByProperty({ collides: true });
         const layers = [ground, walls, topFloor, roofs, tubes];
@@ -252,6 +255,8 @@
         const follower = new FollowerSprite(scene, 50, 200, navMesh);
         console.info('follower', follower);
 
+        // TODO: works only in a straight line.
+        // Cannot find a way if there is an obstacle in the straight line.
         scene.input.on(
             'pointerdown',
             (pointer: Phaser.Input.Pointer) => {
@@ -284,11 +289,8 @@
                     pointer.worldX,
                     pointer.worldY
                 );
-                // Tell the follower sprite to find its path to the target
                 follower.goTo(end);
-                // For demo purposes, let's recalculate the path here and draw it on the screen
                 const path = navMesh.findPath(start, end);
-                // -> path is now an array of points, or null if no valid path found
                 navMesh.debugDrawClear();
                 navMesh.debugDrawPath(path, 0xffd900);
             }
