@@ -1,7 +1,10 @@
 <script lang="ts">
     import { afterUpdate, onDestroy, onMount } from 'svelte';
     import Phaser from 'phaser';
-    import { PhaserNavMeshPlugin } from 'phaser-navmesh/src';
+    import {
+        PhaserNavMeshPlugin,
+        type PhaserNavMesh
+    } from 'phaser-navmesh/src';
     // types
     import type { IScene, Message } from '$lib/types';
     // store
@@ -243,11 +246,12 @@
 
         walls && walls.setCollisionByProperty({ collides: true });
         const layers = [ground, walls, topFloor, roofs, tubes];
-        const navMesh = scene.navMeshPlugin.buildMeshFromTilemap(
-            'mesh1',
-            map,
-            layers
-        );
+        const navMesh: PhaserNavMesh =
+            scene.navMeshPlugin.buildMeshFromTilemap(
+                'mesh1',
+                map,
+                layers
+            );
 
         // Graphics overlay for visualizing path
         const graphics = scene.add.graphics().setAlpha(0.5);
@@ -256,7 +260,6 @@
         console.info('follower', follower);
 
         // TODO: works only in a straight line.
-        // Cannot find a way if there is an obstacle in the straight line.
         scene.input.on(
             'pointerdown',
             (pointer: Phaser.Input.Pointer) => {
@@ -292,7 +295,7 @@
                 follower.goTo(end);
                 const path = navMesh.findPath(start, end);
                 navMesh.debugDrawClear();
-                navMesh.debugDrawPath(path, 0xffd900);
+                path && navMesh.debugDrawPath(path, 0xffd900);
             }
         );
 
@@ -482,8 +485,8 @@
             .setZoom(0.2)
             .setName('mini');
         (scene as IScene).minimap.setBackgroundColor(0x0f2a3f);
-        (scene as IScene).minimap.scrollX = 800;
-        (scene as IScene).minimap.scrollY = 400;
+        (scene as IScene).minimap.scrollX = 0;
+        (scene as IScene).minimap.scrollY = 420;
 
         // actions
         if (scene.input.keyboard && scene.events) {

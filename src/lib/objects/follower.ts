@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { type PhaserNavMesh } from 'phaser-navmesh/src';
 
 const map = (
     value: number,
@@ -11,15 +12,19 @@ const map = (
 };
 
 class FollowerSprite extends Phaser.GameObjects.Sprite {
-    navMesh: any;
-    path: any;
-    currentTarget: any;
+    navMesh: PhaserNavMesh;
+    path:
+        | Phaser.Geom.Point[]
+        | Phaser.Math.Vector2[]
+        | null
+        | undefined;
+    currentTarget: Phaser.Math.Vector2 | null;
 
     constructor(
         scene: Phaser.Scene,
         x: number,
         y: number,
-        navMesh: any
+        navMesh: PhaserNavMesh
     ) {
         super(scene, x, y, 'follower');
 
@@ -36,7 +41,7 @@ class FollowerSprite extends Phaser.GameObjects.Sprite {
         scene.events.once('shutdown', this.destroy, this);
     }
 
-    goTo(targetPoint: any) {
+    goTo(targetPoint: Phaser.Math.Vector2) {
         // Find a path to the target
         this.path = this.navMesh.findPath(
             new Phaser.Math.Vector2(this.x, this.y),
@@ -45,7 +50,8 @@ class FollowerSprite extends Phaser.GameObjects.Sprite {
 
         // If there is a valid path, grab the first point from the path and set it as the target
         if (this.path && this.path.length > 0)
-            this.currentTarget = this.path.shift();
+            this.currentTarget =
+                this.path.shift() as unknown as Phaser.Math.Vector2;
         else this.currentTarget = null;
     }
 
@@ -71,15 +77,20 @@ class FollowerSprite extends Phaser.GameObjects.Sprite {
 
             if (distance < 5) {
                 // If there is path left, grab the next point. Otherwise, null the target.
-                if (this.path.length > 0)
-                    this.currentTarget = this.path.shift();
+                if (this.path && this.path.length > 0)
+                    this.currentTarget =
+                        this.path.shift() as unknown as Phaser.Math.Vector2;
                 else this.currentTarget = null;
             }
 
             // Slow down as we approach final point in the path. This helps prevent issues with the
             // physics body overshooting the goal and leaving the mesh.
             let speed = 400;
-            if (this.path.length === 0 && distance < 50) {
+            if (
+                this.path &&
+                this.path.length === 0 &&
+                distance < 50
+            ) {
                 speed = map(distance, 50, 0, 400, 50);
             }
 
